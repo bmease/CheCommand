@@ -296,8 +296,7 @@ STATE: {Idle} ~~ {
 				Expr {$capturegroup_saythink==`say`}
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
-		DO: SetState {HandleCheck}	
-
+		DO: SetState {HandleCheck}
 
 	~~ Handle VTank Options
 	IF:	All
@@ -319,6 +318,16 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: DoAll
 				ChatExpr {$capturegroup_echotext}
+				SetState {Idle}
+
+	~~ Handle Version
+	IF: All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#version\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+		DO: DoAll
+				DoExpr {ifthen[$testvar[capturegroup_name]==true, `chatbox[\`/t \`+$capturegroup_name+\`, CheCommand \`+$CCVersion]`, `chatbox[\`/t \`+$CHARACTER_NAME+\`, CheCommand \`+$CCVersion]`]}
 				SetState {Idle}
 
 ~~ }
