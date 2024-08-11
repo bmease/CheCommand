@@ -57,6 +57,7 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[OBJECT, 7]}
 				DoExpr {setvar[PORTAL, 14]}
 				DoExpr {setvar[PLAYER, 24]}
+				DoExpr {setvar[VENDOR, 25]}
 				DoExpr {setvar[CORPSE, 27]}
 				DoExpr {setvar[NPC, 37]}
 
@@ -378,6 +379,7 @@ STATE: {HandleActions} ~~ {
 				DoExpr {echo[`#action portal: All characters use the nearest portal`, $COLOR_INFO]}
 				DoExpr {echo[`#action quit: All characters exit the game`, $COLOR_INFO]}
 				DoExpr {echo[`#action stay: All characters stop following`, $COLOR_INFO]}
+				DoExpr {echo[`#action vendor: All characters use the nearest Vendor`, $COLOR_INFO]}
 				SetState {Idle}
 
 	~~ Handle `#action stay`
@@ -471,6 +473,10 @@ STATE: {HandleActions} ~~ {
 		DO: DoAll
 				DoExpr {setcombatstate[peace]}
 				SetState {Idle}
+
+	~~ Handle `#action vendor`
+	IF: Expr {(vendor)#getvar[capturegroup_actiontext]}
+		DO: SetState {UseVendor}
 
 	~~ Handle no match for actiontext
 	IF: Expr {$LEVEL_WARN>=@CCDebug}
@@ -1305,6 +1311,33 @@ STATE: {UseNPC} ~~ {
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$NPC]]}
 				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $SRING_PROP_NAME]}
 				SetState {UseNPC}
+
+~~ }
+
+
+STATE: {UseVendor} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Disable all options
+	IF: Expr {testvar[OptionsSet]==false}
+		DO: CallState {DisableOptions} {UseVendor}
+	
+	~~ Autovendor finished
+	IF:	ChatMatch {^You think, "AutoVendor finished}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished vending with \`+$name]`, `false`]}
+				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$VENDOR]]} ~~ Close the vendor window
+				DoExpr {clearvar[open]}
+				CallState {EnableOptions} {Idle}
+
+	~~ Use Vendor
+	IF: VendorClosed 
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$VENDOR]]}
+				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$VENDOR], $SRING_PROP_NAME]}
+				SetState {UseVendor}
 
 ~~ }
 
