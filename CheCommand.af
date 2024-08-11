@@ -38,57 +38,6 @@
 ~~ }																					
 
 
-~~ TODO:
-~~ - [ ] Create $CCLeader and assign it when following
-~~ - [ ] Use $CCLeader for all messaging
-~~ - [ ] Finish looting
-~~ - [ ] Finish auto looting
-~~ - [ ] Add #pickup command to pick things up from the landscape
-~~ - [ ] Use clearvar on all variables after done using them
-~~ - [ ] Add threshold for portal usage
-~~ - [ ] Attempt to determine if an NPC is a portal by looking to see if it has summonable or tieable in it's description
-~~ - [ ] Add #version command that responds to anyone requesting the version
-~~ - [ ] Add #permit command that responds to a person asking for the permit
-~~ - [x] Add help to all commands
-~~ - [x] Add ^ and $ to give commands to find exact match
-~~ - [x] Follow should clear the original followers
-~~ - [x] HandleRecall should bail out if the character doesn't have the spell
-~~ - [x] Handle NPCs that don't tell you their name
-~~ - [x] Add command to read contracts
-~~ - [x] Disable combat, nav, buffing during jumping
-~~ - [x] Add stuck character detection
-~~ - [ ] Stop using fellow leader for stuck detection. Use $CCLeader instead
-~~ - [x] Fix errors from stuck when not in fellow
-~~ - [x] Handle auto recruit fellows being in a fellow
-~~ - [x] Disable looting when using portals
-~~ - [x] Disable looting when using recalls
-~~ - [x] Use a state to handle disabling stuff and re-enabling things
-~~ - [x] Add primary and secondary portal recall
-~~ - [x] Fix errors in fellow when characters are already in a fellow
-~~ - [ ] 
-
-
-~~ # v0.0.21 Notes
-~~ Fix errors in fellow when characters are already in a fellow
-~~ Add primary and secondary portal recall
-~~ Disable looting when using portals
-~~ Unify disabling options and enabling them for actions like jump or portal
-
-~~ # v0.0.20 Notes
-~~ - Add help to all commands
-~~ - Add navto Gear Knights
-~~ - Add action command to read contracts
-~~ - Add stuck character detection
-~~ - Notify if the character does not have a recall spell
-~~ - Disable combat, nav, buffing during jumping
-~~ - Fix: Slain Protectorate NPC left stuck in state
-~~ - Fix: Follow should clear the original followers
-~~ - Fix: Handle NPCs that don't tell you their name
-
-~~ # v0.0.19 Notes
-~~ - Add ^ and $ to give commands to find exact match
-
-
 STATE: {Default} ~~ {
 
 	~~ Utility Belt Options
