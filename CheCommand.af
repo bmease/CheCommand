@@ -79,6 +79,8 @@ STATE: {Default} ~~ {
 
 				DoExpr {setvar[CLOSE_BLUE, 7]}
 
+				DoExpr {setvar[CHARACTER_NAME, getcharstringprop[1]]}
+
 	~~ Initialize CC variables
 	IF: Always
 		DO: DoAll
@@ -97,6 +99,9 @@ STATE: {Default} ~~ {
 
 				~~ Distance away a character must be to announce stuck
 				DoExpr {setpvar[CCStuckDistanceThreshold, ifthen[testpvar[CCStuckDistanceThreshold], `@CCStuckDistanceThreshold`, `20`]]}
+
+				~~ Leader to announce things to. Defaults to first character in @CCCharacterList and will update when follow commands are issued
+				DoExpr {setpvar[CCLeader, ifthen[testpvar[CCLeader], `@CCLeader`, `listgetitem[@CCCharacterList, 0]`]]}
 
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
@@ -379,6 +384,7 @@ STATE: {HandleActions} ~~ {
 		DO:	DoAll
 				SetOpt {NavPriorityBoost} {true}
 				ChatExpr {`/ub follow `+$capturegroup_name}
+				DoExpr {@CCLeader=$capturegroup_name}
 				SetState {Idle}
 
 	~~ Handle `#action follow` for person who issued command
@@ -387,6 +393,7 @@ STATE: {HandleActions} ~~ {
 			Expr {$capturegroup_name==false}
 		DO:	DoAll
 				EmbedNav Empty {[None]}
+				DoExpr {@CCLeader=$CHARACTER_NAME}
 				SetState {Idle}
 
 	~~ Handle `#action fellow` for the person who issued the command
