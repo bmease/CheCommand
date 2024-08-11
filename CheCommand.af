@@ -174,26 +174,29 @@ STATE: {Idle} ~~ {
 
 	~~ Announce if stuck
 	IF: All
-			Expr {getfellowshipstatus[]==true} ~~ In a fellowship
-			Expr {getobjectinternaltype[wobjectfindbyid[getfellowshipleaderid[]]]==TYPE_OBJECT} ~~ Leader exists
+			Expr {@CCLeader!=$CHARACTER_NAME}
+			Expr {getobjectinternaltype[$leaderObj]==$TYPE_OBJECT} ~~ Leader exists
 			Expr {stopwatchelapsedseconds[$StuckTimer]>=@CCStuckAnnounceDelay} ~~ Announce when the $StuckTimer is above the delay
 			Expr {coordinatedistancewithz[$InitialPosition, getplayercoordinates[]]<=@CCStuckThreshold} ~~ Character has not moved past the threshold
 			Expr {getmotion[Forward]!=0} ~~ Character is moving
 			Expr {isportaling[]==false} ~~ Character is not portaling
-			Expr {$finalDistance=coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindbyid[getfellowshipleaderid[]]], getplayercoordinates[]]} ~~ Set $finalDistance
-			Expr {$finalDistance-$InitialDistance>=@CCStuckDistanceThreshold} ~~ The distance to the leader is greater than the threshold
+			Expr {$finalDistance=coordinatedistancewithz[wobjectgetphysicscoordinates[$leaderObj], getplayercoordinates[]]} ~~ Set $finalDistance
+			Expr {abs[$finalDistance-$InitialDistance]>=@CCStuckDistanceThreshold} ~~ The distance to the leader is greater than the threshold
 			Not Expr {$finalDistance>1000} ~~ The leader hasn't portaled away
 		DO: DoAll
-				ChatExpr {`/f I am stuck and you are `+floor[$finalDistance]+` meters away!`}
-				ChatExpr {`/f InitialDistance: `+floor[$finalDistance]}
-				ChatExpr {`/f finalDistance: `+floor[$finalDistance]}
+				ChatExpr {`/t `+@CCLeader+`, I am stuck and you are `+floor[$finalDistance]+` meters away!`}
+				~~ ChatExpr {`/f InitialDistance: `+floor[$finalDistance]}
+				~~ ChatExpr {`/f finalDistance: `+floor[$finalDistance]}
 				SetState {Idle}
 
 	~~ Restart stuck stopwatch
-	IF: Expr {stopwatchelapsedseconds[$StuckTimer]>=5}
+	IF: All
+			Expr {@CCLeader!=$CHARACTER_NAME}
+			Expr {stopwatchelapsedseconds[$StuckTimer]>=5}
 		DO: DoAll
+				DoExpr {$leaderObj=wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]}
 				DoExpr {setvar[StuckTimer, stopwatchstart[stopwatchcreate[]]]}
-				DoExpr {$InitialDistance=coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindbyid[getfellowshipleaderid[]]], getplayercoordinates[]]}
+				DoExpr {$InitialDistance=coordinatedistancewithz[wobjectgetphysicscoordinates[$leaderObj], getplayercoordinates[]]}
 				DoExpr {$InitialPosition=getplayercoordinates[]}
 				SetState {Idle}
 
