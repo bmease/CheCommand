@@ -895,6 +895,8 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Ol'tra`, `Crimson Scarab`]} ~~ End of Days
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Morgethais`, `Shard of the Curator of Torment's Mask`]} ~~ Defeating the Curator of Torment
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Spirit of Bist'elle`, `Mirror Shard`]} ~~ Hoshino Must Die
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mortified Soldier`, `Torn Note`]} ~~ Gurog Creation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fayza`, `Journal of a Soldier`]} ~~ Gurog Creation
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
