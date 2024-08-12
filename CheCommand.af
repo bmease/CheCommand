@@ -897,6 +897,8 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Spirit of Bist'elle`, `Mirror Shard`]} ~~ Hoshino Must Die
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mortified Soldier`, `Torn Note`]} ~~ Gurog Creation
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fayza`, `Journal of a Soldier`]} ~~ Gurog Creation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kuyiza bint Zayi the Translator`, listcreate[`Carefully rolled scroll`, `Large Tome`]]} ~~ Bloodstone Investigation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sir Donovan`, listcreate[`Bloodstone Report`, `Research Notes`, `Shattered Master Bloodstone Shard`, `Delicate Bloodstone Wand`, `Sturdy Bloodstone Wand`]]} ~~ Bloodstone Investigation
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
