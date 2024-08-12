@@ -894,6 +894,7 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Raksaa`, `Sealed Scroll for Raksaa`]} ~~ Lugian Assault
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Ol'tra`, `Crimson Scarab`]} ~~ End of Days
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Morgethais`, `Shard of the Curator of Torment's Mask`]} ~~ Defeating the Curator of Torment
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Spirit of Bist'elle`, `Mirror Shard`]} ~~ Hoshino Must Die
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
