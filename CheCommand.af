@@ -563,6 +563,12 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {$CCRecallSpell=6150} ~~ Rynthid Recall
 				SetState {HandleRecall}
 
+	~~ Handle `#navto gearknight`
+	IF: Expr {(gear knight)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=5330} ~~ Gear Knight Invasion Area Camp Recall
+				SetState {HandleRecall}
+
 	~~ Handle `#navto aphus lassel`
 	IF: Expr {(aphus lassel)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
