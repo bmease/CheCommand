@@ -61,7 +61,8 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[CORPSE, 27]}
 				DoExpr {setvar[NPC, 37]}
 
-				DoExpr {setvar[SRING_PROP_NAME, 1]}
+				DoExpr {setvar[STRING_PROP_NAME, 1]}
+				DoExpr {setvar[STRING_PROP_DESCRIPTION, 16]}
 
 				DoExpr {setvar[COLOR_DEBUG, 17]}
 				DoExpr {setvar[COLOR_INFO, 5]}
@@ -80,7 +81,7 @@ STATE: {Default} ~~ {
 
 				DoExpr {setvar[CLOSE_BLUE, 7]}
 
-				DoExpr {setvar[CHARACTER_NAME, getcharstringprop[1]]}
+				DoExpr {setvar[CHARACTER_NAME, getcharstringprop[$STRING_PROP_NAME]]}
 
 	~~ Initialize CC variables
 	IF: Always
@@ -103,6 +104,9 @@ STATE: {Default} ~~ {
 
 				~~ Leader to announce things to. Defaults to first character in @CCCharacterList and will update when follow commands are issued
 				DoExpr {setpvar[CCLeader, ifthen[testpvar[CCLeader], `@CCLeader`, `listgetitem[@CCCharacterList, 0]`]]}
+
+				~~ Distance to use the nearest Portal
+				DoExpr {setpvar[CCPortalThreshold, ifthen[testpvar[CCPortalThreshold], `@CCPortalThreshold`, `30`]}
 
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
@@ -204,7 +208,7 @@ STATE: {Idle} ~~ {
 	IF:	All
 			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]]==$CLOSE_BLUE}
 			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]],getplayercoordinates[]]<15}
-		DO:	SetState {VRPortal}
+		DO:	SetState {UseVRPortal}
 
 	~~ Handle Auto Timers
 	IF: All
@@ -454,7 +458,7 @@ STATE: {HandleActions} ~~ {
 
 	~~ Handle `#action portal`
 	IF: Expr {(portal)#getvar[capturegroup_actiontext]}
-		DO: SetState {Portal}
+		DO: SetState {UsePortal}
 
 	~~ Handle `#action quit`
 	IF: Expr {(quit)#getvar[capturegroup_actiontext]}
@@ -1145,20 +1149,40 @@ STATE: {LootCorpse} ~~ {
 ~~ }
 
 
-STATE: {Portal} ~~ {
+STATE: {UsePortal} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
 
 	~~ Disable all options
 	IF: Expr {testvar[OptionsSet]==false}
-		DO: CallState {DisableOptions} {Portal}
+		DO: CallState {DisableOptions} {UsePortal}
+
+	~~ No portal within range but there is an NPC nearby
+	IF: All
+			Expr {getobjectinternaltype[wobjectfindnearestbyobjectclass[$NPC]]==$TYPE_OBJECT} ~~ NPC within range
+			Any
+				Expr {wobjectfindnearestbyobjectclass[$PORTAL]==false} ~~ No portal detected
+				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$PORTAL]], getplayercoordinates[]]<=@CCPortalThreshold} ~~ No portal within threshold
+		DO: SetState {UsePortalNPC}
+
+	~~ No portal or NPC within range
+	IF: All
+			Any
+				Expr {wobjectfindnearestbyobjectclass[$PORTAL]==false} ~~ no portal detected
+				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$PORTAL]], getplayercoordinates[]]<=@CCPortalThreshold} ~~ no portal within threshold
+			Any
+				Expr {wobjectfindnearestbyobjectclass[$NPC]==false} ~~ no NPC detected
+				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]<=@CCPortalThreshold} ~~ no NPC within threshold
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, No portal within range!\`]`, `false`]}
+				CallState {EnableOptions} {Idle}
 
 	~~ Use the Portal
 	IF:	Expr {isportaling[]==false}
 		DO:	DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$PORTAL]]}
-				SetState {Portal}
+				SetState {UsePortal}
 
 	~~ Finished using portal; reset options to what they originally were
 	IF:	Expr {isportaling[]==true}
@@ -1169,7 +1193,44 @@ STATE: {Portal} ~~ {
 ~~ }
 
 
-STATE: {VRPortal} ~~ {
+STATE: {UsePortalNPC} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ The NPC does not have data, we need to query for it
+	IF: Expr {wobjecthasdata[wobjectfindnearestbyobjectclass[$NPC]]==false}
+		DO: DoAll
+				DoExpr {wobjectrequestdata[wobjectfindnearestbyobjectclass[$NPC]]}
+				SetState {UsePortalNPC}
+
+	~~ No NPC in range with `portal` in description
+	IF: All
+			Expr {wobjecthasdata[wobjectfindnearestbyobjectclass[$NPC]]==true}
+			Not Expr {istrue[wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $STRING_PROP_DESCRIPTION]#portal]}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, No portal within range!\`]`, `false`]}
+				CallState {EnableOptions} {Idle}
+
+	~~ Use the NPC Portal
+	IF:	All
+			Expr {isportaling[]==false}
+			Expr {wobjecthasdata[wobjectfindnearestbyobjectclass[$NPC]]==true}
+			Expr {istrue[wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $STRING_PROP_DESCRIPTION]#portal]}
+		DO:	DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$NPC]]}
+				SetState {UsePortalNPC}
+
+	~~ Finished using portal; reset options to what they originally were
+	IF:	Expr {isportaling[]==true}
+		DO:	DoAll
+				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished using portal\`]`, `false`]}
+				CallState {EnableOptions} {Idle}
+
+~~ }
+
+
+STATE: {UseVRPortal} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
