@@ -1385,7 +1385,7 @@ STATE: {UseNPC} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$NPC]]}
-				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $SRING_PROP_NAME]}
+				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $STRING_PROP_NAME]}
 				SetState {UseNPC}
 
 ~~ }
@@ -1412,7 +1412,7 @@ STATE: {UseVendor} ~~ {
 	IF: VendorClosed 
 		DO: DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$VENDOR]]}
-				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$VENDOR], $SRING_PROP_NAME]}
+				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$VENDOR], $STRING_PROP_NAME]}
 				SetState {UseVendor}
 
 ~~ }
