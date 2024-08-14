@@ -106,7 +106,7 @@ STATE: {Default} ~~ {
 				DoExpr {setpvar[CCLeader, ifthen[testpvar[CCLeader], `@CCLeader`, `listgetitem[@CCCharacterList, 0]`]]}
 
 				~~ Distance to use the nearest Portal
-				DoExpr {setpvar[CCPortalThreshold, ifthen[testpvar[CCPortalThreshold], `@CCPortalThreshold`, `30`]}
+				DoExpr {setpvar[CCPortalThreshold, ifthen[testpvar[CCPortalThreshold], `@CCPortalThreshold`, `30`]]}
 
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
@@ -1237,13 +1237,13 @@ STATE: {UseVRPortal} ~~ {
 
 	~~ Disable all options
 	IF: Expr {testvar[OptionsSet]==false}
-		DO: CallState {DisableOptions} {VRPortal}
+		DO: CallState {DisableOptions} {UseVRPortal}
 
 	~~ Use the VR portal
 	IF:	Expr {isportaling[]==false}
 		DO:	DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]]}
-				SetState {VRPortal}
+				SetState {UseVRPortal}
 
 	~~ Finished using portal; reset options to what they originally were
 	IF:	Expr {isportaling[]==true}
