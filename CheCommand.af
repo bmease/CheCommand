@@ -1168,6 +1168,7 @@ STATE: {UsePortal} ~~ {
 
 	~~ No portal or NPC within range
 	IF: All
+			Expr {isportaling[]==false}
 			Any
 				Expr {wobjectfindnearestbyobjectclass[$PORTAL]==false} ~~ no portal detected
 				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$PORTAL]], getplayercoordinates[]]<=@CCPortalThreshold} ~~ no portal within threshold
