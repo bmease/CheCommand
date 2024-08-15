@@ -1160,6 +1160,7 @@ STATE: {UsePortal} ~~ {
 
 	~~ No portal within range but there is an NPC nearby
 	IF: All
+			Expr {isportaling[]==false}
 			Expr {getobjectinternaltype[wobjectfindnearestbyobjectclass[$NPC]]==$TYPE_OBJECT} ~~ NPC within range
 			Any
 				Expr {wobjectfindnearestbyobjectclass[$PORTAL]==false} ~~ No portal detected
