@@ -329,13 +329,9 @@ STATE: {Idle} ~~ {
 				SetState {Idle}
 
 	~~ Handle Version
-	IF: All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#version\"$} {}
-			Any
-				Expr {$capturegroup_saythink==`say`}
-				Expr {$capturegroup_saythink==`think`}
+	IF: ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#version\"$} {}
 		DO: DoAll
-				DoExpr {ifthen[$testvar[capturegroup_name]==true, `chatbox[\`/t \`+$capturegroup_name+\`, CheCommand \`+$CCVersion]`, `chatbox[\`/t \`+$CHARACTER_NAME+\`, CheCommand \`+$CCVersion]`]}
+				DoExpr {chatbox[`/t `+$capturegroup_name+`, CheCommand `+$CCVersion]}
 				SetState {Idle}
 
 ~~ }
