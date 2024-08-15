@@ -1496,14 +1496,18 @@ STATE: {EnableOptions} ~~ {
 
 STATE: {ShowJump} ~~ {
 
+	~~ Show Jump view
 	IF: Not Expr {uiviewvisible[Jump]}
 		DO: DoAll
 				CreateView {Jump} {:CheCommand-Jump.xml}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowJump], `Jump <<`]}
 				SetState {Idle}
 
+	~~ Close Jump view
 	IF: Expr {uiviewvisible[Jump]}
 		DO: DoAll
 				DestroyView {Jump}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowJump], `Jump >>`]}
 				SetState {Idle}
 ~~ }
 
