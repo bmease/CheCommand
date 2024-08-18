@@ -185,7 +185,7 @@ STATE: {Idle} ~~ {
 			Expr {getmotion[Forward]!=0} ~~ Character is moving
 			Expr {isportaling[]==false} ~~ Character is not portaling
 			Expr {$finalDistance=coordinatedistancewithz[wobjectgetphysicscoordinates[$leaderObj], getplayercoordinates[]]} ~~ Set $finalDistance
-			Expr {abs[$finalDistance-$InitialDistance]>=@CCStuckDistanceThreshold} ~~ The distance to the leader is greater than the threshold
+			Expr {$finalDistance>=@CCStuckDistanceThreshold} ~~ The distance to the leader is greater than the threshold
 			Not Expr {$finalDistance>1000} ~~ The leader hasn't portaled away
 		DO: DoAll
 				ChatExpr {`/t `+@CCLeader+`, I am stuck and you are `+floor[$finalDistance]+` meters away!`}
@@ -200,7 +200,7 @@ STATE: {Idle} ~~ {
 		DO: DoAll
 				DoExpr {$leaderObj=wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]}
 				DoExpr {setvar[StuckTimer, stopwatchstart[stopwatchcreate[]]]}
-				DoExpr {$InitialDistance=coordinatedistancewithz[wobjectgetphysicscoordinates[$leaderObj], getplayercoordinates[]]}
+				~~ DoExpr {$InitialDistance=coordinatedistancewithz[wobjectgetphysicscoordinates[$leaderObj], getplayercoordinates[]]}
 				DoExpr {$InitialPosition=getplayercoordinates[]}
 				SetState {Idle}
 
