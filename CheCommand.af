@@ -499,6 +499,7 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {(help)#getvar[capturegroup_navdestination]}
 		DO: DoAll
 				DoExpr {echo[`#navto aphus lassel: Navigate to Aphus Lassel (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto aerlinthe: Navigate to Aerlinthe (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto comps: Navigate to Haven and purchase comps`, $COLOR_INFO]}
 				DoExpr {echo[`#navto couch: Navigate to Haven and sit on the couch`, $COLOR_INFO]}
 				DoExpr {echo[`#navto frozen valley: Navigate to Frozen Valley (requires flagging)`, $COLOR_INFO]}
@@ -574,6 +575,12 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {(aphus lassel)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
 				DoExpr {$CCRecallSpell=2931} ~~ Recall Aphus Lassel
+				SetState {HandleRecall}
+
+	~~ Handle `#navto aerlinthe`
+	IF: Expr {(aerlinthe)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=2041} ~~ Aerlinthe Recall
 				SetState {HandleRecall}
 
 	~~ Handle `#navto sanctuary`
