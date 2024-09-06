@@ -108,6 +108,9 @@ STATE: {Default} ~~ {
 				~~ Distance to use the nearest Portal
 				DoExpr {setpvar[CCPortalThreshold, ifthen[testpvar[CCPortalThreshold], `@CCPortalThreshold`, `30`]]}
 
+				~~ Are vitals on or off
+				DoExpr {setpvar[CCVitals, ifthen[testpvar[CCVitals], `@CCVitals`, `true`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -160,8 +163,6 @@ STATE: {Init} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {setvar[FoundTimers, listcreate[]]}
-
-				DoExpr {setvar[vitals, false]}
 
 				DoExpr {setvar[CorpseBlacklist, listcreate[]]}
 				DoExpr {setvar[StuckTimer, stopwatchstart[stopwatchcreate[]]]}
@@ -1511,23 +1512,22 @@ STATE: {ShowJump} ~~ {
 
 ~~ Use Virindi Hotkey System to map this state to a key like `tab` to toggle on and off combat/healing/buffing
 STATE: {HotkeyToggleVitals} ~~ {
-	IF: Expr {$Vitals==true}
+	IF: Expr {@CCVitals==true}
 		DO: DoAll
-				DoExpr {$Vitals=false} ~~ Toggle vitals
+				DoExpr {@CCVitals=false} ~~ Toggle vitals
 				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Turning off vitals\`, $COLOR_INFO]`, `false`]}
-				DoExpr {$OriginalVitals=dictcreate[]}
-				DoExpr {dictadditem[$OriginalVitals, EnableBuffing, cstr[vtgetsetting[EnableBuffing]]]}
-				DoExpr {dictadditem[$OriginalVitals, EnableCombat, cstr[vtgetsetting[EnableCombat]]]}
-				DoExpr {dictadditem[$OriginalVitals, EnableLooting, cstr[vtgetsetting[EnableLooting]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-Norm-HitP, cstr[vtgetsetting[Recharge-Norm-HitP]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-Norm-Stam, cstr[vtgetsetting[Recharge-Norm-Stam]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-Norm-Mana, cstr[vtgetsetting[Recharge-Norm-Mana]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-NoTarg-HitP, cstr[vtgetsetting[Recharge-NoTarg-HitP]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-NoTarg-Stam, cstr[vtgetsetting[Recharge-NoTarg-Stam]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-NoTarg-Mana, cstr[vtgetsetting[Recharge-NoTarg-Mana]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-Helper-HitP, cstr[vtgetsetting[Recharge-Helper-HitP]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-Helper-Stam, cstr[vtgetsetting[Recharge-Helper-Stam]]]}
-				DoExpr {dictadditem[$OriginalVitals, Recharge-Helper-Mana, cstr[vtgetsetting[Recharge-Helper-Mana]]]}
+				DoExpr {setpvar[CCOriginalVitalsEnableBuffing, cstr[vtgetsetting[EnableBuffing]]]}
+				DoExpr {setpvar[CCOriginalVitalsEnableCombat, cstr[vtgetsetting[EnableCombat]]]}
+				DoExpr {setpvar[CCOriginalVitalsEnableLooting, cstr[vtgetsetting[EnableLooting]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeNormHitP, cstr[vtgetsetting[Recharge-Norm-HitP]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeNormStam, cstr[vtgetsetting[Recharge-Norm-Stam]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeNormMana, cstr[vtgetsetting[Recharge-Norm-Mana]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeNoTargHitP, cstr[vtgetsetting[Recharge-NoTarg-HitP]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeNoTargStam, cstr[vtgetsetting[Recharge-NoTarg-Stam]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeNoTargMana, cstr[vtgetsetting[Recharge-NoTarg-Mana]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeHelperHitP, cstr[vtgetsetting[Recharge-Helper-HitP]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeHelperStam, cstr[vtgetsetting[Recharge-Helper-Stam]]]}
+				DoExpr {setpvar[CCOriginalVitalsRechargeHelperMana, cstr[vtgetsetting[Recharge-Helper-Mana]]]}
 				DoExpr {vtsetsetting[EnableBuffing, `0`]}
 				DoExpr {vtsetsetting[EnableCombat, `0`]}
 				DoExpr {vtsetsetting[EnableLooting, `0`]}
@@ -1542,23 +1542,22 @@ STATE: {HotkeyToggleVitals} ~~ {
 				DoExpr {vtsetsetting[Recharge-Helper-Mana, `0`]}
 				SetState {Idle}
 
-	IF: Expr {$Vitals==false}
+	IF: Expr {@CCVitals==false}
 		DO: DoAll
-				DoExpr {$Vitals=true} ~~ Toggle vitals
+				DoExpr {@CCVitals=true} ~~ Toggle vitals
 				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Turning on vitals\`, $COLOR_INFO]`, `false`]}
-				DoExpr {vtsetsetting[EnableBuffing, dictgetitem[$OriginalVitals, EnableBuffing]]}
-				DoExpr {vtsetsetting[EnableCombat, dictgetitem[$OriginalVitals, EnableCombat]]}
-				DoExpr {vtsetsetting[EnableLooting, dictgetitem[$OriginalVitals, EnableLooting]]}
-				DoExpr {vtsetsetting[Recharge-Norm-HitP, dictgetitem[$OriginalVitals, Recharge-Norm-HitP]]}
-				DoExpr {vtsetsetting[Recharge-Norm-Stam, dictgetitem[$OriginalVitals, Recharge-Norm-Stam]]}
-				DoExpr {vtsetsetting[Recharge-Norm-Mana, dictgetitem[$OriginalVitals, Recharge-Norm-Mana]]}
-				DoExpr {vtsetsetting[Recharge-NoTarg-HitP, dictgetitem[$OriginalVitals, Recharge-NoTarg-HitP]]}
-				DoExpr {vtsetsetting[Recharge-NoTarg-Stam, dictgetitem[$OriginalVitals, Recharge-NoTarg-Stam]]}
-				DoExpr {vtsetsetting[Recharge-NoTarg-Mana, dictgetitem[$OriginalVitals, Recharge-NoTarg-Mana]]}
-				DoExpr {vtsetsetting[Recharge-Helper-HitP, dictgetitem[$OriginalVitals, Recharge-Helper-HitP]]}
-				DoExpr {vtsetsetting[Recharge-Helper-Stam, dictgetitem[$OriginalVitals, Recharge-Helper-Stam]]}
-				DoExpr {vtsetsetting[Recharge-Helper-Mana, dictgetitem[$OriginalVitals, Recharge-Helper-Mana]]}
-				DoExpr {clearvar[OriginalVitals]}
+				DoExpr {vtsetsetting[EnableBuffing, @CCOriginalVitalsEnableBuffing]}
+				DoExpr {vtsetsetting[EnableCombat, @CCOriginalVitalsEnableCombat]}
+				DoExpr {vtsetsetting[EnableLooting, @CCOriginalVitalsEnableLooting]}
+				DoExpr {vtsetsetting[Recharge-Norm-HitP, @CCOriginalVitalsRechargeNormHitP]}
+				DoExpr {vtsetsetting[Recharge-Norm-Stam, @CCOriginalVitalsRechargeNormStam]}
+				DoExpr {vtsetsetting[Recharge-Norm-Mana, @CCOriginalVitalsRechargeNormMana]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-HitP, @CCOriginalVitalsRechargeNoTargHitP]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-Stam, @CCOriginalVitalsRechargeNoTargStam]}
+				DoExpr {vtsetsetting[Recharge-NoTarg-Mana, @CCOriginalVitalsRechargeNoTargMana]}
+				DoExpr {vtsetsetting[Recharge-Helper-HitP, @CCOriginalVitalsRechargeHelperHitP]}
+				DoExpr {vtsetsetting[Recharge-Helper-Stam, @CCOriginalVitalsRechargeHelperStam]}
+				DoExpr {vtsetsetting[Recharge-Helper-Mana, @CCOriginalVitalsRechargeHelperMana]}
 				SetState {Idle}
 
 	IF: Always
