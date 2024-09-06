@@ -910,11 +910,15 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Morgethais`, `Shard of the Curator of Torment's Mask`]} ~~ Defeating the Curator of Torment
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Spirit of Bist'elle`, `Mirror Shard`]} ~~ Hoshino Must Die
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mortified Soldier`, `Torn Note`]} ~~ Gurog Creation
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fayza`, `Journal of a Soldier`]} ~~ Gurog Creation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fayza`, listcreate[`Journal of a Soldier`, `Energy Infused Rock`]]} ~~ Gurog Creation, Deewains
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kuyiza bint Zayi the Translator`, listcreate[`Carefully rolled scroll`, `Large Tome`]]} ~~ Bloodstone Investigation
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sir Donovan`, listcreate[`Bloodstone Report`, `Research Notes`, `Shattered Master Bloodstone Shard`, `Delicate Bloodstone Wand`, `Sturdy Bloodstone Wand`]]} ~~ Bloodstone Investigation
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Virindi Delegate`, `Olthoi Hive Queen Carapace`]} ~~ Hive Queen Assault
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Virindi Delegate`, listcreate[`Olthoi Hive Queen Carapace`, `Virindi Sentinel's Message Shard`]]} ~~ Hive Queen Assault, Dream Reaver Investigation
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mhoire Lieutenant`, `Geraine's Tome \\(1\\)`]} ~~ Geraine's Hosts
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Darviss`, `Spectral Nanjou Master's Sword`]} ~~ Ninja Academy
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kinchou`, `Coded Tanada Scroll`]} ~~ Tanada Intercept
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kousha`, `Tanada Neophyte's Mask`]} ~~ Tanada Slaughter
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Shorikan`, `Spectral Nanjou Zaikan's Sword`]} ~~ Nanjou Stockade
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
@@ -922,10 +926,11 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Diyas al-Yat`, `Apostate Message Shard`]} ~~ Uncovering the Renegades
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aruq ibn Balthar`, `Apostate Orders`]} ~~ Uncovering the Renegades
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Neelic`, `Translated Orders for Zrikux`]} ~~ Falacot Depot
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Omarah`, `Essence of Dravann`]} ~~ Virindi Rescue
 
 				~~ Random
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fiun Rehlyun`, `Insatiable Eater Jaw`]} ~~ Blank Aug Gem
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mana Siphon`, `Unstable Mana Stone`]} ~~ Blank Aug Gem
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mana Siphon`, `Unstable Mana Stone`]} ~~ Society
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kervim'telek`, listcreate[`Essence of Norshuntyr`, `Essence of Night Brier`, `Essence of Wind Fury`, `Essence of Zerzelikyr`]]} ~~ Virindian Rise
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `The Deep`, `Altered Dark Remoran Fin`]} ~~ Society
 
