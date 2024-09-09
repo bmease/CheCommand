@@ -79,7 +79,7 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[TYPE_STRING, 3]}
 				DoExpr {setvar[TYPE_OBJECT, 7]}
 
-				DoExpr {setvar[CLOSE_BLUE, 7]}
+				DoExpr {setvar[CLOSE_BLUE, 15]}
 
 				DoExpr {setvar[CHARACTER_NAME, getcharstringprop[$STRING_PROP_NAME]]}
 
@@ -207,8 +207,8 @@ STATE: {Idle} ~~ {
 
 	~~ Use VR portal
 	IF:	All
-			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]]==$CLOSE_BLUE}
-			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]],getplayercoordinates[]]<15}
+			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]]==$OBJECT}
+			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]],getplayercoordinates[]]<$CLOSE_BLUE}
 		DO:	SetState {UseVRPortal}
 
 	~~ Handle Auto Timers
