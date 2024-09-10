@@ -802,7 +802,7 @@ STATE: {Face} ~~ {
 
 	IF:	ChatMatch {^You think, "Turning Success"}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished turning\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished turning\`]`, `false`]}
 				DoExpr {clearvar[direction]}
 				CallState {EnableOptions} {Idle}
 
@@ -851,7 +851,7 @@ STATE: {Jump} ~~ {
 	~~ Jump success
 	IF:	ChatMatch {^You think, "Jumper Success"}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished jumping\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished jumping\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 	~~ Jump failure
@@ -937,7 +937,7 @@ STATE: {AutoGive} ~~ {
 	~~ No NPC nearby with the Autogive name
 	IF: Not Expr {dicthaskey[$AUTOGIVE_PROFILE, wobjectgetname[wobjectfindnearestbyobjectclass[$NPC]]]}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, No autogive profile for \`+wobjectgetname[wobjectfindnearestbyobjectclass[$NPC]]]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No autogive profile for \`+wobjectgetname[wobjectfindnearestbyobjectclass[$NPC]]]`, `false`]}
 				SetState {Idle}
 
 	~~ Found NPC hand off to Give
@@ -965,7 +965,7 @@ STATE: {Give} ~~ {
 			ChatMatch {^You hand over}
 			ChatMatch {^You allow}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Gave \`+$item]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Gave \`+$item]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 	~~ Handle $item being a list
@@ -980,7 +980,7 @@ STATE: {Give} ~~ {
 			SecsInStateGE 1
 			Expr {wobjectfindininventorybynamerx[`^`+$item+`$`]==false}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, I do not have \`+$item]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I do not have \`+$item]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 	~~ Give to nearest Player
@@ -1002,7 +1002,7 @@ STATE: {Give} ~~ {
 	~~ Handle no player or NPC with that name nearby
 	IF: Expr {wobjectfindnearestbynameandobjectclass[$PLAYER, $name]==false&&wobjectfindnearestbynameandobjectclass[$NPC, $name]==false}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, I can't find \`+$name]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I can't find \`+$name]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 ~~ }
@@ -1187,7 +1187,7 @@ STATE: {UsePortal} ~~ {
 				Expr {wobjectfindnearestbyobjectclass[$NPC]==false} ~~ no NPC detected
 				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]<=@CCPortalThreshold} ~~ no NPC within threshold
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, No portal within range!\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No portal within range!\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 	~~ Use the Portal
@@ -1199,7 +1199,7 @@ STATE: {UsePortal} ~~ {
 	~~ Finished using portal; reset options to what they originally were
 	IF:	Expr {isportaling[]==true}
 		DO:	DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished using portal\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using portal\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 ~~ }
@@ -1221,7 +1221,7 @@ STATE: {UsePortalNPC} ~~ {
 			Expr {wobjecthasdata[wobjectfindnearestbyobjectclass[$NPC]]==true}
 			Not Expr {istrue[wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $STRING_PROP_DESCRIPTION]#portal]}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, No portal within range!\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No portal within range!\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 	~~ Use the NPC Portal
@@ -1236,7 +1236,7 @@ STATE: {UsePortalNPC} ~~ {
 	~~ Finished using portal; reset options to what they originally were
 	IF:	Expr {isportaling[]==true}
 		DO:	DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished using portal\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using portal\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 ~~ }
@@ -1260,7 +1260,7 @@ STATE: {UseVRPortal} ~~ {
 	~~ Finished using portal; reset options to what they originally were
 	IF:	Expr {isportaling[]==true}
 		DO:	DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished using VR portal\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using VR portal\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 ~~ }
@@ -1333,7 +1333,7 @@ STATE: {HandleRecall} ~~ {
 	~~ Return to Idle if the spell isn't known
 	IF: Not Expr {getisspellknown[$CCRecallSpell]}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, I do not know this recall spell\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I do not know this recall spell\`]`, `false`]}
 				SetState {Idle}
 
 	~~ Disable all options
@@ -1349,7 +1349,7 @@ STATE: {HandleRecall} ~~ {
 	~~ Finished recalling; reset EnableNav to what it originally was
 	IF: Expr {isportaling[]==true}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished recalling\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished recalling\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 ~~}
@@ -1390,7 +1390,7 @@ STATE: {UseNPC} ~~ {
 			ChatMatch {^You have killed} ~~ Slain Protectorate
 			IntoPortal
 		DO:	DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Talked to \`+$name]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Talked to \`+$name]`, `false`]}
 				CallState {EnableOptions} {Idle}
 
 	~~ Use NPC
@@ -1415,7 +1415,7 @@ STATE: {UseVendor} ~~ {
 	~~ Autovendor finished
 	IF:	ChatMatch {^You think, "AutoVendor finished}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished vending with \`+$name]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished vending with \`+$name]`, `false`]}
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$VENDOR]]} ~~ Close the vendor window
 				DoExpr {clearvar[open]}
 				CallState {EnableOptions} {Idle}
@@ -1446,7 +1446,7 @@ STATE: {ReadContracts} ~~ {
 	~~ No contracts left return to Idle
 	IF: Expr {getitemcountininventorybynamerx[`(Hunting\: Lost City of Neftet)|(Contract for)`]==0}
 		DO: DoAll
-				DoExpr {ifthen[@CCConfirm==true&&testvar[`capturegroup_name`]==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished reading contracts\`]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished reading contracts\`]`, `false`]}
 				SetState {Idle}
 
 ~~ }
