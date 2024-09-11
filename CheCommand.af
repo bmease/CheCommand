@@ -108,6 +108,9 @@ STATE: {Default} ~~ {
 				~~ Distance to use the nearest Portal
 				DoExpr {setpvar[CCPortalThreshold, ifthen[testpvar[CCPortalThreshold], `@CCPortalThreshold`, `30`]]}
 
+				~~ Distance the leader needs to be within to leave LeaderCheck
+				DoExpr {setpvar[CCLeaderCheckDistance, ifthen[testpvar[CCLeaderCheckDistance], `@CCLeaderCheckDistance`, `60`]]}
+
 				~~ Are vitals on or off
 				DoExpr {setpvar[CCVitals, ifthen[testpvar[CCVitals], `@CCVitals`, `true`]]}
 
@@ -1188,7 +1191,7 @@ STATE: {UsePortal} ~~ {
 				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]<=@CCPortalThreshold} ~~ no NPC within threshold
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No portal within range!\`]`, `false`]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
 
 	~~ Use the Portal
 	IF:	Expr {isportaling[]==false}
@@ -1200,7 +1203,7 @@ STATE: {UsePortal} ~~ {
 	IF:	Expr {isportaling[]==true}
 		DO:	DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using portal\`]`, `false`]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
 
 ~~ }
 
@@ -1222,7 +1225,7 @@ STATE: {UsePortalNPC} ~~ {
 			Not Expr {istrue[wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $STRING_PROP_DESCRIPTION]#portal]}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No portal within range!\`]`, `false`]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
 
 	~~ Use the NPC Portal
 	IF:	All
@@ -1233,11 +1236,11 @@ STATE: {UsePortalNPC} ~~ {
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$NPC]]}
 				SetState {UsePortalNPC}
 
-	~~ Finished using portal; reset options to what they originally were
+	~~ Finished using portal; go to LeaderCheck
 	IF:	Expr {isportaling[]==true}
 		DO:	DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using portal\`]`, `false`]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
 
 ~~ }
 
@@ -1257,11 +1260,33 @@ STATE: {UseVRPortal} ~~ {
 				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]]}
 				SetState {UseVRPortal}
 
-	~~ Finished using portal; reset options to what they originally were
+	~~ Finished using portal; go to LeaderCheck
 	IF:	Expr {isportaling[]==true}
 		DO:	DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using VR portal\`]`, `false`]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
+
+~~ }
+
+
+STATE: {LeaderCheck} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ If leader go straight to EnableOptions
+	IF: Expr {@CCLeader==$CHARACTER_NAME}
+		DO: CallState {EnableOptions} {Idle}
+
+	~~ When leader is nearby leave check
+	IF: All
+			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]]==$TYPE_OBJECT}  ~~ CCLeader WObject exists
+			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]], getplayercoordinates[]]<=@CCLeaderCheckDistance}  ~~ CCLeader is nearby
+		DO: CallState {EnableOptions} {Idle}
+
+	~~ Warn if in the check too long
+	IF:	SecsInStateGE 15
+		DO: DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Waiting for nearby leader for 15 seconds\`]`, `false`]}	
 
 ~~ }
 
@@ -1346,11 +1371,11 @@ STATE: {HandleRecall} ~~ {
 				DoExpr {actiontrycastbyid[$CCRecallSpell]}
 				SetState {HandleRecall}
 
-	~~ Finished recalling; reset EnableNav to what it originally was
+	~~ Finished recalling; go to LeaderCheck
 	IF: Expr {isportaling[]==true}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished recalling\`]`, `false`]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
 
 ~~}
 
@@ -1391,7 +1416,7 @@ STATE: {UseNPC} ~~ {
 			IntoPortal
 		DO:	DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Talked to \`+$name]`, `false`]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
 
 	~~ Use NPC
 	IF: Always
@@ -1418,7 +1443,7 @@ STATE: {UseVendor} ~~ {
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished vending with \`+$name]`, `false`]}
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$VENDOR]]} ~~ Close the vendor window
 				DoExpr {clearvar[open]}
-				CallState {EnableOptions} {Idle}
+				SetState {LeaderCheck}
 
 	~~ Use Vendor
 	IF: VendorClosed 
