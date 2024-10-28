@@ -506,6 +506,7 @@ STATE: {HandleNavigation} ~~ {
 		DO: DoAll
 				DoExpr {echo[`#navto aphus lassel: Navigate to Aphus Lassel (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto aerlinthe: Navigate to Aerlinthe (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto colosseum: Navigate to Colosseum (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto comps: Navigate to Haven and purchase comps`, $COLOR_INFO]}
 				DoExpr {echo[`#navto couch: Navigate to Haven and sit on the couch`, $COLOR_INFO]}
 				DoExpr {echo[`#navto frozen valley: Navigate to Frozen Valley (requires flagging)`, $COLOR_INFO]}
@@ -528,6 +529,12 @@ STATE: {HandleNavigation} ~~ {
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavRecomp`]}
 				SetState {CallMeta}
+
+	~~ Handle `#navto colosseum`
+	IF: Expr {(colosseum)#getvar[capturegroup_navdestination]}	
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=4213} ~~ Colosseum Recall
+				SetState {HandleRecall}
 
 	~~ Handle `#navto couch`
 	IF: Expr {(couch)#getvar[capturegroup_navdestination]}	
