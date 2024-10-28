@@ -654,6 +654,7 @@ STATE: {HandleKilltask} ~~ {
 
 	IF: Expr {(help)#getvar[capturegroup_ktaction]}
 		DO: DoAll
+				DoExpr {echo[`#killtask all: Begins all killtask loops`, $COLOR_INFO]}
 				DoExpr {echo[`#killtask check: Checks remaining kill tasks (NOT IMPLEMENTED)`, $COLOR_INFO]}
 				DoExpr {echo[`#killtask frozen valley: Begins killtask loop in Frozen Valley`, $COLOR_INFO]}
 				DoExpr {echo[`#killtask neftet: Begins killtask loop in Neftet`, $COLOR_INFO]}
@@ -663,6 +664,19 @@ STATE: {HandleKilltask} ~~ {
 	IF: Expr {(check)#getvar[capturegroup_ktaction]}
 		DO: DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskCheck`]}
+				SetState {CallMeta}
+
+	~~ Handle `#killtask all`
+	IF: Expr {(all)#getvar[capturegroup_ktaction]}	
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavFrozenValley`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFrozenValley`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavNeftet`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskNeftet`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
 				SetState {CallMeta}
 
 	~~ Handle `#killtask frozen valley`
