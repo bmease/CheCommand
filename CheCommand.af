@@ -114,6 +114,9 @@ STATE: {Default} ~~ {
 				~~ Are vitals on or off
 				DoExpr {setpvar[CCVitals, ifthen[testpvar[CCVitals], `@CCVitals`, `true`]]}
 
+				~~ Equip Item for handin
+				DoExpr {setpvar[CCEquipOnTurnin, ifthen[testpvar[CCEquipOnTurnin], `@CCEquipOnTurnin`, `false`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -962,6 +965,11 @@ STATE: {Give} ~~ {
 	IF: Expr {testvar[OptionsSet]==false}
 		DO: CallState {DisableOptions} {Give}
 
+	~~ If set equip item before giving
+	IF: Expr {@CCEquipOnTurnin!=false} 
+		DO: DoAll
+				DoExpr {actiontryuseitem[@CCEquipOnTurnin]}
+
 	~~ Successfully handed off item
 	IF: Any
 			ChatMatch {^You give}
@@ -1389,6 +1397,15 @@ STATE: {UseNPC} ~~ {
 	IF: Expr {testvar[OptionsSet]==false}
 		DO: CallState {DisableOptions} {UseNPC}
 
+	~~ If set equip item to talk to npc
+	IF: All
+			Expr {@CCEquipOnTurnin!=false} 
+			Expr {wobjectfindnearestbyobjectclass[31]!=@CCEquipOnTurnin}
+			Expr {testvar[equipped]==false}
+		DO: DoAll
+				DoExpr {actiontryuseitem[@CCEquipOnTurnin]}
+				DoExpr {$equipped=true}
+
 	~~ Stop using NPC if you receieve a response
 	IF:	Any
 			All
@@ -1416,6 +1433,7 @@ STATE: {UseNPC} ~~ {
 			IntoPortal
 		DO:	DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Talked to \`+$name]`, `false`]}
+				DoExpr {clearvar[equipped]}
 				SetState {LeaderCheck}
 
 	~~ Use NPC
