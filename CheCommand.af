@@ -304,6 +304,15 @@ STATE: {Idle} ~~ {
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleJumping}	
+	
+	~~ Handle Picking up items
+	IF: All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#pickup (?<itemtext>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandlePickup}	
 
 	~~ Handle Auto Giving items
 	IF: All
@@ -903,6 +912,55 @@ STATE: {Jump} ~~ {
 	~~ Jump failure
 	IF:	ChatMatch {^You think, "You have failed to jump too many times}
 		DO:	SetState {Jump}
+
+~~ }
+
+
+STATE: {HandlePickup} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	IF: Always
+		DO: DoAll
+				DoExpr {$item=$capturegroup_itemtext}
+				SetState {Pickup}
+
+~~ }
+
+
+STATE: {Pickup} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	DoAll
+				DoExpr {clearvar[itemCount]}
+				DoExpr {clearvar[item]}
+				SetState {Idle}
+
+	~~ Disable all options
+	IF: Expr {testvar[OptionsSet]==false}
+		DO: CallState {DisableOptions} {Pickup}
+
+	~~ Set the amount of items you have
+	IF: Expr {testvar[itemCount]==false}
+		DO: DoExpr {$itemCount=getitemcountininventorybynamerx[$item]}
+
+	~~ Stop picking up if your items are above the initial value or ChatMatch
+	IF: Any
+			Expr {getitemcountininventorybynamerx[$item]>$itemCount}
+			ChatMatch {You have solved}
+			ChatMatch {You cannot pick up more than}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Picked up \`+$item]`, `false`]}
+				DoExpr {clearvar[itemCount]}
+				DoExpr {clearvar[item]}
+				CallState {EnableOptions} {Idle}
+
+	~~ Pickup the item from the landscape
+	IF: Always
+		DO: DoAll
+				ChatExpr {`/ub uselp`+$item}
+				SetState {Pickup}
 
 ~~ }
 
