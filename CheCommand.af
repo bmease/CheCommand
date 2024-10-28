@@ -131,7 +131,6 @@ STATE: {Default} ~~ {
 				~~ DoExpr {listadd[$AutoTimers, listcreate[2, 28, 00, `AM`, listcreate[`CheCommandNavRecomp`]]]}
 				~~ DoExpr {listadd[$AutoTimers, listcreate[2, 29, 00, `AM`, listcreate[`CheCommandNavRecomp`]]]}
 
-
 	~~ Open Remote view
 	IF: Always
 		DO:	CreateView {Main} {:CheCommand-Main.xml}
@@ -175,9 +174,29 @@ STATE: {Init} ~~ {
 				DoExpr {$InitialPosition=getplayercoordinates[]}
 				DoExpr {$InitialDistance=0}
 
+	IF: Any
+			Expr {listcount[@CCCharacterList]==0}
+			Expr {@CCFellowname==`Not Set`}
+		DO: SetState {Setup}
+
 	IF: Always
 		DO: SetState {Idle}
 
+~~ }
+
+
+STATE: {Setup} ~~ {
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[`SETUP:`, $COLOR_DEBUG]}
+				DoExpr {echo[`1) Add characters: /ub mexec @CCCharacterList=listcreate[\`First Character\`, \`Second Character\`, \`Third Character\`]`, $COLOR_DEBUG]}
+				DoExpr {echo[`2) Set fellow name: /ub mexec @CCFellowname=\`Example Army\``, $COLOR_DEBUG]}
+				DoExpr {echo[`3) Restart: !start`, $COLOR_DEBUG]}
+
+	IF:	ChatMatch {![Ss]tart}
+		DO: DoAll
+				DoExpr {@CCLeader=listgetitem[@CCCharacterList, 0]}
+				Chat {/vt meta load CheCommand}
 ~~ }
 
 
