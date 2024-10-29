@@ -957,9 +957,9 @@ STATE: {Pickup} ~~ {
 				CallState {EnableOptions} {Idle}
 
 	~~ Pickup the item from the landscape
-	IF: Always
+	IF: Expr {getitemcountininventorybynamerx[$item]==$itemCount} 
 		DO: DoAll
-				ChatExpr {`/ub uselp`+$item}
+				DoExpr {actiontryuseitem[listpop[wobjectfindalllandscapebynamerx[$item], 0]]}
 				SetState {Pickup}
 
 ~~ }
