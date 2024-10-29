@@ -120,6 +120,9 @@ STATE: {Default} ~~ {
 				~~ Are the followers staying
 				DoExpr {setpvar[CCStay, ifthen[testpvar[CCStay], `@CCStay`, `true`]]}
 
+				~~ Announce VR Blue
+				DoExpr {setpvar[CCAnnounceVRBlue, ifthen[testpvar[CCAnnounceVRBlue], `@CCAnnounceVRBlue`, `true`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -176,6 +179,8 @@ STATE: {Init} ~~ {
 				DoExpr {setvar[StuckTimer, stopwatchstart[stopwatchcreate[]]]}
 				DoExpr {$InitialPosition=getplayercoordinates[]}
 				DoExpr {$InitialDistance=0}
+
+				DoExpr {setvar[BlueSeen, listcreate[]]}
 
 	IF: Any
 			Expr {listcount[@CCCharacterList]==0}
@@ -239,6 +244,22 @@ STATE: {Idle} ~~ {
 			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]]==$OBJECT}
 			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]],getplayercoordinates[]]<$CLOSE_BLUE}
 		DO:	SetState {UseVRPortal}
+
+	~~ Find nearest Blue
+	IF: All
+			Expr {@CCAnnounceVRBlue==true}
+			Expr {wobjectfindnearestbynameandobjectclass[$NPC, `Fiery Remains`]}
+			Not Expr {listcontains[$BlueSeen, wobjectgetid[wobjectfindnearestbynameandobjectclass[$NPC, `Fiery Remains`]]]}
+		DO: DoAll
+				~~ coordinateparse in VTank does not output the height so we turn off the PatchExpressionEngine to use VTank instead of UtilityBelt
+				Chat {/ub opt set VTank.PatchExpressionEngine false}
+				ChatExpr {`Found Blue at `+coordinatetostring[coordinateparse[coordinatetostring[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[37, `Fiery Remains`]]]]]}  ~~ Can't use getvar for some reason throws error. 37=NPC
+				Chat {/ub opt set VTank.PatchExpressionEngine true}
+				
+				ChatExpr {`/goarrow to `+coordinatetostring[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$NPC, `Fiery Remains`]]]}
+				
+				DoExpr {listadd[$BlueSeen, wobjectgetid[wobjectfindnearestbynameandobjectclass[$NPC, `Fiery Remains`]]]}
+				SetState {Idle}
 
 	~~ Handle Auto Timers
 	IF: All
