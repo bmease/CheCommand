@@ -935,6 +935,7 @@ STATE: {Pickup} ~~ {
 		DO:	DoAll
 				DoExpr {clearvar[itemCount]}
 				DoExpr {clearvar[item]}
+				DoExpr {clearvar[hasNearbyItem]}
 				SetState {Idle}
 
 	~~ Disable all options
@@ -946,7 +947,9 @@ STATE: {Pickup} ~~ {
 		DO: DoExpr {$itemCount=getitemcountininventorybynamerx[$item]}
 
 	~~ Handle no items nearby
-	IF: Expr {listcount[wobjectfindalllandscapebynamerx[$item]]==0}
+	IF: All
+			Expr {testvar[hasNearbyItem]==false]}
+			Expr {listcount[wobjectfindalllandscapebynamerx[$item]]==0}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No \`+$item+\` nearby\`]`, `false`]}
 				CallState {EnableOptions} {Idle}
@@ -960,12 +963,16 @@ STATE: {Pickup} ~~ {
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Picked up \`+$item]`, `false`]}
 				DoExpr {clearvar[itemCount]}
 				DoExpr {clearvar[item]}
+				DoExpr {clearvar[hasNearbyItem]}
 				CallState {EnableOptions} {Idle}
 
 	~~ Pickup the item from the landscape
-	IF: Expr {getitemcountininventorybynamerx[$item]==$itemCount} 
+	IF: All
+			Expr {listcount[wobjectfindalllandscapebynamerx[$item]]>0}
+			Expr {getitemcountininventorybynamerx[$item]==$itemCount} 
 		DO: DoAll
 				DoExpr {actiontryuseitem[listpop[wobjectfindalllandscapebynamerx[$item], 0]]}
+				DoExpr {setvar[hasNearbyItem, true]}
 				SetState {Pickup}
 
 ~~ }
