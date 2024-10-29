@@ -117,6 +117,9 @@ STATE: {Default} ~~ {
 				~~ Equip Item for handin
 				DoExpr {setpvar[CCEquipOnTurnin, ifthen[testpvar[CCEquipOnTurnin], `@CCEquipOnTurnin`, `false`]]}
 
+				~~ Are the followers staying
+				DoExpr {setpvar[CCStay, ifthen[testpvar[CCStay], `@CCStay`, `true`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -204,7 +207,8 @@ STATE: {Idle} ~~ {
 
 	~~ Announce if stuck
 	IF: All
-			Expr {@CCLeader!=$CHARACTER_NAME}
+			Expr {@CCStay==false} ~~ Characters are following
+			Expr {@CCLeader!=$CHARACTER_NAME} ~~ Not the leader
 			Expr {getobjectinternaltype[$leaderObj]==$TYPE_OBJECT} ~~ Leader exists
 			Expr {stopwatchelapsedseconds[$StuckTimer]>=@CCStuckAnnounceDelay} ~~ Announce when the $StuckTimer is above the delay
 			Expr {coordinatedistancewithz[$InitialPosition, getplayercoordinates[]]<=@CCStuckThreshold} ~~ Character has not moved past the threshold
@@ -424,6 +428,7 @@ STATE: {HandleActions} ~~ {
 	IF: Expr {(stay)#getvar[capturegroup_actiontext]}	
 		DO:	DoAll
 				EmbedNav Empty {[None]}
+				DoExpr {@CCStay=true}
 				SetState {Idle}
 
 	~~ Handle `#action follow` for followers
@@ -434,6 +439,7 @@ STATE: {HandleActions} ~~ {
 				SetOpt {NavPriorityBoost} {true}
 				ChatExpr {`/ub follow `+$capturegroup_name}
 				DoExpr {@CCLeader=$capturegroup_name}
+				DoExpr {@CCStay=false}
 				SetState {Idle}
 
 	~~ Handle `#action follow` for person who issued command
