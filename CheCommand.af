@@ -945,6 +945,12 @@ STATE: {Pickup} ~~ {
 	IF: Expr {testvar[itemCount]==false}
 		DO: DoExpr {$itemCount=getitemcountininventorybynamerx[$item]}
 
+	~~ Handle no items nearby
+	IF: Expr {listcount[wobjectfindalllandscapebynamerx[$item]]==0}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No \`+$item+\` nearby\`]`, `false`]}
+				CallState {EnableOptions} {Idle}
+
 	~~ Stop picking up if your items are above the initial value or ChatMatch
 	IF: Any
 			Expr {getitemcountininventorybynamerx[$item]>$itemCount}
