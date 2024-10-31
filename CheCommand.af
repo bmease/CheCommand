@@ -139,6 +139,15 @@ STATE: {Default} ~~ {
 				~~ DoExpr {listadd[$AutoTimers, listcreate[2, 28, 00, `AM`, listcreate[`CheCommandNavRecomp`]]]}
 				~~ DoExpr {listadd[$AutoTimers, listcreate[2, 29, 00, `AM`, listcreate[`CheCommandNavRecomp`]]]}
 
+				~~ Nav Routes
+				~~ Keys are landcells in hexidecimal format, values are the name of the nav file without the file extension
+				DoExpr {setvar[CCRoutes, dictcreate[]]}
+				DoExpr {dictadditem[$CCRoutes, `59540817`, `Catacombs of Torment`]}
+				DoExpr {dictadditem[$CCRoutes, `002C029C`, `Forgotten Chasm`]}
+				DoExpr {dictadditem[$CCRoutes, `472D0107`, `Massilor's Crypt`]}
+				DoExpr {dictadditem[$CCRoutes, `00060100`, `Western Power Forge`]}
+				DoExpr {dictadditem[$CCRoutes, `002E02D1`, `Feeding Tube`]}
+
 	~~ Open Remote view
 	IF: Always
 		DO:	CreateView {Main} {:CheCommand-Main.xml}
@@ -294,6 +303,14 @@ STATE: {Idle} ~~ {
 			Expr {listcount[$FoundTimers]>0}
 		DO: SetState {HandleTimers} 
 
+	~~ Display message if route is available
+	IF: All
+			Expr {listcount[listfilter[dictkeys[$CCRoutes], `cstrf[getplayerlandcell[], \`X8\`]==$1`]]>0}
+			ExitPortal	
+		DO: DoAll
+				DoExpr {echo[`[INFO] Available route found!`, $COLOR_INFO]}
+				SetState {Idle}
+
 	~~ Handle Actions
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#action (?<actiontext>.*)\"$} {}
@@ -311,6 +328,15 @@ STATE: {Idle} ~~ {
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleNavigation}	
+
+	~~ Handle Routes
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#route\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleRoute}	
 
 	~~ Handle Killtasks
 	IF:	All
@@ -724,6 +750,28 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {$LEVEL_WARN>=@CCDebug}
 		DO: DoAll
 				DoExpr {echo[`[WARN] No matching destination for #navto`, $COLOR_WARN]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {HandleRoute} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ No routes found, show warning
+	IF: Expr {listcount[listfilter[dictkeys[$CCRoutes], `cstrf[getplayerlandcell[], \`X8\`]==$1`]]==0}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No matching routes found for `+cstrf[getplayerlandcell[], `X8`], $COLOR_WARN]}
+				SetState {Idle}
+
+	~~ Route found, load route and start navigation
+	IF: Expr {listcount[listfilter[dictkeys[$CCRoutes], `cstrf[getplayerlandcell[], \`X8\`]==$1`]]>0}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Loading route: \`+dictgetitem[$CCRoutes, cstrf[getplayerlandcell[], \`X8\`]]]`, `false`]}
+				ChatExpr {`/vt nav load `+dictgetitem[$CCRoutes, cstrf[getplayerlandcell[], `X8`]]}
+				SetOpt {EnableNav} {True}
 				SetState {Idle}
 
 ~~ }
