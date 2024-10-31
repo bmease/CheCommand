@@ -263,11 +263,30 @@ STATE: {Idle} ~~ {
 				DoExpr {listadd[$BlueSeen, wobjectgetid[wobjectfindnearestbynameandobjectclass[$NPC, `Fiery Remains`]]]}
 				SetState {Idle}
 
-	~~ Use Rynthid Weapons portal when it opens
+	~~ Start stopwatch when Rynthid Weapons greentext appears
+	IF: ChatMatch {^With the last of the Warding Crystals shattered}
+		DO: DoAll
+				DoExpr {setvar[RynthidPortalWait, stopwatchstart[stopwatchcreate[]]]}
+				SetState {Idle} 
+
+	~~ Use Rynthid Weapons portal after the stopwatch expires
 	IF: All
-			ChatMatch {^With the last of the Warding Crystals shattered}
+			Expr {testvar[RynthidPortalWait]!=0}
+			Expr {stopwatchelapsedseconds[$RynthidPortalWait]>=10}
+			Expr {wobjectfindnearestbytemplatetype[$RYNTHID_WEAPONS_PORTAL]!=0}
 			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbytemplatetype[$RYNTHID_WEAPONS_PORTAL]], getplayercoordinates[]]<=@CCPortalThreshold}
-		DO: SetState {UsePortal} 
+		DO: DoAll
+				DoExpr {clearvar[RynthidPortalWait]}
+				SetState {UsePortal} 
+
+	~~ Clear Rynthid Weapons stopwatch if not within range
+	IF: All
+			Expr {testvar[RynthidPortalWait]!=0}
+			Expr {stopwatchelapsedseconds[$RynthidPortalWait]>=15}
+			Expr {wobjectfindnearestbytemplatetype[$RYNTHID_WEAPONS_PORTAL]==0}
+		DO: DoAll
+				DoExpr {clearvar[RynthidPortalWait]}
+				SetState {UsePortal} 
 
 	~~ Handle Auto Timers
 	IF: All
