@@ -772,6 +772,7 @@ STATE: {HandleRoute} ~~ {
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Loading route: \`+dictgetitem[$CCRoutes, cstrf[getplayerlandcell[], \`X8\`]]]`, `false`]}
 				ChatExpr {`/vt nav load `+dictgetitem[$CCRoutes, cstrf[getplayerlandcell[], `X8`]]}
 				SetOpt {EnableNav} {True}
+				SetOpt {NavPriorityBoost} {False}
 				SetState {Idle}
 
 ~~ }
