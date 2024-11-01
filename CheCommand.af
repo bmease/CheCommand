@@ -125,6 +125,9 @@ STATE: {Default} ~~ {
 				~~ Announce VR Blue
 				DoExpr {setpvar[CCAnnounceVRBlue, ifthen[testpvar[CCAnnounceVRBlue], `@CCAnnounceVRBlue`, `true`]]}
 
+				~~ Use Rynthid Weapons Portal
+				DoExpr {setpvar[CCUseRynthidWeaponsPortal, ifthen[testpvar[CCUseRynthidWeaponsPortal], `@CCUseRynthidWeaponsPortal`, `true`]]}
+
 				~~ Use Auto Timers
 				DoExpr {setpvar[CCAutoTimers, ifthen[testpvar[CCAutoTimers], `@CCAutoTimers`, `true`]]}
 
@@ -276,13 +279,16 @@ STATE: {Idle} ~~ {
 				SetState {Idle}
 
 	~~ Start stopwatch when Rynthid Weapons greentext appears
-	IF: ChatMatch {^With the last of the Warding Crystals shattered}
+	IF: All
+			Expr {@CCUseRynthidWeaponsPortal==true}
+			ChatMatch {^With the last of the Warding Crystals shattered}
 		DO: DoAll
 				DoExpr {setvar[RynthidPortalWait, stopwatchstart[stopwatchcreate[]]]}
 				SetState {Idle} 
 
 	~~ Use Rynthid Weapons portal after the stopwatch expires
 	IF: All
+			Expr {@CCUseRynthidWeaponsPortal==true}
 			Expr {testvar[RynthidPortalWait]!=0}
 			Expr {stopwatchelapsedseconds[$RynthidPortalWait]>=10}
 			Expr {wobjectfindnearestbytemplatetype[$RYNTHID_WEAPONS_PORTAL]!=0}
@@ -293,6 +299,7 @@ STATE: {Idle} ~~ {
 
 	~~ Clear Rynthid Weapons stopwatch if not within range
 	IF: All
+			Expr {@CCUseRynthidWeaponsPortal==true}
 			Expr {testvar[RynthidPortalWait]!=0}
 			Expr {stopwatchelapsedseconds[$RynthidPortalWait]>=15}
 			Expr {wobjectfindnearestbytemplatetype[$RYNTHID_WEAPONS_PORTAL]==0}
