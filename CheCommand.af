@@ -281,6 +281,7 @@ STATE: {Idle} ~~ {
 
 	~~ Start stopwatch when Rynthid Weapons greentext appears
 	IF: All
+			CellE 2D310025  ~~ Next to Rynthid Weapons Portal
 			Expr {@CCUseRynthidWeaponsPortal==true}
 			ChatMatch {^With the last of the Warding Crystals shattered}
 		DO: DoAll
@@ -289,6 +290,7 @@ STATE: {Idle} ~~ {
 
 	~~ Use Rynthid Weapons portal after the stopwatch expires
 	IF: All
+			CellE 2D310025  ~~ Next to Rynthid Weapons Portal
 			Expr {@CCUseRynthidWeaponsPortal==true}
 			Expr {testvar[RynthidPortalWait]!=0}
 			Expr {stopwatchelapsedseconds[$RynthidPortalWait]>=10}
