@@ -153,6 +153,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$CCRoutes, `472D0107`, `Massilor's Crypt`]}
 				DoExpr {dictadditem[$CCRoutes, `00060100`, `Western Power Forge`]}
 				DoExpr {dictadditem[$CCRoutes, `002E02D1`, `Feeding Tube`]}
+				DoExpr {dictadditem[$CCRoutes, `5879052B`, `Path of Rage`]}
 
 	~~ Open Remote view
 	IF: Always
