@@ -1124,7 +1124,7 @@ STATE: {AutoGive} ~~ {
 
 				~~ Legendary Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Uber P`, `Letter from Mouf`]} ~~ Rescuing Mouf P
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mr. P`, `Letter from Mouf and Uber P`]} ~~ Rescuing Mouf P
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mr. P`, listcreate[`Letter from Mouf and Uber P`, `Pet Mouf Igloo`]]} ~~ Rescuing Mouf P
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kraytuss Nallah`, `Bone Fragment from Shikken Moriyaki`]} ~~ Serpent Burial Grounds
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Collector Golem`, listcreate[`Glowing Statue Shard`, `Essence of the Sundered`, `Empowered Empyrean Robe`]]} ~~ Saving Asheron
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fanzen San the Translator`, listcreate[`Complete Page of Lost Lore`, `Orders for Zrikux`]]} ~~ Lost Lore, Falacot Depot
