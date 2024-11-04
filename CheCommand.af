@@ -632,8 +632,9 @@ STATE: {HandleNavigation} ~~ {
 
 	IF: Expr {(help)#getvar[capturegroup_navdestination]}
 		DO: DoAll
-				DoExpr {echo[`#navto aphus lassel: Navigate to Aphus Lassel (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto aerlinthe: Navigate to Aerlinthe (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto aphus lassel: Navigate to Aphus Lassel (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto asherons castle: Navigate to Asheron's Castle`, $COLOR_INFO]}
 				DoExpr {echo[`#navto colosseum: Navigate to Colosseum (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto comps: Navigate to Haven and purchase comps`, $COLOR_INFO]}
 				DoExpr {echo[`#navto couch: Navigate to Haven and sit on the couch`, $COLOR_INFO]}
@@ -668,6 +669,12 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {(couch)#getvar[capturegroup_navdestination]}	
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavChair`]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto asheron castle`
+	IF: Expr {(asherons castle)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavAsheronsCastle`]}
 				SetState {CallMeta}
 
 	~~ Handle `#navto frozen valley`
