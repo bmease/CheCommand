@@ -180,7 +180,9 @@ STATE: {Init} ~~ {
 		DO: DoExpr {setvar[MetaCallQueue, listcreate[]]}
 
 	~~ Show Debug info about $MetaCallQueue
-	IF: Expr {$LEVEL_DEBUG>=@CCDebug}
+	IF: All
+			Expr {listcount[$MetaCallQueue]>0}
+			Expr {$LEVEL_DEBUG>=@CCDebug}
 		DO: DoAll
 				DoExpr {echo[`[DEBUG] $MetaCallQueue => `+$MetaCallQueue, $COLOR_DEBUG]}
 
