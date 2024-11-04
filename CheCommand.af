@@ -1142,14 +1142,14 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Amethyst Annex`, `Shroud of Spite`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Jade Annex`, `Shroud of Envy`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sapphire Annex`, `Shroud of Apathy`]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rinne Gorber`, `Spirit Crystal`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rinne Gorber`, listcreate[`Spirit Crystal`, `Spirited Bloodlust Guard`]]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lady Daenerah`, `Sealed Tome`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mareeno Donn`, `First Lieutenant's Insignia.`]} ~~ Hoshino Infiltration
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fahneph`, `Ancient Falatacot Symbol`]} ~~ Foundry of Izexi
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mhoire Soldier`, `Book`]} ~~ Geraine's Study
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Commander Presk`, `Sealed Scroll for Commander Presk`]} ~~ Lugian Assault
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Raksaa`, `Sealed Scroll for Raksaa`]} ~~ Lugian Assault
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Ol'tra`, `Crimson Scarab`]} ~~ End of Days
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Raksaa`, listcreate[`Sealed Scroll for Raksaa`, `Casting Stone`]]} ~~ Lugian Assault
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Ol'tra`, listcreate[`Crimson Scarab`, `Purified Crimson Scarab`]]} ~~ End of Days
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Morgethais`, `Shard of the Curator of Torment's Mask`]} ~~ Defeating the Curator of Torment
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Spirit of Bist'elle`, `Mirror Shard`]} ~~ Hoshino Must Die
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mortified Soldier`, `Torn Note`]} ~~ Gurog Creation
@@ -1162,6 +1162,8 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kinchou`, `Coded Tanada Scroll`]} ~~ Tanada Intercept
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kousha`, `Tanada Neophyte's Mask`]} ~~ Tanada Slaughter
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Shorikan`, `Spectral Nanjou Zaikan's Sword`]} ~~ Nanjou Stockade
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `El'Yst Maggann`, `Idol of the Recluse`]} ~~ Four Corners
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aetherium Ore`, `Tainted Aetherium Oil`]} ~~ Rynthid Foundry
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
