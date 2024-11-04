@@ -128,6 +128,12 @@ STATE: {Default} ~~ {
 				~~ Use Rynthid Weapons Portal
 				DoExpr {setpvar[CCUseRynthidWeaponsPortal, ifthen[testpvar[CCUseRynthidWeaponsPortal], `@CCUseRynthidWeaponsPortal`, `true`]]}
 
+				~~ Distance to recruit nearby players with `#fellow nearby`
+				DoExpr {setpvar[CCFellowNearbyRecruitDistance, ifthen[testpvar[CCFellowNearbyRecruitDistance], `@CCFellowNearbyRecruitDistance`, `30`]]}
+
+				~~ Maximum fellowship size
+				DoExpr {setpvar[CCMaxFellowshipSize, ifthen[testpvar[CCMaxFellowshipSize], `@CCMaxFellowshipSize`, `9`]]}
+
 				~~ Use Auto Timers
 				DoExpr {setpvar[CCAutoTimers, ifthen[testpvar[CCAutoTimers], `@CCAutoTimers`, `true`]]}
 
@@ -333,6 +339,24 @@ STATE: {Idle} ~~ {
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleActions}	
+
+	~~ Handle `#fellow add`
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#fellow add (?<namerx>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {FellowAdd}
+
+	~~ Handle Fellows
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#fellow (?<fellowtext>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleFellow}
 
 	~~ Handle Navigation
 	IF:	All
@@ -546,33 +570,6 @@ STATE: {HandleActions} ~~ {
 		DO:	DoAll
 				EmbedNav Empty {[None]}
 				DoExpr {@CCLeader=$CHARACTER_NAME}
-				SetState {Idle}
-
-	~~ Handle `#action fellow` for the person who issued the command
-	IF: All
-			Expr {(fellow)#getvar[capturegroup_actiontext]}
-			Expr {$capturegroup_name==false}
-		DO: SetState {CreateFellow}
-
-	~~ Handle `#action fellow` for followers
-	IF: All
-			Expr {(fellow)#getvar[capturegroup_actiontext]}
-			Expr {$capturegroup_name!=false}
-		DO: SetState {Idle}
-
-	~~ Handle `#action disband` for leader
-	IF: All
-			Expr {(disband)#getvar[capturegroup_actiontext]}
-			Expr {getfellowshipisleader[]==true}
-		DO: DoAll
-				ChatExpr {`/ub fellow disband`}
-				SetState {Idle}
-
-	~~ Handle `#action disband` for followers
-	IF: All
-			Expr {(disband)#getvar[capturegroup_actiontext]}
-			Expr {getfellowshipisleader[]==false}
-		DO: DoAll
 				SetState {Idle}
 
 	~~ Handle `#action contracts`
@@ -1117,6 +1114,7 @@ STATE: {HandleGive} ~~ {
 
 ~~ }
 
+
 STATE: {AutoGive} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
@@ -1604,7 +1602,104 @@ STATE: {LeaderCheck} ~~ {
 ~~ }
 
 
-STATE: {CreateFellow} ~~ {
+STATE: {HandleFellow} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	IF: Expr {(help)#getvar[capturegroup_fellowtext]}
+		DO: DoAll
+				DoExpr {echo[`#fellow add: Add characters by name`, $COLOR_INFO]}
+				DoExpr {echo[`#fellow close: Close the fellow`, $COLOR_INFO]}
+				DoExpr {echo[`#fellow create: Create a fellow and add all characters in @CCCharacterList`, $COLOR_INFO]}
+				DoExpr {echo[`#fellow disband: Disband the fellow`, $COLOR_INFO]}
+				DoExpr {echo[`#fellow nearby: Add all characters close to the issuer of the command`, $COLOR_INFO]}
+				DoExpr {echo[`#fellow open: Open the fellow`, $COLOR_INFO]}
+				DoExpr {echo[`#fellow quit: All characters quit the fellow`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Handle `#fellow close` for the leader
+	IF: All
+			Expr {(close)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==true}
+		DO: DoAll
+				ChatExpr {`/ub fellow close`}
+				SetState {Idle}
+
+	~~ Handle `#fellow close` for followers
+	IF: All
+			Expr {(close)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==false}
+		DO:	SetState {Idle}
+
+	~~ Handle `#fellow create` for the character who issued the command
+	IF: All
+			Expr {(create)#getvar[capturegroup_fellowtext]}
+			Expr {$capturegroup_name==false}
+		DO:	SetState {FellowCreate}
+
+	~~ Handle `#fellow create` for followers
+	IF: All
+			Expr {(create)#getvar[capturegroup_fellowtext]}
+			Expr {$capturegroup_name!=false}
+		DO:	SetState {Idle}
+
+	~~ Handle `#fellow disband` for leader
+	IF: All
+			Expr {(disband)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==true}
+		DO:	DoAll
+				ChatExpr {`/ub fellow disband`}
+				SetState {Idle}
+
+	~~ Handle `#fellow disband` for followers
+	IF: All
+			Expr {(disband)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==false}
+		DO:	SetState {Idle}
+
+	~~ Handle `#fellow nearby` for character who issued the command
+	IF: All
+			Expr {(nearby)#getvar[capturegroup_fellowtext]}
+			Expr {$capturegroup_name==false}
+		DO:	SetState {FellowNearby}
+
+	~~ Handle `#fellow nearby` for followers
+	IF: All
+			Expr {(nearby)#getvar[capturegroup_fellowtext]}
+			Expr {$capturegroup_name!=false}
+		DO:	SetState {Idle}
+
+	~~ Handle `#fellow open` for the leader
+	IF: All
+			Expr {(open)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==true}
+		DO: DoAll
+				ChatExpr {`/ub fellow open`}
+				SetState {Idle}
+
+	~~ Handle `#fellow open` for followers
+	IF: All
+			Expr {(open)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==false}
+		DO:	SetState {Idle}
+
+	~~ Handle `#fellow quit`
+	IF: Expr {(quit)#getvar[capturegroup_fellowtext]}
+		DO:	DoAll
+				ChatExpr {`/ub fellow quit`}
+				SetState {Idle}
+
+	~~ Handle no match for actiontext
+	IF: Expr {$LEVEL_WARN>=@CCDebug}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No matching parameter for #fellow`, $COLOR_WARN]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {FellowCreate} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
@@ -1613,18 +1708,18 @@ STATE: {CreateFellow} ~~ {
 	IF:	Always
 		DO:	ChatExpr {`/ub fellow create `+@CCFellowname}
 
-	~~ If fellow is created move to InviteFellow
+	~~ If fellow is created move to FellowInvite
 	IF:	Expr {getfellowshipstatus[]==1}
-		DO:	SetState {InviteFellow}
+		DO:	SetState {FellowInvite}
 
 	~~ If fellow isn't created try again
 	IF:	SecsInStateGE 1
-		DO:	SetState {CreateFellow}
+		DO:	SetState {FellowCreate}
 
 ~~ }
 
 
-STATE: {InviteFellow} ~~ {
+STATE: {FellowInvite} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
@@ -1646,19 +1741,124 @@ STATE: {InviteFellow} ~~ {
 		DO: DoAll
 				DoExpr {listmap[listcreate[`AllNearbyPlayers`, `AllNearbyCharacterList`, `AllNearbyNotInFellow`, `AllNearbyNotInFellowNotBlacklisted`, `FellowBlacklist`, `name`], `clearvar[$1]`]}
 				SetState {Idle}
-	
-	~~ Blacklist the character if already in a fellow
-	IF: ChatMatch {is already a member of a Fellowship.$}
-		DO: DoAll
-				DoExpr {listadd[$FellowBlacklist, $name]}
-				SetState {InviteFellow}
 
 	~~ Recruit a nearby player in $CCCharacterlist
 	IF: Always
 		DO: DoAll
 				DoExpr {$name=listpop[$AllNearbyNotInFellowNotBlacklisted, 0]}
 				ChatExpr {`/ub fellow recruit `+$name}
-				SetState {InviteFellow}
+				SetState {FellowInvite}
+	
+	~~ Blacklist the character if already in a fellow
+	IF: Any
+			ChatMatch {is already a member of a Fellowship.$}
+			ChatMatch {is not accepting fellowship requests.$}
+		DO: DoAll
+				DoExpr {listadd[$FellowBlacklist, $name]}
+				SetState {FellowInvite}
+
+~~ }
+
+
+STATE: {FellowNearby} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Abort if not in a fellow
+	IF: Expr {getfellowshipstatus[]==false}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[Warn] Aborting, not in a fellow\`, $COLOR_WARN]`, `false`]}
+				SetState {Idle}
+
+	~~ Create blacklist
+	IF: Expr {testvar[FellowBlacklist]==false}
+		DO: DoExpr {$FellowBlacklist=listcreate[]}
+
+	~~ Find all nearby characters
+	IF: Always
+		DO: DoAll
+				DoExpr {$AllNearbyPlayers=listmap[wobjectfindallbyobjectclass[$PLAYER], `wobjectgetstringprop[$1, 1]`]}
+				DoExpr {$AllNearbyExceptSelf=listfilter[$AllNearbyPlayers, `$1!=$CHARACTER_NAME`]}
+				DoExpr {$AllNearbyPlayersWithinRange=listfilter[$AllNearbyExceptSelf, `coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, $1]], getplayercoordinates[]]<@CCFellowNearbyRecruitDistance`]}
+				DoExpr {$AllNearbyNotInFellow=listfilter[$AllNearbyPlayersWithinRange, `listcontains[getfellownames[], $1]==false`]}
+				DoExpr {$AllNearbyNotInFellowNotBlacklisted=listfilter[$AllNearbyNotInFellow, `listcontains[$FellowBlacklist, $1]==false`]}
+
+			~~ Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]],getplayercoordinates[]]<$CLOSE_BLUE}
+
+	~~ Clear variables and return to idle if there are no more characters to add
+	IF: Any
+			Expr {listcount[$AllNearbyNotInFellowNotBlacklisted]==0}
+			Expr {getfellowshipcount[]>=@CCMaxFellowshipSize}
+		DO: DoAll
+				DoExpr {listmap[listcreate[`AllNearbyPlayers`, `AllNearbyExceptSelf`, `AllNearbyPlayersWithinRange`, `AllNearbyNotInFellow`, `AllNearbyNotInFellowNotBlacklisted`, `FellowBlacklist`, `name`], `clearvar[$1]`]}
+				SetState {Idle}
+
+	~~ Recruit a nearby character
+	IF: Always
+		DO: DoAll
+				DoExpr {$name=listpop[$AllNearbyNotInFellowNotBlacklisted, 0]}
+				ChatExpr {`/ub fellow recruit `+$name}
+				SetState {FellowNearby}
+
+	~~ Blacklist the character if already in a fellow
+	IF: Any
+			ChatMatch {is already a member of a Fellowship.$}
+			ChatMatch {is not accepting fellowship requests.$}
+		DO: DoAll
+				DoExpr {listadd[$FellowBlacklist, $name]}
+				SetState {FellowNearby}
+
+~~}
+
+
+STATE: {FellowAdd} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	IF: Always
+		DO: DoExpr {$namerx=$capturegroup_namerx}
+
+	~~ Warn if no players are found
+	IF: Expr {listcount[listfilter[wobjectfindallbynamerx[$namerx], `wobjectgetobjectclass[$1]==$PLAYER`]]==0}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[Warn] No players found!\`, $COLOR_WARN]`, `false`]}
+				SetState {Idle}
+
+	~~ Create blacklist
+	IF: Expr {testvar[FellowBlacklist]==false}
+		DO: DoExpr {$FellowBlacklist=listcreate[]}
+
+	~~ Find all characters with $namerx
+	IF: Always
+		DO: DoAll
+				DoExpr {$AllCharacters=listfilter[wobjectfindallbynamerx[$namerx], `wobjectgetobjectclass[$1]==$PLAYER`]}
+				DoExpr {$AllCharacterNames=listmap[$AllCharacters, `wobjectgetstringprop[$1, 1]`]}
+				DoExpr {$AllCharactersNotInFellow=listfilter[$AllCharacterNames, `listcontains[getfellownames[], $1]==false`]}
+				DoExpr {$AllCharactersNotInFellowNotBlacklisted=listfilter[$AllCharactersNotInFellow, `listcontains[$FellowBlacklist, $1]==false`]}
+
+	~~ Clear variables and return to idle if there are no more characters to add
+	IF: Any
+			Expr {listcount[$AllCharactersNotInFellowNotBlacklisted]==0}
+			Expr {getfellowshipcount[]>=@CCMaxFellowshipSize}
+		DO: DoAll
+				DoExpr {listmap[listcreate[`AllCharacters`, `AllCharacterNames`, `AllCharactersNotInFellow`, `AllCharactersNotInFellowNotBlacklisted`, `FellowBlacklist`, `name`, `namerx`], `clearvar[$1]`]}
+				SetState {Idle}
+
+	~~ Recruit a character
+	IF: Always
+		DO: DoAll
+				DoExpr {$name=listpop[$AllCharactersNotInFellowNotBlacklisted, 0]}
+				DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[Warn] recruiting \`+$name, $COLOR_DEBUG]`, `false`]}
+				ChatExpr {`/ub fellow recruit `+$name}
+				SetState {FellowAdd}
+
+	~~ Blacklist the character if already in a fellow
+	IF: ChatMatch {is already a member of a Fellowship.$}
+		DO: DoAll
+				DoExpr {listadd[$FellowBlacklist, $name]}
+				SetState {FellowAdd}
 
 ~~ }
 
