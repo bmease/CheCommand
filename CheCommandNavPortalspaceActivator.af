@@ -40,45 +40,85 @@
 
 STATE: {Default} ~~ {
 
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
 	IF: Always
 		DO: DoAll
-				DoExpr {setvar[NUMBER, 1]}
-				DoExpr {setvar[MONSTER, 5]}
-				DoExpr {setvar[OBJECT, 7]}
-				DoExpr {setvar[PLAYER, 24]}
-				DoExpr {setvar[VENDOR, 25]}
-				DoExpr {setvar[NPC, 37]}
-
-				DoExpr {setvar[COLOR_DEBUG, 17]}
-				DoExpr {setvar[COLOR_INFO, 5]}
-				DoExpr {setvar[COLOR_WARN, 31]}
-				DoExpr {setvar[COLOR_ERROR, 21]}
-
-				DoExpr {setvar[LEVEL_DEBUG, 10]}
-				DoExpr {setvar[LEVEL_INFO, 20]}
-				DoExpr {setvar[LEVEL_WARN, 30]}
-				DoExpr {setvar[LEVEL_ERROR, 40]}
-
 				DoExpr {setvar[OriginalEnableNav, vtgetsetting[EnableNav]]}
-				DoExpr {setvar[OriginalIdlePeaceMode, vtgetsetting[IdlePeaceMode]]}
-				DoExpr {setvar[OriginalNavCloseStopRange, vtgetsetting[NavCloseStopRange]]}
+				DoExpr {setvar[metaname, `CheCommandNavPortalspaceActivator`]}
 
-	IF:	Expr {$LEVEL_DEBUG>=@CCDebug}
-		DO:	DoAll
-				DoExpr {echo[`[DEBUG] Che Nav Frozen Valley v0.0.2 by Che de Pa of Sundering`, $COLOR_DEBUG]}
+	IF:	Always
+		DO:	DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[DEBUG] Che Nav Empyrean Portalspace Activator v0.0.1 by Che de Pa of Sundering\`, $COLOR_DEBUG]`, `false`]}
 
-	~~ Finish if in Frozen Valley
-	IF: Any
-			BlockE 7AE80000
-			BlockE 79E80000
+	IF: Always
+		DO: SetState {ParseArguments}
+
+~~ }
+
+
+STATE: {ParseArguments} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Warn if arguments are not defined
+	IF: Expr {testvar[CCArguments]==false}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] Arguments are not defined!\`, $COLOR_WARN]`, `false`]}
+				SetState {Finished}
+
+	~~ Warn if arguments are missing for this meta
+	IF: Expr {dicthaskey[$CCArguments, $metaname]==false}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] Arguments are missing for this meta!\`, $COLOR_WARN]`, `false`]}
+				SetState {Finished}
+
+	~~ Get arguments for this meta
+	IF: Always
+		DO: DoExpr {$arguments=dictgetitem[$CCArguments, $metaname]}
+
+	~~ Warn if destination argument is missing
+	IF: Expr {dicthaskey[$arguments, `destination`]==false}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] Destination is missing from arguments\`, $COLOR_WARN]`, `false`]}
+				SetState {Finished}
+
+	~~ Get destination
+	IF: Always
+		DO: DoExpr {$destination=dictgetitem[$arguments, `destination`]}
+
+	~~ Navigate to destination
+	IF: Always
+		DO: SetState {NavToDestination}
+
+~~ }
+
+
+STATE: {NavToDestination} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	IF: Always
+		DO: DoAll
+				DoExpr {setvar[DESTINATION_LANDCELLS, dictcreate[]]}
+				DoExpr {dictadditem[$DESTINATION_LANDCELLS, `AsheronsCastle`, listcreate[`D59A0039`]]}
+				DoExpr {dictadditem[$DESTINATION_LANDCELLS, `Hoshino`, listcreate[`49E40033`]]}
+				DoExpr {dictadditem[$DESTINATION_LANDCELLS, `FrozenValley`, listcreate[`7AE80002`]]}
+				DoExpr {dictadditem[$DESTINATION_LANDCELLS, `Rynthid`, listcreate[`2C32003D`]]}
+				DoExpr {dictadditem[$DESTINATION_LANDCELLS, `VR`, listcreate[`B349001C`, `B146003E`]]}
+
+	~~ Finish if at destination
+	IF: Expr {listcontains[dictgetitem[$DESTINATION_LANDCELLS, $destination], cstrf[getplayerlandcell[], `X8`]]==true}
 		DO: SetState {Finished}
 
 	~~ Navigate to Haven if not there
-	IF:	Not BlockE 01AC0000
+	IF: Not BlockE 01AC0000
 		DO:	SetState {ToHaven}
 
 	~~ Navigate to Empyrean Portalspace Activator if in Haven
-	IF:	BlockE 01AC0000
+	IF: BlockE 01AC0000
 		DO:	SetState {ToEmpyreanPortalspaceActivator}
 
 	~~ Use Empyrean Portalspace Activator if in Haven
@@ -89,17 +129,22 @@ STATE: {Default} ~~ {
 
 
 STATE: {ToHaven} ~~ {
-	IF:	Expr {$LEVEL_DEBUG>=@CCDebug}
-		DO: DoAll
-				DoExpr {echo[`Navigating to Haven`, $COLOR_Debug]}
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
 
 	IF: Always
-		DO: DoAll
-				SetOpt {EnableNav} {True}
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Haven\`, $COLOR_INFO]`, `false`]}
 
+	~~ Set EnableNav to navigate
+	IF: Always
+		DO: SetOpt {EnableNav} {True}
+
+	~~ Navigate to Haven
 	IF: Always
 		DO: EmbedNav ToHaven {ToHaven}
 
+	~~ Finished navigating
 	IF:	All
 			NavEmpty
 			CellE 01AC011F
@@ -108,17 +153,22 @@ STATE: {ToHaven} ~~ {
 
 
 STATE: {ToEmpyreanPortalspaceActivator} ~~ {
-	IF:	Expr {$LEVEL_INFO>=@CCDebug}
-		DO: DoAll
-				DoExpr {echo[`Navigating to Empyrean Portalspace Activator`, $COLOR_INFO]}
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
 
 	IF: Always
-		DO: DoAll
-				SetOpt {EnableNav} {True}
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Empyrean Portalspace Activator\`, $COLOR_INFO]`, `false`]}
 
-	IF: SecsInStateGE 2
+	~~ Set EnableNav to navigate
+	IF: Always
+		DO: SetOpt {EnableNav} {True}
+
+	~~ Navigate to Empyrean Portalspace Activator
+	IF: Always
 		DO: EmbedNav ToEmpyreanPortalspaceActivator {ToEmpyreanPortalspaceActivator}
 
+	~~ Finished navigating
 	IF:	All
 			NavEmpty
 			CellE 01AC0135
@@ -127,39 +177,53 @@ STATE: {ToEmpyreanPortalspaceActivator} ~~ {
 
 
 STATE: {UseEmpyreanPortalspaceActivator} ~~ {
-	IF:	Expr {$LEVEL_INFO>=@CCDebug}
-		DO: DoAll
-				DoExpr {echo[`Using Empyrean Portalspace Activator`, $COLOR_INFO]}
 
-	IF: ItemCountLE 1 {Powdered Quartz}
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	IF: Always
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Using Empyrean Portalspace Activator\`, $COLOR_INFO]`, `false`]}
+
+	IF: Always
 		DO: DoAll
-				DoExpr {[ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`Out of Powdered Quartz!\`, $COLOR_WARN]`, `false`]}
+				DoExpr {setvar[DESTINATION_ITEMS, dictcreate[]]}
+				DoExpr {dictadditem[$DESTINATION_ITEMS, `AsheronsCastle`, `Powdered Agate`]}
+				DoExpr {dictadditem[$DESTINATION_ITEMS, `Hoshino`, `Powdered Turquoise`]}
+				DoExpr {dictadditem[$DESTINATION_ITEMS, `FrozenValley`, `Powdered Quartz`]}
+				DoExpr {dictadditem[$DESTINATION_ITEMS, `Rynthid`, `Powdered Carnelian`]}
+				DoExpr {dictadditem[$DESTINATION_ITEMS, `VR`, `Powdered Malachite`]}
+
+				DoExpr {$item=dictgetitem[$DESTINATION_ITEMS, $destination]}
+
+	~~ Warn if out of item
+	IF: Expr {getitemcountininventorybyname[$item]==0}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] Out of \`+$item, $COLOR_WARN]`, `false`]}
 				SetState {Finished}
 
-	IF: SecsInStateGE 2
-		DO: DoAll
-				ChatExpr {`/ub givep Powdered Quartz to Empyrean Portalspace Activator`}
-				SetState {UseEmpyreanPortalspaceActivator}
+	~~ Hand item to Empyrean Portalspace Activator
+	IF: Always
+		DO: ChatExpr {`/ub givep `+$item+` to Empyrean Portalspace Activator`}
 
 	IF:	All
 			ExitPortal
-			CellE 7AE80002
+			Expr {listcontains[dictgetitem[$DESTINATION_LANDCELLS, $destination], cstrf[getplayerlandcell[], `X8`]]==true}
 		DO: SetState {Finished}
 ~~ }
 
 
 STATE: {Finished} ~~ {
-	IF:	Expr {$LEVEL_INFO>=@CCDebug}
-		DO: DoAll
-				DoExpr {echo[`Finished navigating to Frozen Valley`, $COLOR_INFO]}
+
+	IF: Always
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Finished navigating to destination\`, $COLOR_INFO]`, `false`]}
 
 	~~ Reset all options to what they originally were
 	IF: Always
-		DO: DoAll
-				SetOpt {EnableNav} {$OriginalEnableNav}
+		DO: SetOpt {EnableNav} {$OriginalEnableNav}
 
 	IF: Always
 		DO: ChatExpr {`/vt meta load `+$CCReturnMeta}
+
 ~~ }
 
 
@@ -170,6 +234,7 @@ NAV: ToHaven once ~~ {
 ~~ }
 
 NAV: ToEmpyreanPortalspaceActivator once ~~ {
+	~~ pnt -100.975732088089 35.5507949988047 2.08333134651184E-05
 	pnt -101.024495410919 35.5612228711446 2.08333134651184E-05
 	pnt -100.981455087662 35.6083782513936 2.08333134651184E-05
 	pnt -100.934240690867 35.6245988269647 2.08333134651184E-05

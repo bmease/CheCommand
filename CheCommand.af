@@ -676,19 +676,22 @@ STATE: {HandleNavigation} ~~ {
 	~~ Handle `#navto asheron castle`
 	IF: Expr {(asherons castle)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavAsheronsCastle`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavPortalspaceActivator`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `AsheronsCastle`]]}
 				SetState {CallMeta}
 
 	~~ Handle `#navto frozen valley`
 	IF: Expr {(frozen valley)#getvar[capturegroup_navdestination]}	
 		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavFrozenValley`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavPortalspaceActivator`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `FrozenValley`]]}
 				SetState {CallMeta}
 
 	~~ Handle `#navto hoshino`
 	IF: Expr {(hoshino)#getvar[capturegroup_navdestination]}	
 		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavHoshino`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavPortalspaceActivator`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `Hoshino`]]}
 				SetState {CallMeta}
 
 	~~ Handle `#navto graveyard`
