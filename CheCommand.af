@@ -213,6 +213,16 @@ STATE: {Init} ~~ {
 			Expr {@CCFellowname==`Not Set`}
 		DO: SetState {Setup}
 
+	~~ Wait for Leader if they are not nearby
+	IF: All
+			Expr {listcount[$MetaCallQueue]==0}
+			Expr {@CCStay==false}
+			Expr {@CCLeader!=$CHARACTER_NAME}
+			Any
+				Not Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]]==$TYPE_OBJECT}  ~~ CCLeader WObject exists
+				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]], getplayercoordinates[]]<=@CCLeaderCheckDistance}  ~~ CCLeader is nearby
+		DO: SetState {LeaderCheck}
+
 	IF: Always
 		DO: SetState {Idle}
 
@@ -1993,9 +2003,32 @@ STATE: {LeaderCheck} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
 
+	~~ Warn if commands are issued
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#(?<command>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I cannot listen to commands! I am currently in the state \`+vtgetmetastate[]]`, `false`]}
+
+	~~ Disable all options if other states haven't
+	IF: Expr {testvar[OptionsSet]==false}
+		DO: CallState {DisableOptions} {LeaderCheck}
+
 	~~ If leader go straight to EnableOptions
 	IF: Expr {@CCLeader==$CHARACTER_NAME}
 		DO: CallState {EnableOptions} {Idle}
+
+	~~ If following re-enable follow when leader is nearby
+	IF: All
+			Expr {@CCStay==false}
+			Expr {@CCLeader!=$CHARACTER_NAME}
+			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]]==$TYPE_OBJECT}  ~~ CCLeader WObject exists
+			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]], getplayercoordinates[]]<=@CCLeaderCheckDistance}  ~~ CCLeader is nearby
+		DO: DoAll
+				SetOpt {NavPriorityBoost} {true}
+				ChatExpr {`/ub follow `+@CCLeader}
 
 	~~ When leader is nearby leave check
 	IF: All
@@ -2005,7 +2038,15 @@ STATE: {LeaderCheck} ~~ {
 
 	~~ Warn if in the check too long
 	IF:	SecsInStateGE 15
-		DO: DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Waiting for nearby leader for 15 seconds\`]`, `false`]}	
+		DO: DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Waiting for nearby leader for 15 seconds!\`]`, `false`]}
+
+	~~ Disable waiting if longer than the timeout
+	IF: SecsInStateGE 30
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Timeout reached waiting for leader! Staying but listening for commands.\`]`, `false`]}
+				EmbedNav Empty {[None]}
+				DoExpr {@CCStay=true}
+				CallState {EnableOptions} {Idle}
 
 ~~ }
 
