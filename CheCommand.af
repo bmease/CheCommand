@@ -2269,6 +2269,12 @@ STATE: {FellowAdd} ~~ {
 	IF: Always
 		DO: DoExpr {$namerx=$capturegroup_namerx}
 
+	~~ Abort if not in a fellow
+	IF: Expr {getfellowshipstatus[]==false}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] Aborting, not in a fellow\`, $COLOR_WARN]`, `false`]}
+				SetState {Idle}
+
 	~~ Warn if no players are found
 	IF: Expr {listcount[listfilter[wobjectfindallbynamerx[$namerx], `wobjectgetobjectclass[$1]==$PLAYER`]]==0}
 		DO: DoAll
@@ -2304,7 +2310,9 @@ STATE: {FellowAdd} ~~ {
 				SetState {FellowAdd}
 
 	~~ Blacklist the character if already in a fellow
-	IF: ChatMatch {is already a member of a Fellowship.$}
+	IF: Any
+			ChatMatch {is already a member of a Fellowship.$}
+			ChatMatch {is not accepting fellowship requests.$}
 		DO: DoAll
 				DoExpr {listadd[$FellowBlacklist, $name]}
 				SetState {FellowAdd}
