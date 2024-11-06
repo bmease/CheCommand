@@ -653,6 +653,58 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {echo[`#navto lifestone recall: Navigate to Lifestone Recall (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto primary: Navigate to Primary Portal Recall (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto portal recall: Navigate to Portal Recall (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`Town Network (Annex):`, $COLOR_INFO]}
+				DoExpr {echo[`#navto ahurenga: Navigate to Ahurenga`, $COLOR_INFO]}
+				DoExpr {echo[`#navto bluespire: Navigate to Bluespire`, $COLOR_INFO]}
+				DoExpr {echo[`#navto danbys outpost: Navigate to Danby's Outpost`, $COLOR_INFO]}
+				DoExpr {echo[`#navto eastwatch: Navigate to Eastwatch`, $COLOR_INFO]}
+				DoExpr {echo[`#navto fiun outpost: Navigate to Fiun Outpost`, $COLOR_INFO]}
+				DoExpr {echo[`#navto greenspire: Navigate to Greenspire`, $COLOR_INFO]}
+				DoExpr {echo[`#navto linvak tukal: Navigate to Linvak Tukal`, $COLOR_INFO]}
+				DoExpr {echo[`#navto neydisa castle: Navigate to Neydisa Castle`, $COLOR_INFO]}
+				DoExpr {echo[`#navto oolutungas refuge: Navigate to Oolutanga's Refuge`, $COLOR_INFO]}
+				DoExpr {echo[`#navto redspire: Navigate to Redspire`, $COLOR_INFO]}
+				DoExpr {echo[`#navto sanamar: Navigate to Sanamar`, $COLOR_INFO]}
+				DoExpr {echo[`#navto silyun: Navigate to Silyun`, $COLOR_INFO]}
+				DoExpr {echo[`#navto timaru: Navigate to Timaru`, $COLOR_INFO]}
+				DoExpr {echo[`#navto westwatch: Navigate to Westwatch`, $COLOR_INFO]}
+				DoExpr {echo[`Town Network (Sho):`, $COLOR_INFO]}
+				DoExpr {echo[`#navto baishi: Navigate to Baishi`, $COLOR_INFO]}
+				DoExpr {echo[`#navto freehold: Navigate to Freehold`, $COLOR_INFO]}
+				DoExpr {echo[`#navto hebianto: Navigate to Hebian-To`, $COLOR_INFO]}
+				DoExpr {echo[`#navto kara: Navigate to Kara`, $COLOR_INFO]}
+				DoExpr {echo[`#navto kryst: Navigate to Kryst`, $COLOR_INFO]}
+				DoExpr {echo[`#navto lin: Navigate to Lin`, $COLOR_INFO]}
+				DoExpr {echo[`#navto mayoi: Navigate to Mayoi`, $COLOR_INFO]}
+				DoExpr {echo[`#navto nanto: Navigate to Nanto`, $COLOR_INFO]}
+				DoExpr {echo[`#navto sawato: Navigate to Sawato`, $COLOR_INFO]}
+				DoExpr {echo[`#navto shoushi: Navigate to Shoushi`, $COLOR_INFO]}
+				DoExpr {echo[`#navto tou tou: Navigate to Tou-Tou`, $COLOR_INFO]}
+				DoExpr {echo[`#navto yanshi: Navigate to Yanshi`, $COLOR_INFO]}
+				DoExpr {echo[`Town Network (Gharu'ndim):`, $COLOR_INFO]}
+				DoExpr {echo[`#navto al-arqas: Navigate to Al-Arqas`, $COLOR_INFO]}
+				DoExpr {echo[`#navto al-jalima: Navigate to Al-Jalima`, $COLOR_INFO]}
+				DoExpr {echo[`#navto khayyaban: Navigate to Khayyaban`, $COLOR_INFO]}
+				DoExpr {echo[`#navto qalabar: Navigate to Qalaba'r`, $COLOR_INFO]}
+				DoExpr {echo[`#navto samsur: Navigate to Samsur`, $COLOR_INFO]}
+				DoExpr {echo[`#navto tufa: Navigate to Tufa`, $COLOR_INFO]}
+				DoExpr {echo[`#navto uziz: Navigate to Uziz`, $COLOR_INFO]}
+				DoExpr {echo[`#navto xarabydun: Navigate to Xarabydun`, $COLOR_INFO]}
+				DoExpr {echo[`#navto yaraq: Navigate to Yaraq`, $COLOR_INFO]}
+				DoExpr {echo[`#navto zaikhal: Navigate to Zaikhal`, $COLOR_INFO]}
+				DoExpr {echo[`Town Network (Aluvian):`, $COLOR_INFO]}
+				DoExpr {echo[`#navto arwic: Navigate to Arwic`, $COLOR_INFO]}
+				DoExpr {echo[`#navto cragstone: Navigate to Cragstone`, $COLOR_INFO]}
+				DoExpr {echo[`#navto dryreach: Navigate to Dryreach`, $COLOR_INFO]}
+				DoExpr {echo[`#navto eastham: Navigate to Eastham`, $COLOR_INFO]}
+				DoExpr {echo[`#navto fort tethana: Navigate to Fort Tethana`, $COLOR_INFO]}
+				DoExpr {echo[`#navto glenden wood: Navigate to Glenden Wood`, $COLOR_INFO]}
+				DoExpr {echo[`#navto holtburg: Navigate to Holtburg`, $COLOR_INFO]}
+				DoExpr {echo[`#navto lytelthorpe: Navigate to Lytelthorpe`, $COLOR_INFO]}
+				DoExpr {echo[`#navto plateau village: Navigate to Plateau Village`, $COLOR_INFO]}
+				DoExpr {echo[`#navto rithwic: Navigate to Rithwic`, $COLOR_INFO]}
+				DoExpr {echo[`#navto stonehold: Navigate to Stonehold`, $COLOR_INFO]}
+
 				SetState {Idle}
 
 	~~ Handle `#navto comps`
@@ -731,7 +783,7 @@ STATE: {HandleNavigation} ~~ {
 				SetState {HandleRecall}
 
 	~~ Handle `#navto aerlinthe`
-	IF: Expr {(aerlinthe)#getvar[capturegroup_navdestination]}
+	IF: Expr {$capturegroup_navdestination==`aerlinthe`}  ~~ Prevent aerlinthe from eating Lin destination
 		DO:	DoAll
 				DoExpr {$CCRecallSpell=2041} ~~ Aerlinthe Recall
 				SetState {HandleRecall}
@@ -777,6 +829,350 @@ STATE: {HandleNavigation} ~~ {
 		DO:	DoAll
 				DoExpr {$CCRecallSpell=2648} ~~ Secondary Portal Recall
 				SetState {HandleRecall}
+
+
+
+	~~ Annex
+
+	~~ Handle `#navto ahurenga`
+	IF: Expr {(ahurenga)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Ahurenga`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto bluespire`
+	IF: Expr {(bluespire)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Bluespire`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto danbys outpost`
+	IF: Expr {(danbys outpost)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Danby's Outpost`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto eastwatch`
+	IF: Expr {(eastwatch)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Eastwatch`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto fiun outpost`
+	IF: Expr {(fiun outpost)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Fiun Outpost`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto greenspire`
+	IF: Expr {(greenspire)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Greenspire`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto linvak tukal`
+	IF: Expr {$capturegroup_navdestination==`linvak tukal`}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Linvak Tukal`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto neydisa castle`
+	IF: Expr {(neydisa castle)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Neydisa Castle`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto oolutangas refuge`
+	IF: Expr {(oolutangas refuge)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Oolutanga's Refuge`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto redspire`
+	IF: Expr {(redspire)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Redspire`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto sanamar`
+	IF: Expr {(sanamar)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Sanamar`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto silyun`
+	IF: Expr {(silyun)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Silyun`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto timaru`
+	IF: Expr {(timaru)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Timaru`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto westwatch`
+	IF: Expr {(westwatch)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Westwatch`]]}
+				SetState {CallMeta}
+
+	~~ Sho
+
+	~~ Handle `#navto baishi`
+	IF: Expr {(baishi)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Baishi`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto freehold`
+	IF: Expr {(freehold)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Freehold`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto hebian-to`
+	IF: Expr {(hebian to)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Hebian-To`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto kara`
+	IF: Expr {(kara)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Kara`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto kryst`
+	IF: Expr {(kryst)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Kryst`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto lin`
+	IF: Expr {(lin)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Lin`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto mayoi`
+	IF: Expr {(mayoi)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Mayoi`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto nanto`
+	IF: Expr {(nanto)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Nanto`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto sawato`
+	IF: Expr {(sawato)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Sawato`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto shoushi`
+	IF: Expr {(shoushi)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Shoushi`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto tou tou`
+	IF: Expr {(tou tou)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Tou-Tou`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto yanshi`
+	IF: Expr {(yanshi)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Yanshi`]]}
+				SetState {CallMeta}
+
+
+	~~ Gharu
+
+
+	~~ Handle `#navto al-arqas`
+	IF: Expr {(al-arqas)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Al-Arqas`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto al-jalima`
+	IF: Expr {(al-jalima)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Al-Jalima`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto khayyaban`
+	IF: Expr {(khayyaban)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Khayyaban`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto qalabar`
+	IF: Expr {(qalabar)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Qalaba'r`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto samsur`
+	IF: Expr {(samsur)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Samsur`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto tufa`
+	IF: Expr {(tufa)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Tufa`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto uziz`
+	IF: Expr {(uziz)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Uziz`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto xarabydun`
+	IF: Expr {(xarabydun)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Xarabydun`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto yaraq`
+	IF: Expr {(yaraq)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Yaraq`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto zaikhal`
+	IF: Expr {(zaikhal)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Zaikhal`]]}
+				SetState {CallMeta}
+
+
+	~~ Aluvian
+
+
+	~~ Handle `#navto arwic`
+	IF: Expr {(arwic)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Arwic`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto cragstone`
+	IF: Expr {(cragstone)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Cragstone`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto dryreach`
+	IF: Expr {(dryreach)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Dryreach`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto eastham`
+	IF: Expr {(eastham)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Eastham`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto fort tethana`
+	IF: Expr {(fort tethana)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Fort Tethana`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto glenden wood`
+	IF: Expr {(glenden wood)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Glenden Wood`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto holtburg`
+	IF: Expr {(holtburg)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Holtburg`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto lytelthorpe`
+	IF: Expr {(lytelthorpe)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Lytelthorpe`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto plateau village`
+	IF: Expr {(plateau village)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Plateau Village`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto rithwic`
+	IF: Expr {(rithwic)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Rithwic`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto stonehold`
+	IF: Expr {(stonehold)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Stonehold`]]}
+				SetState {CallMeta}
+
 
 	~~ Handle no match for navdestination
 	IF: Expr {$LEVEL_WARN>=@CCDebug}
