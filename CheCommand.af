@@ -2176,7 +2176,7 @@ STATE: {FellowNearby} ~~ {
 	~~ Abort if not in a fellow
 	IF: Expr {getfellowshipstatus[]==false}
 		DO: DoAll
-				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[Warn] Aborting, not in a fellow\`, $COLOR_WARN]`, `false`]}
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] Aborting, not in a fellow\`, $COLOR_WARN]`, `false`]}
 				SetState {Idle}
 
 	~~ Create blacklist
@@ -2231,7 +2231,7 @@ STATE: {FellowAdd} ~~ {
 	~~ Warn if no players are found
 	IF: Expr {listcount[listfilter[wobjectfindallbynamerx[$namerx], `wobjectgetobjectclass[$1]==$PLAYER`]]==0}
 		DO: DoAll
-				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[Warn] No players found!\`, $COLOR_WARN]`, `false`]}
+				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] No players found!\`, $COLOR_WARN]`, `false`]}
 				SetState {Idle}
 
 	~~ Create blacklist
@@ -2258,7 +2258,7 @@ STATE: {FellowAdd} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {$name=listpop[$AllCharactersNotInFellowNotBlacklisted, 0]}
-				DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[Warn] recruiting \`+$name, $COLOR_DEBUG]`, `false`]}
+				DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[WARN] recruiting \`+$name, $COLOR_DEBUG]`, `false`]}
 				ChatExpr {`/ub fellow recruit `+$name}
 				SetState {FellowAdd}
 
