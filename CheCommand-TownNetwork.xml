@@ -29,7 +29,7 @@
         <!-- Column 3 -->
         <control type="button" name="Baishi" left="225" top="5" width="100" height="20" text="Baishi" actionexpr="chatbox[\#navto baishi]" />
         <control type="button" name="Freehold" left="225" top="30" width="100" height="20" text="Freehold" actionexpr="chatbox[\#navto freehold]" />
-        <control type="button" name="Hebian-To" left="225" top="55" width="100" height="20" text="Hebian-To" actionexpr="chatbox[\#navto hebian-to]" />
+        <control type="button" name="Hebian-To" left="225" top="55" width="100" height="20" text="Hebian-To" actionexpr="chatbox[\#navto hebian\-to]" />
         <control type="button" name="Kara" left="225" top="80" width="100" height="20" text="Kara" actionexpr="chatbox[\#navto kara]" />
         <control type="button" name="Kryst" left="225" top="105" width="100" height="20" text="Kryst" actionexpr="chatbox[\#navto kryst]" />
         <control type="button" name="Lin" left="225" top="130" width="100" height="20" text="Lin" actionexpr="chatbox[\#navto lin]" />
@@ -37,7 +37,7 @@
         <control type="button" name="Nanto" left="225" top="180" width="100" height="20" text="Nanto" actionexpr="chatbox[\#navto nanto]" />
         <control type="button" name="Sawato" left="225" top="205" width="100" height="20" text="Sawato" actionexpr="chatbox[\#navto sawato]" />
         <control type="button" name="Shoushi" left="225" top="230" width="100" height="20" text="Shoushi" actionexpr="chatbox[\#navto shoushi]" />
-        <control type="button" name="Tou-Tou" left="225" top="255" width="100" height="20" text="Tou-Tou" actionexpr="chatbox[\#navto tou-tou]" />
+        <control type="button" name="Tou-Tou" left="225" top="255" width="100" height="20" text="Tou-Tou" actionexpr="chatbox[\#navto tou\-tou]" />
         <control type="button" name="Yanshi" left="225" top="280" width="100" height="20" text="Yanshi" actionexpr="chatbox[\#navto yanshi]" />
 
         <!-- Column 4 -->
