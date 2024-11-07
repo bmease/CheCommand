@@ -213,14 +213,11 @@ STATE: {Init} ~~ {
 			Expr {@CCFellowname==`Not Set`}
 		DO: SetState {Setup}
 
-	~~ Wait for Leader if they are not nearby
+	~~ Wait for Leader if supposed to be following
 	IF: All
 			Expr {listcount[$MetaCallQueue]==0}
 			Expr {@CCStay==false}
 			Expr {@CCLeader!=$CHARACTER_NAME}
-			Any
-				Not Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]]==$TYPE_OBJECT}  ~~ CCLeader WObject exists
-				Not Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, @CCLeader]], getplayercoordinates[]]<=@CCLeaderCheckDistance}  ~~ CCLeader is nearby
 		DO: SetState {LeaderCheck}
 
 	IF: Always
