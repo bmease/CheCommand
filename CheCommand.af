@@ -154,12 +154,12 @@ STATE: {Default} ~~ {
 				~~ Nav Routes
 				~~ Keys are landcells in hexidecimal format, values are the name of the nav file without the file extension
 				DoExpr {setvar[CCRoutes, dictcreate[]]}
-				DoExpr {dictadditem[$CCRoutes, `59540817`, `Catacombs of Torment`]}
-				DoExpr {dictadditem[$CCRoutes, `002C029C`, `Forgotten Chasm`]}
-				DoExpr {dictadditem[$CCRoutes, `472D0107`, `Massilor's Crypt`]}
-				DoExpr {dictadditem[$CCRoutes, `00060100`, `Western Power Forge`]}
-				DoExpr {dictadditem[$CCRoutes, `002E02D1`, `Feeding Tube`]}
-				DoExpr {dictadditem[$CCRoutes, `5879052B`, `Path of Rage`]}
+				DoExpr {dictadditem[$CCRoutes, `59540817`, `CC-Catacombs of Torment`]}
+				DoExpr {dictadditem[$CCRoutes, `002C029C`, `CC-Forgotten Chasm`]}
+				DoExpr {dictadditem[$CCRoutes, `472D0107`, `CC-Massilor's Crypt`]}
+				DoExpr {dictadditem[$CCRoutes, `00060100`, `CC-Western Power Forge`]}
+				DoExpr {dictadditem[$CCRoutes, `002E02D1`, `CC-Feeding Tube`]}
+				DoExpr {dictadditem[$CCRoutes, `5879052B`, `CC-Path of Rage`]}
 
 	~~ Open Remote view
 	IF: Always
