@@ -2524,6 +2524,26 @@ STATE: {ShowJump} ~~ {
 ~~ }
 
 
+STATE: {ShowNavto} ~~ {
+
+	~~ Show Navto view
+	IF: Not Expr {uiviewvisible[Navto]}
+		DO: DoAll
+				CreateView {Navto} {:CheCommand-TownNetwork.xml}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
+				SetState {Idle}
+
+	~~ Close Jump view
+	IF: Expr {uiviewvisible[Navto]}
+		DO: DoAll
+				DestroyView {Navto}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
+				SetState {Idle}
+
+
+~~ }
+
+
 ~~ Use Virindi Hotkey System to map this state to a key like `tab` to toggle on and off combat/healing/buffing
 STATE: {HotkeyToggleVitals} ~~ {
 	IF: Expr {@CCVitals==true}

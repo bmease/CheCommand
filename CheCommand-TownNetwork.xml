@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<view width="440" height="355" title="Meta - Town Network">
+    <control type="layout">
+        <!-- Column 1 -->
+        <control type="button" name="Arwic" left="5" top="5" width="100" height="20" text="Arwic" actionexpr="chatbox[\#navto arwic]" />
+        <control type="button" name="Cragstone" left="5" top="30" width="100" height="20" text="Cragstone" actionexpr="chatbox[\#navto cragstone]" />
+        <control type="button" name="Dryreach" left="5" top="55" width="100" height="20" text="Dryreach" actionexpr="chatbox[\#navto dryreach]" />
+        <control type="button" name="Eastham" left="5" top="80" width="100" height="20" text="Eastham" actionexpr="chatbox[\#navto eastham]" />
+        <control type="button" name="Fort Tethana" left="5" top="105" width="100" height="20" text="Fort Tethana" actionexpr="chatbox[\#navto fort tethana]" />
+        <control type="button" name="Glenden Wood" left="5" top="130" width="100" height="20" text="Glenden Wood" actionexpr="chatbox[\#navto glenden wood]" />
+        <control type="button" name="Holtburg" left="5" top="155" width="100" height="20" text="Holtburg" actionexpr="chatbox[\#navto holtburg]" />
+        <control type="button" name="Lytelthorpe" left="5" top="180" width="100" height="20" text="Lytelthorpe" actionexpr="chatbox[\#navto lytelthorpe]" />
+        <control type="button" name="Plateau Village" left="5" top="205" width="100" height="20" text="Plateau Village" actionexpr="chatbox[\#navto plateau village]" />
+        <control type="button" name="Rithwic" left="5" top="230" width="100" height="20" text="Rithwic" actionexpr="chatbox[\#navto rithwic]" />
+        <control type="button" name="Stonehold" left="5" top="255" width="100" height="20" text="Stonehold" actionexpr="chatbox[\#navto stonehold]" />
+
+        <!-- Column 2 -->
+        <control type="button" name="Al-Arqas" left="115" top="5" width="100" height="20" text="Al-Arqas" actionexpr="chatbox[\#navto al\-arqas]" />
+        <control type="button" name="Al-Jalima" left="115" top="30" width="100" height="20" text="Al-Jalima" actionexpr="chatbox[\#navto al\-jalima]" />
+        <control type="button" name="Khayyaban" left="115" top="55" width="100" height="20" text="Khayyaban" actionexpr="chatbox[\#navto khayyaban]" />
+        <control type="button" name="Qalaba'r" left="115" top="80" width="100" height="20" text="Qalaba'r" actionexpr="chatbox[\#navto qalabar]" />
+        <control type="button" name="Samsur" left="115" top="105" width="100" height="20" text="Samsur" actionexpr="chatbox[\#navto samsur]" />
+        <control type="button" name="Tufa" left="115" top="130" width="100" height="20" text="Tufa" actionexpr="chatbox[\#navto tufa]" />
+        <control type="button" name="Uziz" left="115" top="155" width="100" height="20" text="Uziz" actionexpr="chatbox[\#navto uziz]" />
+        <control type="button" name="Xarabydun" left="115" top="180" width="100" height="20" text="Xarabydun" actionexpr="chatbox[\#navto xarabydun]" />
+        <control type="button" name="Yaraq" left="115" top="205" width="100" height="20" text="Yaraq" actionexpr="chatbox[\#navto yaraq]" />
+        <control type="button" name="Zaikhal" left="115" top="230" width="100" height="20" text="Zaikhal" actionexpr="chatbox[\#navto zaikhal]" />
+
+        <!-- Column 3 -->
+        <control type="button" name="Baishi" left="225" top="5" width="100" height="20" text="Baishi" actionexpr="chatbox[\#navto baishi]" />
+        <control type="button" name="Freehold" left="225" top="30" width="100" height="20" text="Freehold" actionexpr="chatbox[\#navto freehold]" />
+        <control type="button" name="Hebian-To" left="225" top="55" width="100" height="20" text="Hebian-To" actionexpr="chatbox[\#navto hebian-to]" />
+        <control type="button" name="Kara" left="225" top="80" width="100" height="20" text="Kara" actionexpr="chatbox[\#navto kara]" />
+        <control type="button" name="Kryst" left="225" top="105" width="100" height="20" text="Kryst" actionexpr="chatbox[\#navto kryst]" />
+        <control type="button" name="Lin" left="225" top="130" width="100" height="20" text="Lin" actionexpr="chatbox[\#navto lin]" />
+        <control type="button" name="Mayoi" left="225" top="155" width="100" height="20" text="Mayoi" actionexpr="chatbox[\#navto mayoi]" />
+        <control type="button" name="Nanto" left="225" top="180" width="100" height="20" text="Nanto" actionexpr="chatbox[\#navto nanto]" />
+        <control type="button" name="Sawato" left="225" top="205" width="100" height="20" text="Sawato" actionexpr="chatbox[\#navto sawato]" />
+        <control type="button" name="Shoushi" left="225" top="230" width="100" height="20" text="Shoushi" actionexpr="chatbox[\#navto shoushi]" />
+        <control type="button" name="Tou-Tou" left="225" top="255" width="100" height="20" text="Tou-Tou" actionexpr="chatbox[\#navto tou-tou]" />
+        <control type="button" name="Yanshi" left="225" top="280" width="100" height="20" text="Yanshi" actionexpr="chatbox[\#navto yanshi]" />
+
+        <!-- Column 4 -->
+        <control type="button" name="Ahurenga" left="335" top="5" width="100" height="20" text="Ahurenga" actionexpr="chatbox[\#navto ahurenga]" />
+        <control type="button" name="Bluespire" left="335" top="30" width="100" height="20" text="Bluespire" actionexpr="chatbox[\#navto bluespire]" />
+        <control type="button" name="Danby's Outpost" left="335" top="55" width="100" height="20" text="Danby's Outpost" actionexpr="chatbox[\#navto danbys outpost]" />
+        <control type="button" name="Eastwatch" left="335" top="80" width="100" height="20" text="Eastwatch" actionexpr="chatbox[\#navto eastwatch]" />
+
+        <control type="button" name="Fiun Outpost" left="335" top="105" width="100" height="20" text="Fiun Outpost" actionexpr="chatbox[\#navto fiun outpost]" />
+        <control type="button" name="Greenspire" left="335" top="130" width="100" height="20" text="Greenspire" actionexpr="chatbox[\#navto greenspire]" />
+        <control type="button" name="Linvak Tukal" left="335" top="155" width="100" height="20" text="Linvak Tukal" actionexpr="chatbox[\#navto linvak tukal]" />
+
+        <control type="button" name="Neydisa Castle" left="335" top="180" width="100" height="20" text="Neydisa Castle" actionexpr="chatbox[\#navto neydisa castle]" />
+        <control type="button" name="Oolutanga's Refuge" left="335" top="205" width="100" height="20" text="Oolutanga's Refuge" actionexpr="chatbox[\#navto oolutangas refuge]" />
+        <control type="button" name="Redspire" left="335" top="230" width="100" height="20" text="Redspire" actionexpr="chatbox[\#navto redspire]" />
+        <control type="button" name="Sanamar" left="335" top="255" width="100" height="20" text="Sanamar" actionexpr="chatbox[\#navto sanamar]" />
+        <control type="button" name="Silyun" left="335" top="280" width="100" height="20" text="Silyun" actionexpr="chatbox[\#navto silyun]" />
+        <control type="button" name="Timaru" left="335" top="305" width="100" height="20" text="Timaru" actionexpr="chatbox[\#navto timaru]" />
+        <control type="button" name="Westwatch" left="335" top="330" width="100" height="20" text="Westwatch" actionexpr="chatbox[\#navto westwatch]" />
+    </control>
+</view>
