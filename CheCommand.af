@@ -229,7 +229,7 @@ STATE: {Init} ~~ {
 		DO: SetState {LeaderCheck}
 
 	IF: Always
-		DO: SetState {Idle}
+		DO: SetState {SetupButtons}
 
 ~~ }
 
@@ -641,6 +641,7 @@ STATE: {HandleActions} ~~ {
 		DO:	DoAll
 				EmbedNav Empty {[None]}
 				DoExpr {@CCLeader=$CHARACTER_NAME}
+				DoExpr {@CCStay=false}
 				SetState {Idle}
 
 	~~ Handle `#action contracts`
@@ -712,18 +713,24 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {echo[`#navto aerlinthe: Navigate to Aerlinthe (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto aphus lassel: Navigate to Aphus Lassel (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto asherons castle: Navigate to Asheron's Castle`, $COLOR_INFO]}
+				DoExpr {echo[`#navto bur: Navigate to Bur (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto candeth: Navigate to Candeth Keep (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto colosseum: Navigate to Colosseum (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto comps: Navigate to Haven and purchase comps`, $COLOR_INFO]}
 				DoExpr {echo[`#navto couch: Navigate to Haven and sit on the couch`, $COLOR_INFO]}
 				DoExpr {echo[`#navto frozen valley: Navigate to Frozen Valley (requires flagging)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto facility hub: Navigate to Facility Hub (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto hoshino: Navigate to Hoshino tent (requires flagging)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto gear knight: Navigate to Gear Knights (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto glenden wood: Navigate to Glenden Wood (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto graveyard: Navigate to Graveyard (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto mount lethe: Navigate to Mount Lethe (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto neftet: Navigate to Neftet (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto singularity caul: Navigate to Singularity Caul (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto rynthid: Navigate to Rynthid (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto sanctuary: Navigate to Sanctuary (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto secondary: Navigate to Secondary Portal Recall (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto ulgrims: Navigate to Ulgrim's Recall (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto lifestone: Navigate to Lifestone (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto lifestone recall: Navigate to Lifestone Recall (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto primary: Navigate to Primary Portal Recall (requires spell)`, $COLOR_INFO]}
@@ -792,6 +799,42 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {(colosseum)#getvar[capturegroup_navdestination]}	
 		DO:	DoAll
 				DoExpr {$CCRecallSpell=4213} ~~ Colosseum Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto facility hub`
+	IF: Expr {(facility hub)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=5175} ~~ Facility Hub Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto glenden wood`
+	IF: Expr {(glenden wood)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=3865} ~~ Glenden Wood Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto ulgrims`
+	IF: Expr {(ulgrims)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=2941} ~~ Ulgrim's Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto candeth`
+	IF: Expr {(candeth)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=4214} ~~ Candeth's Keep Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto bur`
+	IF: Expr {(bur)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=4084} ~~ Bur Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto mount lethe`
+	IF: Expr {(mount lethe)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=2813} ~~ Mount Lethe Recall
 				SetState {HandleRecall}
 
 	~~ Handle `#navto couch`
@@ -902,7 +945,7 @@ STATE: {HandleNavigation} ~~ {
 	~~ Handle `#navto secondary`
 	IF: Expr {(secondary)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
-				DoExpr {$CCRecallSpell=2648} ~~ Secondary Portal Recall
+				DoExpr {$CCRecallSpell=2647} ~~ Secondary Portal Recall
 				SetState {HandleRecall}
 
 
@@ -2722,21 +2765,91 @@ STATE: {ShowJump} ~~ {
 STATE: {ShowNavto} ~~ {
 
 	~~ Show Navto view
-	IF: Not Expr {uiviewvisible[Navto]}
+	IF: All
+			Not Expr {uiviewvisible[Navto]}
+			Not Expr {uiviewvisible[Recalls]}
 		DO: DoAll
 				CreateView {Navto} {:CheCommand-TownNetwork.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
 				SetState {Idle}
 
 	~~ Close Jump view
-	IF: Expr {uiviewvisible[Navto]}
+	IF: Any
+			Expr {uiviewvisible[Navto]}
+			Expr {uiviewvisible[Recalls]}
 		DO: DoAll
 				DestroyView {Navto}
+				DestroyView {Recalls}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
 				SetState {Idle}
 
 
 ~~ }
+
+
+STATE: {ShowRecalls} ~~ {
+
+	~~ Show Navto view
+	IF: Not Expr {uiviewvisible[Recalls]}
+		DO: DoAll
+				DestroyView {Navto}
+				CreateView {Recalls} {:CheCommand-Recalls.xml}
+				~~ DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
+				SetState {Idle}
+
+	~~ Close Jump view
+	IF: Expr {uiviewvisible[Recalls]}
+		DO: DoAll
+				DestroyView {Recalls}
+				~~ DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
+				SetState {Idle}
+
+
+~~ }
+STATE: {SetupButtons} ~~ {
+
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetlabel[uigetcontrol[Main, Follow], ifthen[@CCStay, `Follow`, `Stay`]]}
+				~~ DoExpr {uisetlabel[uigetcontrol[Main, Combat], ifthen[testpvar[CCOriginalVitalsEnableCombat], `ifthen[@CCOriginalVitalsEnableCombat, \`Combat Off\`, \`Combat On\`]`, `ifthen[vtgetsetting[EnableCombat], \`Combat Off\`, \`Combat On\`]`]]}
+
+	IF: Always
+		DO: SetState {Idle}
+
+~~ }
+
+STATE: {ToggleStay} ~~ {
+
+	IF: Expr {@CCStay==true}
+		DO: DoAll
+				ChatExpr {`#action follow`}
+				DoExpr {uisetlabel[uigetcontrol[Main, Follow], `Stay`]}
+				SetState {Idle}
+
+	IF: Expr {@CCStay==false}
+		DO: DoAll
+				ChatExpr {`#action stay`}
+				DoExpr {uisetlabel[uigetcontrol[Main, Follow], `Follow`]}
+				SetState {Idle}
+
+~~ }
+
+
+~~ STATE: {ToggleCombat} ~~ {
+
+~~ 	IF: Expr {ifthen[testpvar[CCOriginalVitalsEnableCombat], `@CCOriginalVitalsEnableCombat`, `vtgetsetting[EnableCombat]`]==true}
+~~ 		DO: DoAll
+~~ 				ChatExpr {`#vtoption enablecombat false`}
+~~ 				DoExpr {uisetlabel[uigetcontrol[Main, Combat], `Combat On`]}
+~~ 				SetState {Idle}
+
+~~ 	IF: Expr {ifthen[testpvar[CCOriginalVitalsEnableCombat], `@CCOriginalVitalsEnableCombat`, `vtgetsetting[EnableCombat]`]==false}
+~~ 		DO: DoAll
+~~ 				ChatExpr {`#vtoption enablecombat true`}
+~~ 				DoExpr {uisetlabel[uigetcontrol[Main, Combat], `Combat Off`]}
+~~ 				SetState {Idle}
+
+~~ ~~ }
 
 
 ~~ Use Virindi Hotkey System to map this state to a key like `tab` to toggle on and off combat/healing/buffing

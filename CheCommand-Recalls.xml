@@ -1,36 +1,35 @@
 <?xml version="1.0"?>
-<view width="168" height="217" title="Recalls">
-
+<view width="441" height="156" title="Meta - Custom Network">
     <control type="layout">
+        
+        <!-- Column 1 -->
+        <control type="button" name="Lifestone" left="5" top="5" width="100" height="20" text="Lifestone" actionexpr="chatbox[\#navto lifestone]" />
+        <control type="button" name="Lifestone Recall" left="5" top="30" width="100" height="20" text="Lifestone Recall" actionexpr="chatbox[\#navto lifestone recall]" />
+        <control type="button" name="Portal Recall" left="5" top="55" width="100" height="20" text="Portal Recall" actionexpr="chatbox[\#navto portal recall]" />
+        <control type="button" name="Primary" left="5" top="80" width="100" height="20" text="Primary" actionexpr="chatbox[\#navto primary]" />
+        <control type="button" name="Secondary" left="5" top="105" width="100" height="20" text="Secondary" actionexpr="chatbox[\#navto secondary]" />
 
-        <!-- <control type="button" name="All On" left="6" top="6" width="75" height="15" text="All On" setstate="Idle" actionexpr="chatbox[\#action all on]" />
-        <control type="button" name="All Off" left="87" top="6" width="75" height="15" text="All Off" setstate="Idle" actionexpr="chatbox[\#action all off]" /> -->
+        <!-- Column 2 -->
+        <control type="button" name="Facility Hub" left="115" top="5" width="100" height="20" text="Facility Hub" actionexpr="chatbox[\#navto facility hub]" />
+        <control type="button" name="Colosseum" left="115" top="30" width="100" height="20" text="Colosseum" actionexpr="chatbox[\#navto colosseum]" />
+        <control type="button" name="Glenden Wood" left="115" top="55" width="100" height="20" text="Glenden Wood" actionexpr="chatbox[\#navto glenden wood]" />
+        <control type="button" name="Ulgrim's" left="115" top="80" width="100" height="20" text="Ulgrim's" actionexpr="chatbox[\#navto ulgrims]" />
+        <control type="button" name="Candeth" left="115" top="105" width="100" height="20" text="Candeth" actionexpr="chatbox[\#navto candeth]" />
 
-        <control type="button" name="Follow" left="6" top="27" width="75" height="15" text="Follow" setstate="Idle" actionexpr="chatbox[\#action follow]" />
-        <control type="button" name="Stay" left="87" top="27" width="75" height="15" text="Stay" setstate="Idle" actionexpr="chatbox[\#action stay]" />
+        <!-- Column 3 -->
+        <control type="button" name="Aerlinthe" left="225" top="5" width="100" height="20" text="Aerlinthe" actionexpr="chatbox[\#navto aerlinthe]" />
+        <control type="button" name="Aphus Lassel" left="225" top="30" width="100" height="20" text="Aphus Lassel" actionexpr="chatbox[\#navto aphus lassel]" />
+        <control type="button" name="Bur" left="225" top="55" width="100" height="20" text="Bur" actionexpr="chatbox[\#navto bur]" />
+        <control type="button" name="Mount Lethe" left="225" top="80" width="100" height="20" text="Mount Lethe" actionexpr="chatbox[\#navto mount lethe]" />
+        <control type="button" name="Sanctuary" left="225" top="105" width="100" height="20" text="Sanctuary" actionexpr="chatbox[\#navto sanctuary]" />
+        <control type="button" name="Singularity Caul" left="225" top="130" width="100" height="20" text="Singularity Caul" actionexpr="chatbox[\#navto singularity caul]" />
 
-        <!-- <control type="button" name="Nav Only" left="87" top="48" width="75" height="15" text="Nav Only" setstate="Idle" actionexpr="chatbox[\#action nav only]" /> -->
-        <control type="button" name="Forcebuff" left="6" top="48" width="75" height="15" text="Forcebuff" setstate="Idle" actionexpr="chatbox[\#action buff]" />
-
-        <control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="Idle" actionexpr="chatbox[\#vtoption enablecombat true]" />
-        <control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablecombat false]" />
-
-        <control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablenav false]" />
-        <control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="Idle" actionexpr="chatbox[\#vtoption enablenav true]" />
-
-        <control type="button" name="Rares Only" left="87" top="111" width="75" height="15" text="Rares Only" setstate="Idle" actionexpr="chatbox[\#vtoption LootOnlyRareCorpses true]" />
-        <control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Idle" actionexpr="chatbox[\#vtoption EnableLooting true]" />
-
-        <control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" actionexpr="chatbox[\#vtoption enablebuffing true]" />
-        <control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" actionexpr="chatbox[\#vtoption enablebuffing false]" />
-
-        <control type="button" name="Portal" left="6" top="174" width="75" height="15" text="Portal" setstate="Idle" actionexpr="chatbox[\#action portal]" />
-        <control type="button" name="ShowNavto" left="87" top="174" width="75" height="15" text="Navto >>" setstate="ShowNavto" />
-
-        <control type="button" name="NPC" left="6" top="195" width="75" height="15" text="NPC" setstate="Idle" actionexpr="chatbox[\#action npc]" />
-        <control type="button" name="ShowJump" left="87" top="195" width="75" height="15" text="Jump >>" setstate="ShowJump" />
-
+        <!-- Column 4 -->
+        <control type="button" name="Gear Knight" left="335" top="5" width="100" height="20" text="Gear Knight" actionexpr="chatbox[\#navto gear knight]" />
+        <control type="button" name="Graveyard" left="335" top="30" width="100" height="20" text="Graveyard" actionexpr="chatbox[\#navto graveyard]" />
+        <control type="button" name="Neftet" left="335" top="55" width="100" height="20" text="Neftet" actionexpr="chatbox[\#navto neftet]" />
+        <control type="button" name="Olthoi" left="335" top="80" width="100" height="20" text="Olthoi" actionexpr="chatbox[\#navto olthoi]" />
+        <control type="button" name="Rynthid" left="335" top="105" width="100" height="20" text="Rynthid" actionexpr="chatbox[\#navto rynthid]" />
 
     </control>
-
 </view>

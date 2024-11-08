@@ -3,31 +3,29 @@
 
     <control type="layout">
 
-        <!-- <control type="button" name="All On" left="6" top="6" width="75" height="15" text="All On" setstate="Idle" actionexpr="chatbox[\#action all on]" />
-        <control type="button" name="All Off" left="87" top="6" width="75" height="15" text="All Off" setstate="Idle" actionexpr="chatbox[\#action all off]" /> -->
+        <control type="button" name="Portal" left="6" top="6" width="75" height="35" text="Portal" setstate="Idle" actionexpr="chatbox[\#action portal]" />
+        <control type="button" name="NPC" left="87" top="6" width="75" height="35" text="NPC" setstate="Idle" actionexpr="chatbox[\#action npc]" />
 
-        <control type="button" name="Follow" left="6" top="27" width="75" height="15" text="Follow" setstate="Idle" actionexpr="chatbox[\#action follow]" />
-        <control type="button" name="Stay" left="87" top="27" width="75" height="15" text="Stay" setstate="Idle" actionexpr="chatbox[\#action stay]" />
-
-        <!-- <control type="button" name="Nav Only" left="87" top="48" width="75" height="15" text="Nav Only" setstate="Idle" actionexpr="chatbox[\#action nav only]" /> -->
-        <control type="button" name="Forcebuff" left="6" top="48" width="75" height="15" text="Forcebuff" setstate="Idle" actionexpr="chatbox[\#action buff]" />
+        <control type="button" name="Follow" left="6" top="48" width="75" height="15" text="Follow" setstate="ToggleStay" />
+        <control type="button" name="Forcebuff" left="87" top="48" width="75" height="15" text="Forcebuff" setstate="Idle" actionexpr="chatbox[\#action buff]" />
 
         <control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="Idle" actionexpr="chatbox[\#vtoption enablecombat true]" />
         <control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablecombat false]" />
 
-        <control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablenav false]" />
         <control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="Idle" actionexpr="chatbox[\#vtoption enablenav true]" />
+        <control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablenav false]" />
 
-        <control type="button" name="Rares Only" left="87" top="111" width="75" height="15" text="Rares Only" setstate="Idle" actionexpr="chatbox[\#vtoption LootOnlyRareCorpses true]" />
-        <control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Idle" actionexpr="chatbox[\#vtoption EnableLooting true]" />
+        <control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Idle" actionexpr="chatbox[\#vtoption enablelooting true]" />
+        <control type="button" name="Loot Off" left="87" top="111" width="35" height="15" text="Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablelooting false]" />
+        <control type="button" name="Rares" left="128" top="111" width="35" height="15" text="Rares" setstate="Idle" actionexpr="chatbox[\#vtoption lootonlyrarecorpses true]" />
 
         <control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" actionexpr="chatbox[\#vtoption enablebuffing true]" />
         <control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" actionexpr="chatbox[\#vtoption enablebuffing false]" />
 
-        <control type="button" name="Portal" left="6" top="174" width="75" height="15" text="Portal" setstate="Idle" actionexpr="chatbox[\#action portal]" />
-        <control type="button" name="ShowNavto" left="87" top="174" width="75" height="15" text="Navto >>" setstate="ShowNavto" />
+        <!-- <control type="button" name="Portal" left="6" top="174" width="75" height="15" text="Portal" setstate="Idle" actionexpr="chatbox[\#action portal]" /> -->
+        <!-- <control type="button" name="NPC" left="6" top="195" width="75" height="15" text="NPC" setstate="Idle" actionexpr="chatbox[\#action npc]" /> -->
 
-        <control type="button" name="NPC" left="6" top="195" width="75" height="15" text="NPC" setstate="Idle" actionexpr="chatbox[\#action npc]" />
+        <control type="button" name="ShowNavto" left="87" top="174" width="75" height="15" text="Navto >>" setstate="ShowNavto" />
         <control type="button" name="ShowJump" left="87" top="195" width="75" height="15" text="Jump >>" setstate="ShowJump" />
 
 
