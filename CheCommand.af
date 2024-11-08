@@ -608,6 +608,7 @@ STATE: {HandleActions} ~~ {
 				DoExpr {echo[`#action update: All characters reload the meta with the latest changes`, $COLOR_INFO]}
 				DoExpr {echo[`#action mule: All characters navigate to Sort de Che and mule`, $COLOR_INFO]}
 				DoExpr {echo[`#action npc: All characters use the nearest NPC`, $COLOR_INFO]}
+				DoExpr {echo[`#action pack: All characters use mag tools auto pack`, $COLOR_INFO]}
 				DoExpr {echo[`#action peace: All characters enter peace mode`, $COLOR_INFO]}
 				DoExpr {echo[`#action portal: All characters use the nearest portal`, $COLOR_INFO]}
 				DoExpr {echo[`#action quit: All characters exit the game`, $COLOR_INFO]}
@@ -649,6 +650,11 @@ STATE: {HandleActions} ~~ {
 	~~ Handle `#action update`
 	IF: Expr {(update)#getvar[capturegroup_actiontext]}
 		DO: Chat {/vt meta load CheCommand}
+
+	IF: Expr {(pack)#getvar[capturegroup_actiontext]}
+		DO: DoAll
+				Chat {/mt autopack}
+				SetState {Idle}
 
 	~~ Handle `#action mule`
 	IF: Expr {(mule)#getvar[capturegroup_actiontext]}
