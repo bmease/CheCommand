@@ -137,6 +137,14 @@ STATE: {Default} ~~ {
 				~~ Use Auto Timers
 				DoExpr {setpvar[CCAutoTimers, ifthen[testpvar[CCAutoTimers], `@CCAutoTimers`, `true`]]}
 
+				~~ Profiles (UB does not support dictionaries in pvars so using two lists instead)
+				DoExpr {setpvar[CCProfileKeys, ifthen[testpvar[CCProfileKeys], `@CCProfileKeys`, `listcreate[]`]]}
+				DoExpr {setpvar[CCProfileValues, ifthen[testpvar[CCProfileValues], `@CCProfileValues`, `listcreate[]`]]}
+
+				~~ Profiles landcells (UB does not support dictionaries in pvars so using two lists instead)
+				DoExpr {setpvar[CCProfileLandcellKeys, ifthen[testpvar[CCProfileLandcellKeys], `@CCProfileLandcellKeys`, `listcreate[]`]]}
+				DoExpr {setpvar[CCProfileLandcellValues, ifthen[testpvar[CCProfileLandcellValues], `@CCProfileLandcellValues`, `listcreate[]`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -334,10 +342,18 @@ STATE: {Idle} ~~ {
 
 	~~ Display message if route is available
 	IF: All
-			Expr {listcount[listfilter[dictkeys[$CCRoutes], `cstrf[getplayerlandcell[], \`X8\`]==$1`]]>0}
 			ExitPortal	
+			Expr {listcount[listfilter[dictkeys[$CCRoutes], `cstrf[getplayerlandcell[], \`X8\`]==$1`]]>0}
 		DO: DoAll
 				DoExpr {echo[`[INFO] Available route found!`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Display message if profile is available
+	IF: All
+			ExitPortal
+			Expr {listindexof[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]!=-1}
+		DO: DoAll
+				DoExpr {echo[`[INFO] Available profile found!`, $COLOR_INFO]}
 				SetState {Idle}
 
 	~~ Handle Actions
@@ -384,6 +400,51 @@ STATE: {Idle} ~~ {
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleRoute}	
+
+	~~ Load Profiles
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#profile\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {AutoloadProfile}
+
+	~~ Handle `#profile add`
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#profile add (?<profilename>.*) (?<profilevalue>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {ProfileAdd}
+
+	~~ Handle `#profile addlandcell`
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#profile addlandcell (?<profilename>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {ProfileAddLandcell}
+
+	~~ Handle `#profile load`
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#profile load (?<profilename>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {ProfileLoad}
+
+	~~ Handle Profiles
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#profile (?<profiletext>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleProfile}
 
 	~~ Handle Killtasks
 	IF:	All
@@ -1208,6 +1269,133 @@ STATE: {HandleRoute} ~~ {
 				ChatExpr {`/vt nav load `+dictgetitem[$CCRoutes, cstrf[getplayerlandcell[], `X8`]]}
 				SetOpt {EnableNav} {True}
 				SetOpt {NavPriorityBoost} {False}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {HandleProfile} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Handle `#profile help`
+	IF: Expr {(help)#getvar[capturegroup_profiletext]}
+		DO: DoAll
+				DoExpr {echo[`#profile: Loads the profile associated with the landcell`, $COLOR_INFO]}
+				DoExpr {echo[`#profile <Profile Nickname>: Loads the profile on all characters`, $COLOR_INFO]}
+				DoExpr {echo[`#profile add <Profile Nickname> <Profile Filename>: Adds the profile to the saved profiles list`, $COLOR_INFO]}
+				DoExpr {echo[`#profile addlandcell <Profile Name>: Adds the profile with the current landcell to the auto load profile list`, $COLOR_INFO]}
+				DoExpr {echo[`#profile landcell: Shows the current profile for the landcell`, $COLOR_INFO]}
+				DoExpr {echo[`#profile list: Lists all saved profiles`, $COLOR_INFO]}
+				DoExpr {echo[`#profile load <Profile Nickname>: Loads the profile on all characters`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Warn if `#profile landcell` has no entry
+	IF: All
+			Expr {(landcell)#getvar[capturegroup_profiletext]}
+			Expr {listindexof[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]==-1}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No profile found for landcell `+cstrf[getplayerlandcell[], `X8`], $COLOR_WARN]}
+				SetState {Idle}
+
+	~~ Show `#profile landcell` value
+	IF: All
+			Expr {(landcell)#getvar[capturegroup_profiletext]}
+			Expr {listindexof[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]!=-1}
+		DO: DoAll
+				DoExpr {$id=listindexof[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]}
+				DoExpr {echo[cstrf[getplayerlandcell[], `X8`]+` => `+listgetitem[@CCProfileLandcellValues, $id], $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Show `#profile list` values
+	IF: Expr {(list)#getvar[capturegroup_profiletext]}
+		DO: DoAll
+				DoExpr {listmap[@CCProfileKeys, `echo[$1+\` => \`+listgetitem[@CCProfileValues, $0], $COLOR_INFO]`]}
+				SetState {Idle}
+
+
+	~~ Handle no match for profiletext
+	IF: Expr {$LEVEL_WARN>=@CCDebug}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No matching argument for #profile`, $COLOR_WARN]}
+				SetState {Idle}
+
+~~ }
+
+STATE: {ProfileAdd} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Add a profile
+	IF: Always
+		DO: DoAll
+				DoExpr {listadd[@CCProfileKeys, $capturegroup_profilename]}
+				DoExpr {listadd[@CCProfileValues, $capturegroup_profilevalue]}
+				DoExpr {echo[`Added `+$capturegroup_profilename+` => `+$capturegroup_profilevalue, $COLOR_INFO]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ProfileLoad} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Warn if no profile found
+	IF: Expr {listindexof[@CCProfileKeys, $capturegroup_profilename]==-1}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No profile found`, $COLOR_WARN]}
+				SetState {Idle}
+
+	~~ load profile
+	IF: Expr {listindexof[@CCProfileKeys, $capturegroup_profilename]!=-1}
+		DO: DoAll
+				DoExpr {$id=listindexof[@CCProfileKeys, $capturegroup_profilename]}
+				ChatExpr {`/vt settings loadchar `+listgetitem[@CCProfileValues, $id]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Loaded profile \`+listgetitem[@CCProfileValues, $id]]`, `false`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ProfileAddLandcell} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Add a profile for a landcell
+	IF: Always
+		DO: DoAll
+				DoExpr {listadd[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]}
+				DoExpr {listadd[@CCProfileLandcellValues, $capturegroup_profilename]}
+				DoExpr {echo[`Added `+cstrf[getplayerlandcell[], `X8`]+` => `+$capturegroup_profilename, $COLOR_INFO]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {AutoloadProfile} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Warn if landcell has no entry
+	IF: Expr {listindexof[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]==-1}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No profile found for landcell `+cstrf[getplayerlandcell[], `X8`], $COLOR_WARN]}
+				SetState {Idle}
+
+	~~ Load profile for landcell
+	IF: Expr {listindexof[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]!=-1}
+		DO: DoAll
+				DoExpr {$id=listindexof[@CCProfileLandcellKeys, cstrf[getplayerlandcell[], `X8`]]}
+				DoExpr {$nickname=listgetitem[@CCProfileLandcellValues, $id]}
+				DoExpr {$nid=listindexof[@CCProfileKeys, $nickname]}
+				ChatExpr {`/vt settings loadchar `+listgetitem[@CCProfileValues, $nid]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Loaded profile \`+listgetitem[@CCProfileValues, $nid]]`, `false`]}
 				SetState {Idle}
 
 ~~ }
