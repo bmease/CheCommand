@@ -651,6 +651,7 @@ STATE: {HandleActions} ~~ {
 	IF: Expr {(update)#getvar[capturegroup_actiontext]}
 		DO: Chat {/vt meta load CheCommand}
 
+	~~ Handle `#action pack`
 	IF: Expr {(pack)#getvar[capturegroup_actiontext]}
 		DO: DoAll
 				Chat {/mt autopack}
