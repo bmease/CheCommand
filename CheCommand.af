@@ -1829,6 +1829,7 @@ STATE: {AutoGive} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mana Siphon`, `Unstable Mana Stone`]} ~~ Society
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kervim'telek`, listcreate[`Essence of Norshuntyr`, `Essence of Night Brier`, `Essence of Wind Fury`, `Essence of Zerzelikyr`]]} ~~ Virindian Rise
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `The Deep`, `Altered Dark Remoran Fin`]} ~~ Society
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lord Kresovus`, `Sigil of Linvak Tukal`]} ~~ Aerbax's Prodigal Lugian
 
 	~~ No NPC nearby with the Autogive name
 	IF: Not Expr {dicthaskey[$AUTOGIVE_PROFILE, wobjectgetname[wobjectfindnearestbyobjectclass[$NPC]]]}
