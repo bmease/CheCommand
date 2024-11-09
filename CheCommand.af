@@ -2158,6 +2158,14 @@ STATE: {UsePortal} ~~ {
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No portal within range!\`]`, `false`]}
 				SetState {LeaderCheck}
 
+	~~ Warn if you must complete a quest to interact with that portal.
+	IF: All
+			Expr {isportaling[]==false}
+			ChatMatch {You must complete a quest to interact with that portal.}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Unable to use portal!\`]`, `false`]}
+				SetState {LeaderCheck}
+
 	~~ Use the Portal
 	IF:	Expr {isportaling[]==false}
 		DO:	DoAll
