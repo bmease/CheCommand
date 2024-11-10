@@ -45,6 +45,9 @@ STATE: {Default} ~~ {
 
 	IF: Always
 		DO: DoAll
+				DoExpr {setvar[NPC, 37]}
+				DoExpr {setvar[TYPE_OBJECT, 7]}
+
 				DoExpr {setvar[OriginalEnableNav, vtgetsetting[EnableNav]]}
 				DoExpr {setvar[metaname, `CheCommandNavPortalspaceActivator`]}
 
@@ -181,8 +184,10 @@ STATE: {UseEmpyreanPortalspaceActivator} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Finished}
 
-	IF: Always
-		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Using Empyrean Portalspace Activator\`, $COLOR_INFO]`, `false`]}
+	IF: Expr {testvar[using]==false}
+		DO:	DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Using Empyrean Portalspace Activator\`, $COLOR_INFO]`, `false`]}
+				DoExpr {$using=true}
 
 	IF: Always
 		DO: DoAll
@@ -202,8 +207,12 @@ STATE: {UseEmpyreanPortalspaceActivator} ~~ {
 				SetState {Finished}
 
 	~~ Hand item to Empyrean Portalspace Activator
-	IF: Always
-		DO: ChatExpr {`/ub givep `+$item+` to Empyrean Portalspace Activator`}
+	IF: All
+			Expr {isportaling[]==false}
+			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$NPC, `Empyrean Portalspace Activator`]]==$TYPE_OBJECT}
+		DO: DoAll
+				DoExpr {actiontrygiveitem[wobjectfindininventorybyname[$item], wobjectfindnearestbynameandobjectclass[$NPC, `Empyrean Portalspace Activator`]]}
+				SetState {UseEmpyreanPortalspaceActivator}
 
 	IF:	All
 			ExitPortal
@@ -220,6 +229,10 @@ STATE: {Finished} ~~ {
 	~~ Reset all options to what they originally were
 	IF: Always
 		DO: SetOpt {EnableNav} {$OriginalEnableNav}
+
+	~~ Clear all variables
+	IF: Always
+		DO: DoExpr {listmap[listcreate[`item`, `using`, `metaname`, `arguments`, `destination`, `DESTINATION_LANDCELLS`, `DESTINATION_ITEMS`], `clearvar[$1]`]}
 
 	IF: Always
 		DO: ChatExpr {`/vt meta load `+$CCReturnMeta}
