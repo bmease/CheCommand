@@ -2688,6 +2688,12 @@ STATE: {HandleRecall} ~~ {
 	IF: Expr {testvar[OptionsSet]==false}
 		DO: CallState {DisableOptions} {HandleRecall}
 
+	~~ Close recalls view
+	IF: Expr {uiviewvisible[Recalls]}
+		DO: DoAll
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
+				DestroyView {Recalls}
+
 	~~ Cast the recall spell
 	IF: Expr {isportaling[]==false}
 		DO: DoAll
