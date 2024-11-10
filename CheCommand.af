@@ -464,14 +464,32 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleFlagging}	
 
+	~~ Handle Auto Looting
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#loot\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {AutoLoot}
+
 	~~ Handle Looting
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#loot (?<item>.*) from (?<corpse>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleLooting}	
+
+	~~ Handle Looting Info
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#loot (?<loottext>.*)\"$} {}
 			Any
 				Expr {$capturegroup_saythink==`say`}
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
-		DO: SetState {HandleLooting}	
+		DO: SetState {HandleLootingInfo}
 
 	~~ Handle Facing a direction
 	IF: All
@@ -1544,13 +1562,27 @@ STATE: {HandleFlagging} ~~ {
 ~~ }
 
 
+STATE: {HandleLootingInfo} ~~ {
+
+	~~ IF: Expr {(auto)#getvar[capturegroup_loottext]}
+	~~ 	DO: SetState {AutoLoot}
+
+	IF: Expr {(help)#getvar[capturegroup_loottext]}
+		DO: DoAll
+				DoExpr {echo[`#loot: Automatically loot items from corpses for many legendary quests.`, $COLOR_INFO]}
+				DoExpr {echo[`#loot <item name> from <corpse name>: Loot the item from a corpse on all characters.`, $COLOR_INFO]}
+				SetState {Idle}
+
+~~ }
+
+
 STATE: {HandleLooting} ~~ {
 
-	IF: Expr {(auto)#getvar[capturegroup_loottext]}	
-		DO: SetState {AutoLoot}
-
-	IF: Expr {(test)#getvar[capturegroup_loottext]}	
-		DO: SetState {Loot}
+	IF: Always
+		DO: DoAll
+				DoExpr {$LootCorpseItem=$capturegroup_item}
+				DoExpr {$LootCorpseName=$capturegroup_corpse}
+				SetState {Loot}
 
 ~~ }
 
@@ -2032,7 +2064,21 @@ STATE: {AutoLoot} ~~ {
 
 	IF: Always
 		DO: DoAll
-				DoExpr {setvar[$AUTO_LOOT_CORPSES, dictcreate[]]}
+				DoExpr {setvar[AUTO_LOOT_CORPSES, dictcreate[]]}
+
+				~~ Sundering Quests
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Bitter Tongue`, `Bitter Tongue's Head`]} ~~ Drudge Hideout Infiltration
+
+				~~ Legendary Quests
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Izexi`, `Ancient Falatacot Symbol`]} ~~ Foundry of Izexi Quest
+
+				~~ Luminance Quests
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Zrikux`, `Orders for Zrikux`]} ~~ Falacot Depot
+
+				~~ Random
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Battle Lord Gregor`, `Battle Lord Gregor's Mnemosyne`]} ~~ Luminance Flagging
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Shadow Kresovus`, `Sigil of Linvak Tukal`]} ~~ Aerbax's Prodigal Lugian
+
 
 	~~ Warn if there are no corpses
 	IF: Expr {listcount[wobjectfindalllandscapebyobjectclass[$CORPSE]]==0}
@@ -2040,31 +2086,59 @@ STATE: {AutoLoot} ~~ {
 				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] No corpses found\`, $COLOR_WARN]`, `false`]}
 				SetState {Idle}
 
+	~~ Find all corpses with a name in $AUTO_LOOT_CORPSES
+	IF: Expr {listcount[wobjectfindalllandscapebyobjectclass[$CORPSE]]>0}
+		DO: DoAll
+				DoExpr {$foundCorpses=listfilter[wobjectfindalllandscapebyobjectclass[$CORPSE], `listcontains[dictkeys[$AUTO_LOOT_CORPSES], wobjectgetstringprop[$1, $STRING_PROP_NAME]]`]}
+
+	~~ Warn if no corpses found with a name in $AUTO_LOOT_CORPSES
+	IF: All
+			Expr {listcount[wobjectfindalllandscapebyobjectclass[$CORPSE]]>0}
+			Expr {listcount[$foundCorpses]==0}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No auto loot corpses found!\`]`, `false`]}
+				DoExpr {clearvar[foundCorpses]}
+				SetState {Idle}
+
+	~~ Send the first corpse found to Loot
+	IF: All
+			Expr {listcount[wobjectfindalllandscapebyobjectclass[$CORPSE]]>0}
+			Expr {listcount[$foundCorpses]>0}
+		DO: DoAll
+				DoExpr {$LootCorpseItem=dictgetitem[$AUTO_LOOT_CORPSES, wobjectgetstringprop[listgetitem[$foundCorpses, 0], $STRING_PROP_NAME]]}
+				DoExpr {$LootCorpseName=wobjectgetstringprop[listgetitem[$foundCorpses, 0], $STRING_PROP_NAME]}
+				DoExpr {clearvar[foundCorpses]}
+				SetState {Loot}
+
 ~~ }
 
 
 STATE: {Loot} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	DoAll
+				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`], `clearvar[$1]`]}
+				SetState {Idle}
 
+	~~ Disable all options
+	IF: Expr {testvar[OptionsSet]==false}
+		DO: CallState {DisableOptions} {Loot}
 
-	IF: Always
-		DO: DoAll
-				DoExpr {$LootCorpseName=`Corpse of .*`}
-				DoExpr {$LootCorpseItem=`Greater Mana Stone`}
+	IF: Expr {testvar[CorpseBlacklist]==false}
+		DO: DoExpr {$CorpseBlacklist=listcreate[]}
 
 	~~ Find Potential Corpses
 	IF: Always
 		DO: DoAll
 				DoExpr {$allCorpses=wobjectfindalllandscapebynamerx[$LootCorpseName]}
-				DoExpr {$foundCorpses=listfilter[$allCorpses, `listfilter[$allCorpses, \`listcontains[$CorpseBlacklist, wobjectgetid[$1]]==false\`]`]}
+				DoExpr {$foundCorpses=listfilter[$allCorpses, `listcontains[$CorpseBlacklist, wobjectgetid[$1]]==false`]]}
 
 	~~ Out of corpses
 	IF: Expr {listcount[$foundCorpses]==0}
 		DO: DoAll
 				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] No corpse found for \`+$LootCorpseName, $COLOR_WARN]`, `false`]}
-				SetState {Idle}
+				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`], `clearvar[$1]`]}
+				SetState {LeaderCheck}
 
 	~~ OpenCorpse of first foundCorpse
 	IF: Expr {listcount[$foundCorpses]>0}
@@ -2077,12 +2151,14 @@ STATE: {Loot} ~~ {
 STATE: {OpenCorpse} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	DoAll
+				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`], `clearvar[$1]`]}
+				SetState {LeaderCheck}
 
 	~~ Has an open corpse
 	IF: Expr {getobjectinternaltype[wobjectgetopencontainer[]]==$TYPE_OBJECT}
 		DO: DoAll
-				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Opened corpse\`, $COLOR_INFO]`, `false`]}
+				~~ DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Opened corpse\`, $COLOR_INFO]`, `false`]}
 				SetState {LootCorpse}
 
 	~~ Try opening the corpse
@@ -2097,24 +2173,57 @@ STATE: {OpenCorpse} ~~ {
 STATE: {LootCorpse} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	DoAll
+				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`], `clearvar[$1]`]}
+				SetState {LeaderCheck}
 
-	IF: Always
+	~~ IF: Always
+	~~ 	DO: DoAll
+	~~ 			DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Looting corpse\`, $COLOR_INFO]`, `false`]}
+
+	~~ Corpse is not open
+	~~ IF: Expr {getobjectinternaltype[wobjectgetopencontainer[]]==$TYPE_OBJECT}
+	~~ 	DO: DoAll
+	~~ 			DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[WARN] Corpse is not open!\`, $COLOR_WARN]`, `false`]}
+	~~ 			SetState {OpenCorpse}
+
+	~~ Count how many of the item is in inventory
+	IF: Expr {testvar[ItemCount]==false}
 		DO: DoAll
-				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Looting corpse\`, $COLOR_INFO]`, `false`]}
+				DoExpr {$ItemCount=getitemcountininventorybynamerx[$LootCorpseItem]}
+				DoExpr {`$ItemCount: `+$ItemCount}
 
+	~~ Find all wanted items on the corpse
 	IF: Always
 		DO: DoAll
 				DoExpr {$CorpseItems=wobjectfindallbycontainer[wobjectgetopencontainer[]]}
 				DoExpr {$CorpseItemsWanted=listfilter[$CorpseItems, `wobjectgetstringprop[$1, $STRING_PROP_NAME]==$LootCorpseItem`]}
 
+	~~ Warn if unable to pickup item
+	IF: ChatMatch {You have solved this quest too recently!}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Unable to loot \`+$LootCorpseItem]`, `false`]}
+				DoExpr {actiontryuseitem[wobjectgetopencontainer[]]}  ~~ Close the container
+				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`], `clearvar[$1]`]}
+				SetState {LeaderCheck}
+
+	~~ Picked up an item since inventory has increased
+	IF: Expr {getitemcountininventorybynamerx[$LootCorpseItem]>$ItemCount}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Looted \`+$LootCorpseItem]`, `false`]}
+				DoExpr {actiontryuseitem[wobjectgetopencontainer[]]}  ~~ Close the container
+				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`], `clearvar[$1]`]}
+				SetState {LeaderCheck}
+
+	~~ Warn if no items found on the corpse
 	IF: Expr {listcount[$CorpseItemsWanted]==0}
 		DO: DoAll
 				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] Did not find the item \`+$LootCorpseItem+\` on \`+$LootCorpseName, $COLOR_WARN]`, `false`]}
-				DoExpr {actiontryuseitem[wobjectgetopencontainer[]]}
+				DoExpr {actiontryuseitem[wobjectgetopencontainer[]]}  ~~ Close the container
 				DoExpr {listadd[$CorpseBlacklist, wobjectgetid[$Corpse]]}
 				SetState {Loot}
 
+	~~ Pickup item from the corpse
 	IF: Expr {listcount[$CorpseItemsWanted]>0}
 		DO: DoAll
 				DoExpr {$item=listpop[$CorpseItemsWanted, 0]}
