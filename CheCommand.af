@@ -771,7 +771,7 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {echo[`Town Network (Sho):`, $COLOR_INFO]}
 				DoExpr {echo[`#navto baishi: Navigate to Baishi`, $COLOR_INFO]}
 				DoExpr {echo[`#navto freehold: Navigate to Freehold`, $COLOR_INFO]}
-				DoExpr {echo[`#navto hebianto: Navigate to Hebian-To`, $COLOR_INFO]}
+				DoExpr {echo[`#navto hebian-to: Navigate to Hebian-To`, $COLOR_INFO]}
 				DoExpr {echo[`#navto kara: Navigate to Kara`, $COLOR_INFO]}
 				DoExpr {echo[`#navto kryst: Navigate to Kryst`, $COLOR_INFO]}
 				DoExpr {echo[`#navto lin: Navigate to Lin`, $COLOR_INFO]}
@@ -1085,7 +1085,7 @@ STATE: {HandleNavigation} ~~ {
 				SetState {CallMeta}
 
 	~~ Handle `#navto hebian-to`
-	IF: Expr {(hebian to)#getvar[capturegroup_navdestination]}
+	IF: Expr {(hebian-to)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
 				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Hebian-To`]]}
