@@ -789,6 +789,7 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {echo[`#navto couch: Navigate to Haven and sit on the couch`, $COLOR_INFO]}
 				DoExpr {echo[`#navto frozen valley: Navigate to Frozen Valley (requires flagging)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto facility hub: Navigate to Facility Hub (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto haven buffs: Navigate to Haven and use all buffing items`, $COLOR_INFO]}
 				DoExpr {echo[`#navto hoshino: Navigate to Hoshino tent (requires flagging)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto gear knight: Navigate to Gear Knights (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto glenden wood: Navigate to Glenden Wood (requires spell)`, $COLOR_INFO]}
@@ -859,9 +860,15 @@ STATE: {HandleNavigation} ~~ {
 				SetState {Idle}
 
 	~~ Handle `#navto comps`
-	IF: Expr {(comps)#getvar[capturegroup_navdestination]}	
+	IF: Expr {(comps)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavRecomp`]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto haven buffs`
+	IF: Expr {(haven buffs)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavHavenBuffs`]}
 				SetState {CallMeta}
 
 	~~ Handle `#navto colosseum`
