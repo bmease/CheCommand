@@ -148,6 +148,9 @@ STATE: {Default} ~~ {
 				~~ Amount of time to surpress announcing available looting in seconds
 				DoExpr {setpvar[CCAnnounceLootingTimeout, ifthen[testpvar[CCAnnounceLootingTimeout], `@CCAnnounceLootingTimeout`, `60`]]}
 
+				~~ Amount of time to surpress announcing available giving in seconds
+				DoExpr {setpvar[CCAnnounceGivingTimeout, ifthen[testpvar[CCAnnounceGivingTimeout], `@CCAnnounceGivingTimeout`, `60`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -172,6 +175,65 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$CCRoutes, `002E02D1`, `CC-Feeding Tube`]}
 				DoExpr {dictadditem[$CCRoutes, `5879052B`, `CC-Path of Rage`]}
 
+	~~ Setup Auto Giving
+	IF: Always
+		DO: DoAll
+				DoExpr {setvar[AUTOGIVE_PROFILE, dictcreate[]]}
+
+				~~ Sundering Quests
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Liora Fenn`, `Bitter Tongue's Head`]} ~~ Drudge Hideout Infiltration
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Emissary of Asheron`, listcreate[`Virindi Observer's Message Shard`, `Dark Apostate Shard`, `Engorged Bloodstone Shards`, `Virindi Armorer's Message Shard`, `Dericost Gem of Luminance`]]} ~~ Return to Frore, Empyrean Rescue
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Zervakarix`, `Viridian Rise Pocket Watch`]} ~~ Return to Frore
+
+				~~ Legendary Quests
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Uber P`, `Letter from Mouf`]} ~~ Rescuing Mouf P
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mr. P`, listcreate[`Letter from Mouf and Uber P`, `Pet Mouf Igloo`]]} ~~ Rescuing Mouf P
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kraytuss Nallah`, `Bone Fragment from Shikken Moriyaki`]} ~~ Serpent Burial Grounds
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Collector Golem`, listcreate[`Glowing Statue Shard`, `Essence of the Sundered`, `Empowered Empyrean Robe`]]} ~~ Saving Asheron
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fanzen San the Translator`, listcreate[`Complete Page of Lost Lore`, `Orders for Zrikux`]]} ~~ Lost Lore, Falacot Depot
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Popkin of the Gate`, `The Story of the Lost Sisters`]} ~~ Lost Lore
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Ruby Annex`, `Shroud of Bloodlust`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Amethyst Annex`, `Shroud of Spite`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Jade Annex`, `Shroud of Envy`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sapphire Annex`, `Shroud of Apathy`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rinne Gorber`, listcreate[`Spirit Crystal`, `Spirited Bloodlust Guard`]]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lady Daenerah`, `Sealed Tome`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mareeno Donn`, `First Lieutenant's Insignia.`]} ~~ Hoshino Infiltration
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fahneph`, `Ancient Falatacot Symbol`]} ~~ Foundry of Izexi
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mhoire Soldier`, `Book`]} ~~ Geraine's Study
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Commander Presk`, `Sealed Scroll for Commander Presk`]} ~~ Lugian Assault
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Raksaa`, listcreate[`Sealed Scroll for Raksaa`, `Casting Stone`]]} ~~ Lugian Assault
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Ol'tra`, listcreate[`Crimson Scarab`, `Purified Crimson Scarab`]]} ~~ End of Days
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Morgethais`, `Shard of the Curator of Torment's Mask`]} ~~ Defeating the Curator of Torment
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Spirit of Bist'elle`, `Mirror Shard`]} ~~ Hoshino Must Die
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mortified Soldier`, `Torn Note`]} ~~ Gurog Creation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fayza`, listcreate[`Journal of a Soldier`, `Energy Infused Rock`]]} ~~ Gurog Creation, Deewains
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kuyiza bint Zayi the Translator`, listcreate[`Carefully rolled scroll`, `Large Tome`]]} ~~ Bloodstone Investigation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sir Donovan`, listcreate[`Bloodstone Report`, `Research Notes`, `Shattered Master Bloodstone Shard`, `Delicate Bloodstone Wand`, `Sturdy Bloodstone Wand`]]} ~~ Bloodstone Investigation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Virindi Delegate`, listcreate[`Olthoi Hive Queen Carapace`, `Virindi Sentinel's Message Shard`]]} ~~ Hive Queen Assault, Dream Reaver Investigation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mhoire Lieutenant`, `Geraine's Tome \\(1\\)`]} ~~ Geraine's Hosts
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Darviss`, `Spectral Nanjou Master's Sword`]} ~~ Ninja Academy
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kinchou`, `Coded Tanada Scroll`]} ~~ Tanada Intercept
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kousha`, `Tanada Neophyte's Mask`]} ~~ Tanada Slaughter
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Shorikan`, `Spectral Nanjou Zaikan's Sword`]} ~~ Nanjou Stockade
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `El'Yst Maggann`, `Idol of the Recluse`]} ~~ Four Corners
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aetherium Ore`, `Tainted Aetherium Oil`]} ~~ Rynthid Foundry
+
+				~~ Luminance Quests
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Apostate Aetherium Deposit`, `Aetheric Resonator`]} ~~ Nexus Crawl
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Diyas al-Yat`, `Apostate Message Shard`]} ~~ Uncovering the Renegades
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aruq ibn Balthar`, `Apostate Orders`]} ~~ Uncovering the Renegades
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Neelic`, `Translated Orders for Zrikux`]} ~~ Falacot Depot
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Omarah`, `Essence of Dravann`]} ~~ Virindi Rescue
+
+				~~ Random
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fiun Rehlyun`, `Insatiable Eater Jaw`]} ~~ Blank Aug Gem
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mana Siphon`, `Unstable Mana Stone`]} ~~ Society
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kervim'telek`, listcreate[`Essence of Norshuntyr`, `Essence of Night Brier`, `Essence of Wind Fury`, `Essence of Zerzelikyr`]]} ~~ Virindian Rise
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `The Deep`, `Altered Dark Remoran Fin`]} ~~ Society
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lord Kresovus`, `Sigil of Linvak Tukal`]} ~~ Aerbax's Prodigal Lugian
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Master of the Gauntlet`, `Holcha's Head`]} ~~ Holcha's Head
 
 	~~ Setup Auto Looting
 	IF: Always
@@ -405,6 +467,24 @@ STATE: {Idle} ~~ {
 			Expr {stopwatchelapsedseconds[$PreventAnnounceLooting]>=@CCAnnounceLootingTimeout}
 		DO: DoAll
 				DoExpr {clearvar[PreventAnnounceLooting]}
+				SetState {Idle}
+
+	~~ Display message if auto giving is available
+	IF: All
+			Expr {testvar[PreventAnnounceGiving]==false}
+			Expr {getobjectinternaltype[wobjectfindnearestbyobjectclass[$NPC]]==$TYPE_OBJECT}
+			Expr {dicthaskey[$AUTOGIVE_PROFILE, wobjectgetname[wobjectfindnearestbyobjectclass[$NPC]]]}
+		DO: DoAll
+				DoExpr {echo[`[INFO] Auto giving is available!`, $COLOR_INFO]}
+				DoExpr {setvar[PreventAnnounceGiving, stopwatchstart[stopwatchcreate[]]]}
+				SetState {Idle}
+
+	~~ Clear $PreventAnnounceGiving stopwatch after timeout to re-enable announcements for when giving is available
+	IF: All
+			Expr {testvar[PreventAnnounceGiving]==true}
+			Expr {stopwatchelapsedseconds[$PreventAnnounceGiving]>=@CCAnnounceGivingTimeout}
+		DO: DoAll
+				DoExpr {clearvar[PreventAnnounceGiving]}
 				SetState {Idle}
 
 	~~ Handle Actions
@@ -1862,65 +1942,6 @@ STATE: {AutoGive} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
-
-	IF: Always
-		DO: DoAll
-				DoExpr {setvar[AUTOGIVE_PROFILE, dictcreate[]]}
-
-				~~ Sundering Quests
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Liora Fenn`, `Bitter Tongue's Head`]} ~~ Drudge Hideout Infiltration
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Emissary of Asheron`, listcreate[`Virindi Observer's Message Shard`, `Dark Apostate Shard`, `Engorged Bloodstone Shards`, `Virindi Armorer's Message Shard`, `Dericost Gem of Luminance`]]} ~~ Return to Frore, Empyrean Rescue, 
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Zervakarix`, `Viridian Rise Pocket Watch`]} ~~ Return to Frore
-
-				~~ Legendary Quests
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Uber P`, `Letter from Mouf`]} ~~ Rescuing Mouf P
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mr. P`, listcreate[`Letter from Mouf and Uber P`, `Pet Mouf Igloo`]]} ~~ Rescuing Mouf P
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kraytuss Nallah`, `Bone Fragment from Shikken Moriyaki`]} ~~ Serpent Burial Grounds
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Collector Golem`, listcreate[`Glowing Statue Shard`, `Essence of the Sundered`, `Empowered Empyrean Robe`]]} ~~ Saving Asheron
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fanzen San the Translator`, listcreate[`Complete Page of Lost Lore`, `Orders for Zrikux`]]} ~~ Lost Lore, Falacot Depot
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Popkin of the Gate`, `The Story of the Lost Sisters`]} ~~ Lost Lore
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Ruby Annex`, `Shroud of Bloodlust`]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Amethyst Annex`, `Shroud of Spite`]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Jade Annex`, `Shroud of Envy`]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sapphire Annex`, `Shroud of Apathy`]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rinne Gorber`, listcreate[`Spirit Crystal`, `Spirited Bloodlust Guard`]]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lady Daenerah`, `Sealed Tome`]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mareeno Donn`, `First Lieutenant's Insignia.`]} ~~ Hoshino Infiltration
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fahneph`, `Ancient Falatacot Symbol`]} ~~ Foundry of Izexi
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mhoire Soldier`, `Book`]} ~~ Geraine's Study
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Commander Presk`, `Sealed Scroll for Commander Presk`]} ~~ Lugian Assault
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Raksaa`, listcreate[`Sealed Scroll for Raksaa`, `Casting Stone`]]} ~~ Lugian Assault
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Ol'tra`, listcreate[`Crimson Scarab`, `Purified Crimson Scarab`]]} ~~ End of Days
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Morgethais`, `Shard of the Curator of Torment's Mask`]} ~~ Defeating the Curator of Torment
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Spirit of Bist'elle`, `Mirror Shard`]} ~~ Hoshino Must Die
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mortified Soldier`, `Torn Note`]} ~~ Gurog Creation
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fayza`, listcreate[`Journal of a Soldier`, `Energy Infused Rock`]]} ~~ Gurog Creation, Deewains
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kuyiza bint Zayi the Translator`, listcreate[`Carefully rolled scroll`, `Large Tome`]]} ~~ Bloodstone Investigation
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sir Donovan`, listcreate[`Bloodstone Report`, `Research Notes`, `Shattered Master Bloodstone Shard`, `Delicate Bloodstone Wand`, `Sturdy Bloodstone Wand`]]} ~~ Bloodstone Investigation
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Virindi Delegate`, listcreate[`Olthoi Hive Queen Carapace`, `Virindi Sentinel's Message Shard`]]} ~~ Hive Queen Assault, Dream Reaver Investigation
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mhoire Lieutenant`, `Geraine's Tome \\(1\\)`]} ~~ Geraine's Hosts
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Darviss`, `Spectral Nanjou Master's Sword`]} ~~ Ninja Academy
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kinchou`, `Coded Tanada Scroll`]} ~~ Tanada Intercept
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kousha`, `Tanada Neophyte's Mask`]} ~~ Tanada Slaughter
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Shorikan`, `Spectral Nanjou Zaikan's Sword`]} ~~ Nanjou Stockade
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `El'Yst Maggann`, `Idol of the Recluse`]} ~~ Four Corners
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aetherium Ore`, `Tainted Aetherium Oil`]} ~~ Rynthid Foundry
-
-				~~ Luminance Quests
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Apostate Aetherium Deposit`, `Aetheric Resonator`]} ~~ Nexus Crawl
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Diyas al-Yat`, `Apostate Message Shard`]} ~~ Uncovering the Renegades
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aruq ibn Balthar`, `Apostate Orders`]} ~~ Uncovering the Renegades
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Neelic`, `Translated Orders for Zrikux`]} ~~ Falacot Depot
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Omarah`, `Essence of Dravann`]} ~~ Virindi Rescue
-
-				~~ Random
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fiun Rehlyun`, `Insatiable Eater Jaw`]} ~~ Blank Aug Gem
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mana Siphon`, `Unstable Mana Stone`]} ~~ Society
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kervim'telek`, listcreate[`Essence of Norshuntyr`, `Essence of Night Brier`, `Essence of Wind Fury`, `Essence of Zerzelikyr`]]} ~~ Virindian Rise
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `The Deep`, `Altered Dark Remoran Fin`]} ~~ Society
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lord Kresovus`, `Sigil of Linvak Tukal`]} ~~ Aerbax's Prodigal Lugian
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Master of the Gauntlet`, `Holcha's Head`]} ~~ Holcha's Head
 
 	~~ No NPC nearby with the Autogive name
 	IF: Not Expr {dicthaskey[$AUTOGIVE_PROFILE, wobjectgetname[wobjectfindnearestbyobjectclass[$NPC]]]}
