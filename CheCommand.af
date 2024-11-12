@@ -911,7 +911,7 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {echo[`#navto nanto: Navigate to Nanto`, $COLOR_INFO]}
 				DoExpr {echo[`#navto sawato: Navigate to Sawato`, $COLOR_INFO]}
 				DoExpr {echo[`#navto shoushi: Navigate to Shoushi`, $COLOR_INFO]}
-				DoExpr {echo[`#navto tou tou: Navigate to Tou-Tou`, $COLOR_INFO]}
+				DoExpr {echo[`#navto tou-tou: Navigate to Tou-Tou`, $COLOR_INFO]}
 				DoExpr {echo[`#navto yanshi: Navigate to Yanshi`, $COLOR_INFO]}
 				DoExpr {echo[`Town Network (Gharu'ndim):`, $COLOR_INFO]}
 				DoExpr {echo[`#navto al-arqas: Navigate to Al-Arqas`, $COLOR_INFO]}
@@ -1278,8 +1278,8 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Shoushi`]]}
 				SetState {CallMeta}
 
-	~~ Handle `#navto tou tou`
-	IF: Expr {(tou tou)#getvar[capturegroup_navdestination]}
+	~~ Handle `#navto tou-tou`
+	IF: Expr {(tou-tou)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
 				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Tou-Tou`]]}
