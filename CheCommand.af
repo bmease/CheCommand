@@ -269,6 +269,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of NightBrier`, `Essence of NightBrier`]} ~~ VR Boss
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Wind Fury`, `Essence of Wind Fury`]} ~~ VR Boss
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Norshuntyr`, `Essence of Norshuntyr`]} ~~ VR Boss
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Paradox-touched Olthoi Queen`, `Carapace Shard`]} ~~ Paradox-touched Olthoi Queen
 
 	~~ Open Remote view
 	IF: Always
