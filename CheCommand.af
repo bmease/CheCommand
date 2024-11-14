@@ -2119,7 +2119,7 @@ STATE: {HandleCheck} ~~ {
 	~~ Handle `#check buffs`
 	IF: Expr {(buffs)#getvar[capturegroup_checktext]}
 		DO: DoAll
-				DoExpr {$total_seconds=getspellexpirationbyname[Jumping Mastery Self]}
+				DoExpr {$total_seconds=getspellexpirationbyname[@CCCheckBuffsSpell]}
 				DoExpr {$hours=floor[$total_seconds/3600]}
 				DoExpr {$remaining_seconds=$total_seconds%3600}
 				DoExpr {$minutes=floor[$remaining_seconds/60]}
