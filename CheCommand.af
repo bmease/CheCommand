@@ -154,6 +154,13 @@ STATE: {Default} ~~ {
 				~~ Spell to use to check time remaining on buffs. This cannot be a spell that is in your suit. Only self casted spells will give the correct time remaining.
 				DoExpr {setpvar[CCCheckBuffsSpell, ifthen[testpvar[CCCheckBuffsSpell], `@CCCheckBuffsSpell`, `Jumping Mastery Self`]]}
 
+				~~ Amount of time left in buffs duration to warn about low buffs. Defaults to 30 minutes.
+				DoExpr {setpvar[CCWarnBuffsDuration, ifthen[testpvar[CCWarnBuffsDuration], `@CCWarnBuffsDuration`, `1800`]]}
+
+				~~ Amount of time to surpress announcing when buffs are low
+				DoExpr {setpvar[CCAnnounceBuffsTimeout, ifthen[testpvar[CCAnnounceBuffsTimeout], `@CCAnnounceBuffsTimeout`, `300`]]}
+
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -261,6 +268,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Lord Kastellar`, `Large Tome`]} ~~ Bloodstone Investigation
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Master Bloodstone`, `Shattered Master Bloodstone Shard`]} ~~ Bloodstone Investigation
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Geraine`, `Book`]} ~~ Geraine's Study
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Materialized Hoshino Kei`, `Mirror Shard`]} ~~ Hoshino Must Die
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Zrikux`, `Orders for Zrikux`]} ~~ Falacot Depot
@@ -495,6 +503,23 @@ STATE: {Idle} ~~ {
 			Expr {stopwatchelapsedseconds[$PreventAnnounceGiving]>=@CCAnnounceGivingTimeout}
 		DO: DoAll
 				DoExpr {clearvar[PreventAnnounceGiving]}
+				SetState {Idle}
+
+	~~ Display message if buffs are low
+	IF: All
+			Expr {testvar[PreventAnnounceBuffs]==false}
+			Expr {getspellexpirationbyname[@CCCheckBuffsSpell]<=@CCWarnBuffsDuration}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, My buffs are low!\`]`, `false`]}
+				DoExpr {setvar[PreventAnnounceBuffs, stopwatchstart[stopwatchcreate[]]]}
+				SetState {Idle}
+
+	~~ Clear $PreventAnnounceBuff stopwatch after timeout to re-enable announcements for when buffs are running low
+	IF: All
+			Expr {testvar[PreventAnnounceBuffs]==true}
+			Expr {stopwatchelapsedseconds[$PreventAnnounceBuffs]>=@CCAnnounceBuffsTimeout}
+		DO: DoAll
+				DoExpr {clearvar[PreventAnnounceBuffs]}
 				SetState {Idle}
 
 	~~ Handle Actions
