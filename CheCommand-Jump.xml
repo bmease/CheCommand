@@ -7,7 +7,7 @@
         <control type="button" name="Jump 75%" left="200" top="10" width="80" height="20" text="Jump 75%" setstate="Idle" actionexpr="chatbox[`#jump w `+ceiling[getheading[wobjectgetplayer[]]]%360+` 750`]" />
         <control type="button" name="Jump 50%" left="20" top="40" width="80" height="20" text="Jump 50%" setstate="Idle" actionexpr="chatbox[`#jump w `+ceiling[getheading[wobjectgetplayer[]]]%360+` 500`]" />
         <control type="button" name="Jump 25%" left="200" top="40" width="80" height="20" text="Jump 25%" setstate="Idle" actionexpr="chatbox[`#jump w `+ceiling[getheading[wobjectgetplayer[]]]%360+` 250`]" />
-        <control type="button" name="Tap Jump" left="110" top="25" width="80" height="20" text="Tap Jump" setstate="Idle" actionexpr="chatbox[`#jump tap`]" />
+        <control type="button" name="Tap Jump" left="110" top="25" width="80" height="20" text="Tap Jump" setstate="Idle" actionexpr="chatbox[`#jump sw `+ceiling[getheading[wobjectgetplayer[]]]%360+` 5`]" />
 
         <control type="button" name="NW" left="70" top="100" width="30" height="20" text="NW" setstate="Idle" actionexpr="chatbox[`#face northwest`]" />
         <control type="button" name="N" left="135" top="100" width="30" height="20" text="N" setstate="Idle" actionexpr="chatbox[`#face north`]" />
