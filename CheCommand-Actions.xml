@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<view width="85" height="126" title="Actions">
+    <control type="layout">
+        
+        <control type="button" name="Loot" left="5" top="5" width="75" height="15" text="Loot" actionexpr="chatbox[\#loot]" />
+        <control type="button" name="Give" left="5" top="30" width="75" height="15" text="Give" actionexpr="chatbox[\#give]" />
+        <control type="button" name="Pickup" left="5" top="55" width="75" height="15" text="Pickup" actionexpr="chatbox[\#pickup]" />
+        <control type="button" name="Vendor" left="5" top="80" width="75" height="15" text="Vendor" actionexpr="chatbox[\#action vendor]" />
+        <control type="button" name="Select" left="5" top="105" width="75" height="15" text="Select >>" setstate="ShowSelect" />
+
+    </control>
+</view>

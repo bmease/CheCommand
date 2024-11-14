@@ -3066,8 +3066,28 @@ STATE: {ShowRecalls} ~~ {
 				~~ DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
 				SetState {Idle}
 
+~~ }
+
+
+STATE: {ShowActions} ~~ {
+
+	~~ Show Actions view
+	IF: Not Expr {uiviewvisible[Actions]}
+		DO: DoAll
+				CreateView {Actions} {:CheCommand-Actions.xml}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowActions], `Actions <<`]}
+				SetState {Idle}
+
+	~~ Close Action view
+	IF: Expr {uiviewvisible[Actions]}
+		DO: DoAll
+				DestroyView {Actions}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowActions], `Actions >>`]}
+				SetState {Idle}
 
 ~~ }
+
+
 STATE: {SetupButtons} ~~ {
 
 	IF: Always
