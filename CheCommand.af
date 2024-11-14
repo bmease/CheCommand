@@ -1923,6 +1923,12 @@ STATE: {Pickup} ~~ {
 	IF: Expr {testvar[OptionsSet]==false}
 		DO: CallState {DisableOptions} {Pickup}
 
+	~~ Enter Peace mode
+	IF: Expr {getcombatstate[]!=`Peace`}
+		DO: DoAll
+				DoExpr {setcombatstate[peace]}
+				SetState {Pickup}
+
 	~~ Set the amount of items you have
 	IF: Expr {testvar[itemCount]==false}
 		DO: DoExpr {$itemCount=getitemcountininventorybynamerx[$item]}
