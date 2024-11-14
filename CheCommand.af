@@ -151,6 +151,9 @@ STATE: {Default} ~~ {
 				~~ Amount of time to surpress announcing available giving in seconds
 				DoExpr {setpvar[CCAnnounceGivingTimeout, ifthen[testpvar[CCAnnounceGivingTimeout], `@CCAnnounceGivingTimeout`, `60`]]}
 
+				~~ Spell to use to check time remaining on buffs. This cannot be a spell that is in your suit. Only self casted spells will give the correct time remaining.
+				DoExpr {setpvar[CCCheckBuffsSpell, ifthen[testpvar[CCCheckBuffsSpell], `@CCCheckBuffsSpell`, `Jumping Mastery Self`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -2105,11 +2108,23 @@ STATE: {HandleCheck} ~~ {
 	~~ Handle `#check help`
 	IF: Expr {(help)#getvar[capturegroup_checktext]}
 		DO: DoAll
+				DoExpr {echo[`#check buffs: check how much time is left on each characters buffs.`, $COLOR_INFO]}
 				DoExpr {echo[`#check luminance: check how much luminance each character has.`, $COLOR_INFO]}
 				DoExpr {echo[`#check level: check what level each character is.`, $COLOR_INFO]}
 				DoExpr {echo[`#check landblock: check what landblock each character is in.`, $COLOR_INFO]}
 				DoExpr {echo[`#check landcell: check what landcell each character is in.`, $COLOR_INFO]}
 				DoExpr {echo[`#check settings: check the settings (Toggle Vitals, Buff, Combat, Nav, Loot) of all characters.`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Handle `#check buffs`
+	IF: Expr {(buffs)#getvar[capturegroup_checktext]}
+		DO: DoAll
+				DoExpr {$total_seconds=getspellexpirationbyname[Jumping Mastery Self]}
+				DoExpr {$hours=floor[$total_seconds/3600]}
+				DoExpr {$remaining_seconds=$total_seconds%3600}
+				DoExpr {$minutes=floor[$remaining_seconds/60]}
+				DoExpr {$seconds=$remaining_seconds%60}
+				ChatExpr {`/f Buffs: `+$hours+` hours, `+$minutes+` minutes, `+$seconds+` seconds`}
 				SetState {Idle}
 
 	~~ Handle `#check luminance`
