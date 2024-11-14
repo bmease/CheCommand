@@ -2109,6 +2109,7 @@ STATE: {HandleCheck} ~~ {
 				DoExpr {echo[`#check level: check what level each character is.`, $COLOR_INFO]}
 				DoExpr {echo[`#check landblock: check what landblock each character is in.`, $COLOR_INFO]}
 				DoExpr {echo[`#check landcell: check what landcell each character is in.`, $COLOR_INFO]}
+				DoExpr {echo[`#check settings: check the settings (Toggle Vitals, Buff, Combat, Nav, Loot) of all characters.`, $COLOR_INFO]}
 				SetState {Idle}
 
 	~~ Handle `#check luminance`
@@ -2133,6 +2134,12 @@ STATE: {HandleCheck} ~~ {
 	IF: Expr {(landcell)#getvar[capturegroup_checktext]}
 		DO: DoAll
 				ChatExpr {`/f Landblock: `+hexstr[getplayerlandcell[]]}
+				SetState {Idle}
+
+	~~ Handle `#check settings`
+	IF: Expr {(settings)#getvar[capturegroup_checktext]}
+		DO: DoAll
+				ChatExpr {`/f Toggle Vitals: `+ifthen[@CCVitals, `On`, `Off`]+`, Buff: `+ifthen[vtgetsetting[EnableBuffing], `On`, `Off`]+`, Combat: `+ifthen[vtgetsetting[EnableCombat], `On`, `Off`]+`, Nav: `+ifthen[vtgetsetting[EnableNav], `On`, `Off`]+`, Loot: `+ifthen[vtgetsetting[EnableLooting], `On`, `Off`]}
 				SetState {Idle}
 
 	~~ Handle no match for checktext
