@@ -257,6 +257,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Kul Bronzegear`, `Legendary Key`]} ~~ Purging the Corruption
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Lord Kastellar`, `Large Tome`]} ~~ Bloodstone Investigation
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Master Bloodstone`, `Shattered Master Bloodstone Shard`]} ~~ Bloodstone Investigation
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Geraine`, `Book`]} ~~ Geraine's Study
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Zrikux`, `Orders for Zrikux`]} ~~ Falacot Depot
