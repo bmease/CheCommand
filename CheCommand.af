@@ -160,6 +160,8 @@ STATE: {Default} ~~ {
 				~~ Amount of time to surpress announcing when buffs are low
 				DoExpr {setpvar[CCAnnounceBuffsTimeout, ifthen[testpvar[CCAnnounceBuffsTimeout], `@CCAnnounceBuffsTimeout`, `300`]]}
 
+				~~ Amount of luminance to warn when turning in
+				DoExpr {setpvar[CCWarnLuminance, ifthen[testpvar[CCWarnLuminance], `@CCWarnLuminance`, `1300000`]]}
 
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
@@ -521,6 +523,13 @@ STATE: {Idle} ~~ {
 		DO: DoAll
 				DoExpr {clearvar[PreventAnnounceBuffs]}
 				SetState {Idle}
+
+	~~ Display message if near luminance cap
+	IF: All
+			ChatMatch {^You've earned ([\d,]+) Luminance.$}
+			Expr {getcharquadprop[6]>=@CCWarnLuminance}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I am near my luminance cap!\`]`, `false`]}
 
 	~~ Handle Actions
 	IF:	All
