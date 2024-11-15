@@ -257,6 +257,9 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Bitter Tongue`, `Bitter Tongue's Head`]} ~~ Drudge Hideout Infiltration
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Ler Rhan`, `Dericost Gem of Luminance`]} ~~ Uber Nexus
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Nexus Crystal`, `Nexus Core Gem`]} ~~ Uber Nexus
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Fidisa the Agile`, `Shattered Key`]} ~~ Uber Frore
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Virindi Observer`, `Virindi Observer's Message Shard`]} ~~ Uber Frore
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of The Great Work`, `Crystal Device`]} ~~ Uber Frore
 
 				~~ Legendary Quests
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Izexi`, `Ancient Falatacot Symbol`]} ~~ Foundry of Izexi Quest
