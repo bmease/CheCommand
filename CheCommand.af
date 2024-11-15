@@ -798,8 +798,6 @@ STATE: {HandleActions} ~~ {
 	IF: Expr {(help)#getvar[capturegroup_actiontext]}
 		DO: DoAll
 				DoExpr {echo[`#action contracts: All characters read contracts in inventory`, $COLOR_INFO]}
-				DoExpr {echo[`#action disband: Disbands the fellow`, $COLOR_INFO]}
-				DoExpr {echo[`#action fellow: The person issuing the command creates a fellow`, $COLOR_INFO]}
 				DoExpr {echo[`#action follow: All characters follow the initiator of the follow command`, $COLOR_INFO]}
 				DoExpr {echo[`#action update: All characters reload the meta with the latest changes`, $COLOR_INFO]}
 				DoExpr {echo[`#action mule: All characters navigate to Sort de Che and mule`, $COLOR_INFO]}
