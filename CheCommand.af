@@ -3105,6 +3105,25 @@ STATE: {ShowActions} ~~ {
 ~~ }
 
 
+STATE: {ShowSettings} ~~ {
+
+	~~ Show Settings view
+	IF: Not Expr {uiviewvisible[Settings]}
+		DO: DoAll
+				CreateView {Settings} {:CheCommand-Settings.xml}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowSettings], `Settings <<`]}
+				SetState {Idle}
+
+	~~ Close Settings view
+	IF: Expr {uiviewvisible[Settings]}
+		DO: DoAll
+				DestroyView {Settings}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowSettings], `Settings >>`]}
+				SetState {Idle}
+
+~~ }
+
+
 STATE: {SetupButtons} ~~ {
 
 	IF: Always

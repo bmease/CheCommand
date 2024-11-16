@@ -23,7 +23,7 @@
         <control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" actionexpr="chatbox[\#vtoption enablebuffing false]" />
 
         <control type="button" name="ShowActions" left="6" top="174" width="75" height="15" text="Actions >>" setstate="ShowActions" />
-        <!-- <control type="button" name="NPC" left="6" top="195" width="75" height="15" text="NPC" setstate="Idle" actionexpr="chatbox[\#action npc]" /> -->
+        <control type="button" name="ShowSettings" left="6" top="195" width="75" height="15" text="Settings >>" setstate="ShowSettings" />
 
         <control type="button" name="ShowNavto" left="87" top="174" width="75" height="15" text="Navto >>" setstate="ShowNavto" />
         <control type="button" name="ShowJump" left="87" top="195" width="75" height="15" text="Jump >>" setstate="ShowJump" />
