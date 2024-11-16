@@ -1983,6 +1983,13 @@ STATE: {HandleGive} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
 
+	IF: Expr {(help)#getvar[capturegroup_itemtext]}
+		DO: DoAll
+				DoExpr {echo[`#give <item name> to <person name>: All characters give the item in invetory to the person.`, $COLOR_INFO]}
+				DoExpr {echo[`#give <item name>: All characters give the item in invetory to the person who issued the command.`, $COLOR_INFO]}
+				DoExpr {listmap[listcreate[`capturegroup_itemtext`, `capturegroup_giveto`, `capturegroup_name`, `capturegroup_saythink`], `clearvar[$1]`]}
+				SetState {Idle}
+
 	~~ If the optional match for giveto is empty set it to the person who issued the command
 	IF: Expr {testvar[capturegroup_giveto]==false}
 		DO: DoExpr {$capturegroup_giveto=ifthen[$capturegroup_name, `$capturegroup_name`, `$CHARACTER_NAME`]}
