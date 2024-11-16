@@ -54,13 +54,14 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[VENDOR, 25]}
 				DoExpr {setvar[NPC, 37]}
 
-				DoExpr {setvar[COLOR_SYSTEM, 5]}
+				DoExpr {setvar[COLOR_INFO, 5]}
 
-				DoExpr {setvar[CHARACTER_NAME, getcharstringprop[1]]}
+	IF:	Always
+		DO:	DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[DEBUG] Che Nav Recomp v0.1.0 by Che de Pa of Sundering\`, $COLOR_DEBUG]`, `false`]}
 
-	IF:	Expr {$Debug==1}
-		DO:	DoAll
-				ChatExpr {`/tell `+$CHARACTER_NAME+`, Che Recomp v0.0.1 by Che de Pa of Sundering`}
+	~~ Autopack before doing anything
+	IF: Always
+		DO: Chat {/mt autopack}
 
 	~~ Navigate to Haven if not there
 	IF:	Not CellE 01AC011F
@@ -69,13 +70,14 @@ STATE: {Default} ~~ {
 	~~ Navigate to Mei Ling if in Haven
 	IF:	CellE 01AC011F
 		DO:	SetState {ToMeiLing}
+
 ~~ }
 
 
 STATE: {ToHaven} ~~ {
-	IF: Expr {$Debug==1}
-		DO: DoAll
-				DoExpr {echo[`Navigating to Haven`, $COLOR_SYSTEM]}
+
+	IF: Always
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Haven\`, $COLOR_INFO]`, `false`]}
 
 	IF: Always
 		DO: DoAll
@@ -88,14 +90,14 @@ STATE: {ToHaven} ~~ {
 			NavEmpty
 			CellE 01AC011F
 		DO: SetState {ToMeiLing}
+
 ~~ }
 
 
 STATE: {ToMeiLing} ~~ {
-	IF: Expr {$Debug==1}
-		DO: DoAll
-				DoExpr {echo[`Navigating to Mei Ling`, $COLOR_SYSTEM]}
 
+	IF: Always
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Mei Ling\`, $COLOR_INFO]`, `false`]}
 
 	IF: Always
 		DO: DoAll
@@ -107,30 +109,68 @@ STATE: {ToMeiLing} ~~ {
 			NavEmpty
 			CellE 01AC0121
 		DO: SetState {BuyFromMeiLing}
+
 ~~ }
 
-STATE: {BuyFromMeiLing} ~~ {
-	IF: Expr {$Debug==1}
-		DO: DoAll
-				DoExpr {echo[`Buying from Mei Ling`, $COLOR_SYSTEM]}
 
+STATE: {BuyFromMeiLing} ~~ {
+
+	IF: Always
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Buying from Mei Ling\`, $COLOR_INFO]`, `false`]}
 
 	IF: Always
 		DO: DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$VENDOR, `Mei Ling Spellshaper`]]}
 
 	IF:	ChatMatch {^You think, "AutoVendor finished}
-		DO: SetState {Finished}
+		DO: DoAll
+				Chat {/mt autopack}
+				SetState {ToMalachi}
+
+	IF: SecsInStateGE 300
+		DO: SetState {ToMalachi}
+
+~~ }
+
+
+STATE: {ToMalachi} ~~ {
+	IF: Always
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Malachi Blackcloak\`, $COLOR_INFO]`, `false`]}
+
+	IF: Always
+		DO: EmbedNav ToMalachi {ToMalachi}
+
+	IF:	All
+			NavEmpty
+			CellE 01AC012C
+		DO: SetState {BuyFromMalachi}
+
+~~ }
+
+
+STATE: {BuyFromMalachi} ~~ {
+
+	IF: Always
+		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Buying from Malachi Blackcloak\`, $COLOR_INFO]`, `false`]}
+
+	IF: Always
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$VENDOR, `Malachi Blackcloak`]]}
+
+	IF:	ChatMatch {^You think, "AutoVendor finished}
+		DO: DoAll
+				Chat {/mt autopack}
+				SetState {Finished}
 
 	IF: SecsInStateGE 300
 		DO: SetState {Finished}
+
 ~~ }
 
-STATE: {Finished} ~~ {
-	IF: Expr {$Debug==1}
-		DO: DoAll
-				DoExpr {echo[`Finished Recomping`, $COLOR_SYSTEM]}
 
+STATE: {Finished} ~~ {
+	IF: Always
+		DO:	DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished recomping\`]`, `false`]}
 
 	IF: Always
 		DO: ChatExpr {`/vt meta load `+$CCReturnMeta}
@@ -149,4 +189,10 @@ NAV: ToMeiLing once ~~ {
 	pnt -101.02227900823 35.5558451732 2.08333134651184E-05
 	pnt -100.933522558212 35.6320655206839 2.08333134651184E-05
 	pnt -100.94122227033 35.6399822572867 2.08333134651184E-05
+~~ }
+
+NAV: ToMalachi once ~~ {
+	pnt -100.939484024048 35.6369585971038 2.08333134651184E-05
+	pnt -100.922942384084 35.6365104854107 2.08333134651184E-05
+	pnt -100.904572598139 35.6641521692276 2.08333134651184E-05
 ~~ }
