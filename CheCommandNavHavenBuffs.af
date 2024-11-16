@@ -208,6 +208,9 @@ STATE: {Finished} ~~ {
 	IF: Always
 		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Finished Haven Buffs\`, $COLOR_INFO]`, `false`]}
 
+	IF: Always
+		DO:	DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished Haven Buffs\`]`, `false`]}
+
 	~~ Reset all options to what they originally were
 	IF: Always
 		DO: DoAll
