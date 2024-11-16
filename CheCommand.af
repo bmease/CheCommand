@@ -709,7 +709,7 @@ STATE: {Idle} ~~ {
 
 	~~ Handle Giving items
 	IF: All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#give (?<itemtext>.*) to (?<giveto>.*)\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#give (?<itemtext>.+?)(?: to (?<giveto>.*))?\"$} {}
 			Any
 				Expr {$capturegroup_saythink==`say`}
 				Expr {$capturegroup_saythink==`think`}
@@ -1983,10 +1983,16 @@ STATE: {HandleGive} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
 
+	~~ If the optional match for giveto is empty set it to the person who issued the command
+	IF: Expr {testvar[capturegroup_giveto]==false}
+		DO: DoExpr {$capturegroup_giveto=ifthen[$capturegroup_name, `$capturegroup_name`, `$CHARACTER_NAME`]}
+
+	~~ Set the $item and $name and clear variables
 	IF: Always
 		DO: DoAll
 				DoExpr {$item=$capturegroup_itemtext}
 				DoExpr {$name=$capturegroup_giveto}
+				DoExpr {listmap[listcreate[`capturegroup_itemtext`, `capturegroup_giveto`, `capturegroup_name`, `capturegroup_saythink`], `clearvar[$1]`]}
 				SetState {Give}
 
 ~~ }
