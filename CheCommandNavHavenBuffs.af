@@ -49,6 +49,7 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[TYPE_OBJECT, 7]}
 
 				DoExpr {setvar[OriginalEnableNav, vtgetsetting[EnableNav]]}
+				DoExpr {setvar[OriginalNavCloseStopRange, vtgetsetting[NavCloseStopRange]]}
 
 	IF:	Always
 		DO:	DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[DEBUG] Che Nav Haven Buffs v0.0.1 by Che de Pa of Sundering\`, $COLOR_DEBUG]`, `false`]}
@@ -63,6 +64,11 @@ STATE: {NavToDestination} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Finished}
+
+	IF: Always
+		DO: DoAll
+				SetOpt {EnableNav} {True}
+				SetOpt {NavCloseStopRange} {0.0083333}
 
 	~~ Navigate to Haven if not there
 	IF: Not CellE 01AC011F
@@ -204,7 +210,9 @@ STATE: {Finished} ~~ {
 
 	~~ Reset all options to what they originally were
 	IF: Always
-		DO: SetOpt {EnableNav} {$OriginalEnableNav}
+		DO: DoAll
+				SetOpt {EnableNav} {$OriginalEnableNav}
+				SetOpt {NavCloseStopRange} {$OriginalNavCloseStopRange}
 
 	~~ Clear all variables
 	IF: Always
