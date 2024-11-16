@@ -278,6 +278,7 @@ STATE: {Default} ~~ {
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Zrikux`, `Orders for Zrikux`]} ~~ Falacot Depot
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Dravann`, `Essence of Dravann`]} ~~ Virindi Rescue
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Apostate Master`, `Apostate Message Shard`]} ~~ Uncovering the Renegades
 
 				~~ Random
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Battle Lord Gregor`, `Battle Lord Gregor's Mnemosyne`]} ~~ Luminance Flagging
