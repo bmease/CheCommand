@@ -136,7 +136,7 @@ STATE: {ToTownNetwork} ~~ {
 	IF: Always
 		DO: DoAll
 				SetOpt {EnableNav} {True}
-				SetOpt {NavCloseStopRange} {0.000625}
+				SetOpt {NavCloseStopRange} {0.0083333}
 
 	~~ Navigate into the Town Network portal
 	IF: Always
