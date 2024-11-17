@@ -239,6 +239,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aruq ibn Balthar`, `Apostate Orders`]} ~~ Uncovering the Renegades
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Neelic`, `Translated Orders for Zrikux`]} ~~ Falacot Depot
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Omarah`, `Essence of Dravann`]} ~~ Virindi Rescue
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Jilna Fullgood`, `Prodigal Tusker's Token`]} ~~ Aerbax's Prodigal Tusker
 
 				~~ Random
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fiun Rehlyun`, `Insatiable Eater Jaw`]} ~~ Blank Aug Gem
@@ -279,6 +280,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Zrikux`, `Orders for Zrikux`]} ~~ Falacot Depot
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Dravann`, `Essence of Dravann`]} ~~ Virindi Rescue
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Apostate Master`, `Apostate Message Shard`]} ~~ Uncovering the Renegades
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Dark Bobo`, `Prodigal Tusker's Token`]} ~~ Aerbax Prodigal Tusker
 
 				~~ Random
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Battle Lord Gregor`, `Battle Lord Gregor's Mnemosyne`]} ~~ Luminance Flagging
