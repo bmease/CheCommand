@@ -151,6 +151,9 @@ STATE: {Default} ~~ {
 				~~ Amount of time to surpress announcing available giving in seconds
 				DoExpr {setpvar[CCAnnounceGivingTimeout, ifthen[testpvar[CCAnnounceGivingTimeout], `@CCAnnounceGivingTimeout`, `60`]]}
 
+				~~ Distance to an NPC to announce auto giving
+				DoExpr {setpvar[CCAnnounceThreshold, ifthen[testpvar[CCAnnounceThreshold], `@CCAnnounceThreshold`, `5`]]}
+
 				~~ Spell to use to check time remaining on buffs. This cannot be a spell that is in your suit. Only self casted spells will give the correct time remaining.
 				DoExpr {setpvar[CCCheckBuffsSpell, ifthen[testpvar[CCCheckBuffsSpell], `@CCCheckBuffsSpell`, `Jumping Mastery Self`]]}
 
@@ -291,6 +294,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Wind Fury`, `Essence of Wind Fury`]} ~~ VR Boss
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Norshuntyr`, `Essence of Norshuntyr`]} ~~ VR Boss
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Paradox-touched Olthoi Queen`, `Carapace Shard`]} ~~ Paradox-touched Olthoi Queen
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Forge Golem`, `Forge Vault Key`]} ~~ 
 
 	~~ Open Remote view
 	IF: Always
@@ -500,6 +504,7 @@ STATE: {Idle} ~~ {
 	IF: All
 			Expr {testvar[PreventAnnounceGiving]==false}
 			Expr {getobjectinternaltype[wobjectfindnearestbyobjectclass[$NPC]]==$TYPE_OBJECT}
+			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]<=@CCAnnounceThreshold}
 			Expr {dicthaskey[$AUTOGIVE_PROFILE, wobjectgetname[wobjectfindnearestbyobjectclass[$NPC]]]}
 		DO: DoAll
 				DoExpr {echo[`[INFO] Auto giving is available!`, $COLOR_INFO]}
