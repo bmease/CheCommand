@@ -736,6 +736,15 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleCheck}
 
+	~~ Handle Counting
+	IF: All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#count (?<counttext>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleCount}
+
 	~~ Handle VTank Options
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#vtoption (?<optiontext>.*)\"$} {}
@@ -2879,6 +2888,28 @@ STATE: {HandleRecall} ~~ {
 				SetState {LeaderCheck}
 
 ~~}
+
+
+STATE: {HandleCount} ~~ {
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Display help for #count
+	IF: Expr {(help)#getvar[capturegroup_counttext]}
+		DO: DoAll
+				DoExpr {echo[`#count <item name>: All characters report the number of the item they have.`, $COLOR_INFO]}
+				DoExpr {listmap[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`], `clearvar[$1]`]}
+				SetState {Idle}
+
+	~~ Count the number of item
+	IF: Always
+		DO: DoAll
+				DoExpr {$count=getitemcountininventorybynamerx[$capturegroup_counttext]}
+				ChatExpr {`/f `+$capturegroup_counttext+`: `+$count}
+				DoExpr {listmap[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`, `count`], `clearvar[$1]`]}
+				SetState {Idle}
+
+~~ }
 
 
 STATE: {UseNPC} ~~ {
