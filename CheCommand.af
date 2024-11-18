@@ -212,7 +212,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Amethyst Annex`, `Shroud of Spite`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Jade Annex`, `Shroud of Envy`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sapphire Annex`, `Shroud of Apathy`]} ~~ Shroud of Emotion
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rinne Gorber`, listcreate[`Spirit Crystal`, `Spirited Bloodlust Guard`]]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rinne Gorber`, listcreate[`Spirit Crystal`, `Spirited Bloodlust Guard`, `Spirited Spite Guard`, `Spirited Envy Guard`, `Spirited Apathy Guard`]]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lady Daenerah`, `Sealed Tome`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mareeno Donn`, `First Lieutenant's Insignia.`]} ~~ Hoshino Infiltration
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fahneph`, `Ancient Falatacot Symbol`]} ~~ Foundry of Izexi
@@ -234,6 +234,9 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Shorikan`, `Spectral Nanjou Zaikan's Sword`]} ~~ Nanjou Stockade
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `El'Yst Maggann`, `Idol of the Recluse`]} ~~ Four Corners
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aetherium Ore`, `Tainted Aetherium Oil`]} ~~ Rynthid Foundry
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kaltus`, `Seed of Essence`]} ~~ Harvesting the Bulb of Mornings
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Calitoth`, listcreate[`Legendary Seed of Mornings`, `Legendary Seed of Harvests`]]} ~~ Harvesting the Bulb of Mornings
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Adrenkus`, `Seed of Essence`]} ~~ Harvesting the Bulb of Mornings
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
@@ -278,6 +281,13 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Master Bloodstone`, `Shattered Master Bloodstone Shard`]} ~~ Bloodstone Investigation
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Geraine`, `Book`]} ~~ Geraine's Study
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Materialized Hoshino Kei`, `Mirror Shard`]} ~~ Hoshino Must Die
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Spectral Nanjou Master`, `Spectral Nanjou Master's Sword`]} ~~ Ninja Academy
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Tanada Nanjou Jogensha`, `Coded Tanada Scroll`]} ~~ Tanada Intercept and Slaughter
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Spectral Nanjou Zaikan`, `Spectral Nanjou Zaikan's Sword`]} ~~ Nanjou Stockade
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Apparition of Bloodlust`, `Shroud of Bloodlust`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Apparition of Apathy`, `Shroud of Apathy`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Apparition of Envy`, `Shroud of Envy`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Apparition of Spite`, `Shroud of Spite`]} ~~ Shroud of Emotion
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Zrikux`, `Orders for Zrikux`]} ~~ Falacot Depot
