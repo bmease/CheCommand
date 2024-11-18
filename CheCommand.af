@@ -2020,6 +2020,12 @@ STATE: {HandleGive} ~~ {
 	IF: Expr {testvar[capturegroup_giveto]==false}
 		DO: DoExpr {$capturegroup_giveto=ifthen[$capturegroup_name, `$capturegroup_name`, `$CHARACTER_NAME`]}
 
+	~~ If giveto is your character you don't need to do anything
+	IF: Expr {$capturegroup_giveto==$CHARACTER_NAME}
+		DO: DoAll
+				DoExpr {listmap[listcreate[`capturegroup_itemtext`, `capturegroup_giveto`, `capturegroup_name`, `capturegroup_saythink`], `clearvar[$1]`]}
+				SetState {Idle}
+
 	~~ Set the $item and $name and clear variables
 	IF: Always
 		DO: DoAll
