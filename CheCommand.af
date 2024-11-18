@@ -358,6 +358,14 @@ STATE: {Init} ~~ {
 			Expr {@CCFellowname==`Not Set`}
 		DO: SetState {Setup}
 
+	~~ On initial startup display the characters that you will listen to
+	IF: Expr {testvar[CCStarted]==false}
+		DO: DoAll
+				DoExpr {$CCStarted=true}
+				DoExpr {echo[`[DEBUG] I am setup and will listen to commands`, $COLOR_DEBUG]}
+				DoExpr {echo[`[DEBUG] I will listen to the following characters: `+@CCCharacterList, $COLOR_DEBUG]}
+				DoExpr {echo[`[DEBUG] I will create fellows with the name: `+@CCFellowname, $COLOR_DEBUG]}
+
 	~~ Wait for Leader if supposed to be following
 	IF: All
 			Expr {listcount[$MetaCallQueue]==0}
