@@ -2525,10 +2525,12 @@ STATE: {UsePortal} ~~ {
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No portal within range!\`]`, `false`]}
 				SetState {LeaderCheck}
 
-	~~ Warn if you must complete a quest to interact with that portal.
+	~~ Warn if you can't interact with that portal.
 	IF: All
 			Expr {isportaling[]==false}
-			ChatMatch {You must complete a quest to interact with that portal.}
+			Any
+				ChatMatch {You must complete a quest to interact with that portal.}
+				ChatMatch {You completed the quest this portal requires too long ago!}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Unable to use portal!\`]`, `false`]}
 				SetState {LeaderCheck}
