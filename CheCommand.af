@@ -485,7 +485,7 @@ STATE: {Idle} ~~ {
 			Expr {@CCAutoTimers==true}
 			Expr {$FoundTimers=listfilter[$AutoTimers, `cnumber[getdatetimelocal[hh]]==$1{{0}}&&cnumber[getdatetimelocal[mm]]==$1{{1}}&&cnumber[getdatetimelocal[ss]]==$1{{2}}&&getdatetimelocal[tt]==$1{{3}}`]}
 			Expr {listcount[$FoundTimers]>0}
-		DO: SetState {HandleTimers} 
+		DO: SetState {HandleAutoTimers}
 
 	~~ Display message if route is available
 	IF: All
@@ -562,6 +562,30 @@ STATE: {Idle} ~~ {
 			Expr {getcharquadprop[6]>=@CCWarnLuminance}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I am near my luminance cap!\`]`, `false`]}
+
+	~~ Handle timer message
+	IF: All
+			Expr {testvar[CCTimer]!=false}
+			Expr {testvar[CCTimerMsg]!=false}
+			Expr {getobjectinternaltype[$CCTimerMsg]==$TYPE_STRING}
+			Expr {$CCTimerAmount-stopwatchelapsedseconds[$CCTimer]<=0}
+		DO: DoAll
+				ChatExpr {$CCTimerMsg}
+				SetState {Idle}
+
+	~~ Handle timer going off
+	IF: All
+			Expr {testvar[CCTimer]!=false}
+			Expr {$CCTimerAmount-stopwatchelapsedseconds[$CCTimer]<=0}
+		DO: DoAll
+				DoExpr {clearvar[CCTimer]}
+				DoExpr {clearvar[CCTimerAmount]}
+				DoExpr {clearvar[CCTimerMsg]}
+				DoExpr {echo[`[INFO] ==============`, $COLOR_INFO]}
+				DoExpr {echo[`[INFO] Timer is done!`, $COLOR_INFO]}
+				DoExpr {echo[`[INFO] ==============`, $COLOR_INFO]}
+				DestroyView {Timer}
+				SetState {Idle}
 
 	~~ Handle Actions
 	IF:	All
@@ -770,6 +794,15 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleCount}
 
+	~~ Handle Timers
+	IF: All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#timer (?<timertext>(?:help|\d+(?:\.\d+)?))(?:\s+(?<timermsg>.+))?\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleTimers}
+
 	~~ Handle VTank Options
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#vtoption (?<optiontext>.*)\"$} {}
@@ -798,10 +831,23 @@ STATE: {Idle} ~~ {
 				DoExpr {chatbox[`/t `+$capturegroup_name+`, CheCommand `+$CCVersion]}
 				SetState {Idle}
 
+	~~ Update Timer countdown
+	IF: All
+			Expr {testvar[CCTimer]!=false}
+			Expr {uiviewvisible[Timer]}
+		DO: DoAll
+				DoExpr {$total_seconds=$CCTimerAmount-stopwatchelapsedseconds[$CCTimer]}
+				DoExpr {$hours=floor[$total_seconds/3600]}
+				DoExpr {$remaining_seconds=$total_seconds%3600}
+				DoExpr {$minutes=floor[$remaining_seconds/60]}
+				DoExpr {$seconds=$remaining_seconds%60}
+				DoExpr {uisetlabel[uigetcontrol[Timer, Timer], cstrf[$minutes, `00`]+`:`+cstrf[$seconds, `00`]]}
+				SetState {Idle}
+
 ~~ }
 
 
-STATE: {HandleTimers} ~~ {
+STATE: {HandleAutoTimers} ~~ {
 
 	~~ Return to Idle if no timers found
 	IF: Expr {listcount[$FoundTimers]==0}
@@ -2938,6 +2984,33 @@ STATE: {HandleCount} ~~ {
 				DoExpr {$count=getitemcountininventorybynamerx[$capturegroup_counttext]}
 				ChatExpr {`/f `+$capturegroup_counttext+`: `+$count}
 				DoExpr {listmap[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`, `count`], `clearvar[$1]`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {HandleTimers} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Display help for #count
+	IF: Expr {(help)#getvar[capturegroup_timertext]}
+		DO: DoAll
+				DoExpr {echo[`#timer <amount> [message]: Start a timer for a specific amount of time. With an optional message that will be displayed when the timer ends.`, $COLOR_INFO]}
+				DoExpr {listmap[listcreate[`capturegroup_timertext`, `capturegroup_name`, `capturegroup_saythink`], `clearvar[$1]`]}
+				SetState {Idle}
+
+	IF: Always
+		DO: DoAll
+				DoExpr {$CCTimerAmount=cnumber[$capturegroup_timertext]*60}
+				DoExpr {$CCTimerMsg=$capturegroup_timermsg}
+				DoExpr {setvar[CCTimer, stopwatchstart[stopwatchcreate[]]]}
+
+	~~ Show Timer view
+	IF: Not Expr {uiviewvisible[Timer]}
+		DO: DoAll
+				CreateView {Timer} {:CheCommand-Timer.xml}
 				SetState {Idle}
 
 ~~ }

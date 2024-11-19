@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<view width="85" height="25" title="Timer">
+    <control type="layout">
+        
+        <control type="button" name="Timer" left="5" top="5" width="75" height="15" text="00:00:00" />
+
+    </control>
+</view>
