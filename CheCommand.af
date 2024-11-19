@@ -166,6 +166,12 @@ STATE: {Default} ~~ {
 				~~ Amount of luminance to warn when turning in
 				DoExpr {setpvar[CCWarnLuminance, ifthen[testpvar[CCWarnLuminance], `@CCWarnLuminance`, `1300000`]]}
 
+				~~ Automatically start a timer for Rynthid Weapons wave one
+				DoExpr {setpvar[CCTimerWeapons, ifthen[testpvar[CCTimerWeapons], `@CCTimerWeapons`, `true`]]}
+
+				~~ Message to send at the end of automatic Rynthid Weapons timer
+				DoExpr {setpvar[CCTimerWeaponsMsg, ifthen[testpvar[CCTimerWeaponsMsg], `@CCTimerWeaponsMsg`, `false`]]}
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -562,6 +568,17 @@ STATE: {Idle} ~~ {
 			Expr {getcharquadprop[6]>=@CCWarnLuminance}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I am near my luminance cap!\`]`, `false`]}
+
+	~~ Start a timer for Rynthid Weapons wave one
+	IF: All
+			Expr {@CCTimerWeapons==true}
+			ChatMatch {^A voice echos in your mind, "So, you've worked so hard to find me. You've interrupted my experiments and you've interfered with my plans.}
+		DO: DoAll
+				DoExpr {$CCTimerAmount=310}
+				DoExpr {$CCTimerMsg=@CCTimerWeaponsMsg}
+				DoExpr {setvar[CCTimer, stopwatchstart[stopwatchcreate[]]]}
+				CreateView {Timer} {:CheCommand-Timer.xml}
+				SetState {Idle}
 
 	~~ Handle timer message
 	IF: All
