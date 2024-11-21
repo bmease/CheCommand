@@ -2080,12 +2080,14 @@ STATE: {Pickup} ~~ {
 STATE: {HandleGive} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	DoAll
+				DoExpr {listmap[listcreate[`capturegroup_itemtext`, `capturegroup_giveto`, `capturegroup_name`, `capturegroup_saythink`], `clearvar[$1]`]}
+				SetState {Idle}
 
 	IF: Expr {(help)#getvar[capturegroup_itemtext]}
 		DO: DoAll
-				DoExpr {echo[`#give <item name> to <person name>: All characters give the item in invetory to the person.`, $COLOR_INFO]}
-				DoExpr {echo[`#give <item name>: All characters give the item in invetory to the person who issued the command.`, $COLOR_INFO]}
+				DoExpr {echo[`#give <item name> to <person name>: All characters give the item in inventory to the person.`, $COLOR_INFO]}
+				DoExpr {echo[`#give <item name>: All characters give the item in inventory to the person who issued the command.`, $COLOR_INFO]}
 				DoExpr {listmap[listcreate[`capturegroup_itemtext`, `capturegroup_giveto`, `capturegroup_name`, `capturegroup_saythink`], `clearvar[$1]`]}
 				SetState {Idle}
 
