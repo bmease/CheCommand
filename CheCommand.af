@@ -172,6 +172,13 @@ STATE: {Default} ~~ {
 				~~ Message to send at the end of automatic Rynthid Weapons timer
 				DoExpr {setpvar[CCTimerWeaponsMsg, ifthen[testpvar[CCTimerWeaponsMsg], `@CCTimerWeaponsMsg`, `false`]]}
 
+				~~ Automatically start a timer for VR Speed Runs
+				DoExpr {setpvar[CCTimerVR, ifthen[testpvar[CCTimerVR], `@CCTimerVR`, `true`]]}
+
+				~~ Message to send at the end of automatic VR Speed Runs timer
+				DoExpr {setpvar[CCTimerVRMsg, ifthen[testpvar[CCTimerVRMsg], `@CCTimerVRMsg`, `false`]]}
+
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -576,6 +583,17 @@ STATE: {Idle} ~~ {
 		DO: DoAll
 				DoExpr {$CCTimerAmount=310}
 				DoExpr {$CCTimerMsg=@CCTimerWeaponsMsg}
+				DoExpr {setvar[CCTimer, stopwatchstart[stopwatchcreate[]]]}
+				CreateView {Timer} {:CheCommand-Timer.xml}
+				SetState {Idle}
+
+	~~ Start a timer for VR Speed runs
+	IF: All
+			Expr {@CCTimerVR==true}
+			ChatMatch {The leader of your fellowship has paid the 100 Infused Amber Shards, let us begin}
+		DO: DoAll
+				DoExpr {$CCTimerAmount=60*30}
+				DoExpr {$CCTimerMsg=@CCTimerVRMsg}
 				DoExpr {setvar[CCTimer, stopwatchstart[stopwatchcreate[]]]}
 				CreateView {Timer} {:CheCommand-Timer.xml}
 				SetState {Idle}
