@@ -593,6 +593,12 @@ STATE: {Idle} ~~ {
 			Expr {getcharquadprop[6]>=@CCWarnLuminance}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I am near my luminance cap!\`]`, `false`]}
+				SetState {Idle}
+
+	IF: ChatMatch {(?:Lord Kresovus|Neelic|Raksaa|Sergeant Trebuus) gives you Chorizite Threaded Pack Token}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I received a Chorizite Threaded Pack Token!\`]`, `false`]}
+				SetState {Idle}
 
 	~~ Start a timer for Rynthid Weapons wave one
 	IF: All
