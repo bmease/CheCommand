@@ -2429,7 +2429,8 @@ STATE: {PassGive} ~~ {
 	~~ Pass to next person in the @CCCharacterList
 	IF: Expr {listcount[wobjectfindallinventorybynamerx[$item]]>0}
 		DO: DoAll
-				DoExpr {$sortedCharacters=listsort[@CCCharacterList]} ~~ Sort to ensure all character lists are identical in order
+				DoExpr {$onlineCharacters=listfilter[@CCCharacterList, `$1==$CHARACTER_NAME||getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$PLAYER, $1]]==$TYPE_OBJECT`]}
+				DoExpr {$sortedCharacters=listsort[$onlineCharacter]} ~~ Sort to ensure all character lists are identical in order
 				DoExpr {$currentPos=listindexof[$sortedCharacters, $CHARACTER_NAME]}
 				DoExpr {$nextPos=ifthen[$currentPos+1>listcount[$sortedCharacters]-1, `0`, `$currentPos+1`]}
 				DoExpr {$nextCharacter=listgetitem[$sortedCharacters, $nextPos]}
