@@ -2413,7 +2413,7 @@ STATE: {PassGive} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	DoAll
-				DoExpr {listmap[listcreate[`sortedCharacters`, `currentPos`, `nextPos`, `nextCharacter`, `giving`, `item`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`onlineCharacters`, `sortedCharacters`, `currentPos`, `nextPos`, `nextCharacter`, `giving`, `item`], `clearvar[$1]`]}
 				SetState {Idle}
 
 	~~ Warn if no item found
@@ -2422,14 +2422,14 @@ STATE: {PassGive} ~~ {
 			Expr {listcount[wobjectfindallinventorybynamerx[$item]]==0}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I do not have \`+$item]`, `false`]}
-				DoExpr {listmap[listcreate[`sortedCharacters`, `currentPos`, `nextPos`, `nextCharacter`, `giving`, `item`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`onlineCharacters`, `sortedCharacters`, `currentPos`, `nextPos`, `nextCharacter`, `giving`, `item`], `clearvar[$1]`]}
 				SetState {Idle}
 
 	~~ Pass to next person in the @CCCharacterList
 	IF: Expr {listcount[wobjectfindallinventorybynamerx[$item]]>0}
 		DO: DoAll
 				DoExpr {$onlineCharacters=listfilter[@CCCharacterList, `$1==$CHARACTER_NAME||getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$PLAYER, $1]]==$TYPE_OBJECT`]}
-				DoExpr {$sortedCharacters=listsort[$onlineCharacter]} ~~ Sort to ensure all character lists are identical in order
+				DoExpr {$sortedCharacters=listsort[$onlineCharacters]} ~~ Sort to ensure all character lists are identical in order
 				DoExpr {$currentPos=listindexof[$sortedCharacters, $CHARACTER_NAME]}
 				DoExpr {$nextPos=ifthen[$currentPos+1>listcount[$sortedCharacters]-1, `0`, `$currentPos+1`]}
 				DoExpr {$nextCharacter=listgetitem[$sortedCharacters, $nextPos]}
@@ -2441,7 +2441,7 @@ STATE: {PassGive} ~~ {
 	IF: ChatMatch {^You give}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Gave \`+$item]`, `false`]}
-				DoExpr {listmap[listcreate[`sortedCharacters`, `currentPos`, `nextPos`, `nextCharacter`, `giving`, `item`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`onlineCharacters`, `sortedCharacters`, `currentPos`, `nextPos`, `nextCharacter`, `giving`, `item`], `clearvar[$1]`]}
 				SetState {Idle}
 
 ~~ }
