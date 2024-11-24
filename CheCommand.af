@@ -181,6 +181,13 @@ STATE: {Default} ~~ {
 				~~ Distance to use nearest trash npc
 				DoExpr {setpvar[CCTrashDistance, ifthen[testpvar[CCTrashDistance], `@CCTrashDistance`, `15`]]}
 
+				~~ Whether the Actions view is open or closed
+				DoExpr {setpvar[CCViewsActions, ifthen[testpvar[CCViewsActions], `@CCViewsActions`, `false`]]}
+
+				~~ Whether the Jump view is open or closed
+				DoExpr {setpvar[CCViewsJump, ifthen[testpvar[CCViewsJump], `@CCViewsJump`, `false`]]}
+
+
 				DoExpr {setvar[AutoTimers, listcreate[]]}
 				DoExpr {listadd[$AutoTimers, listcreate[11, 00, 00, `AM`, listcreate[`CheCommandNavRecomp`, `CheCommandNavChair`]]]}
 
@@ -407,7 +414,7 @@ STATE: {Init} ~~ {
 		DO: SetState {LeaderCheck}
 
 	IF: Always
-		DO: SetState {SetupButtons}
+		DO: SetState {SetupViews}
 
 ~~ }
 
@@ -3393,6 +3400,7 @@ STATE: {ShowJump} ~~ {
 		DO: DoAll
 				CreateView {Jump} {:CheCommand-Jump.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowJump], `Jump <<`]}
+				DoExpr {@CCViewsJump=true}
 				SetState {Idle}
 
 	~~ Close Jump view
@@ -3400,6 +3408,7 @@ STATE: {ShowJump} ~~ {
 		DO: DoAll
 				DestroyView {Jump}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowJump], `Jump >>`]}
+				DoExpr {@CCViewsJump=false}
 				SetState {Idle}
 ~~ }
 
@@ -3456,6 +3465,7 @@ STATE: {ShowActions} ~~ {
 		DO: DoAll
 				CreateView {Actions} {:CheCommand-Actions.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowActions], `Actions <<`]}
+				DoExpr {@CCViewsActions=true}
 				SetState {Idle}
 
 	~~ Close Action view
@@ -3463,6 +3473,7 @@ STATE: {ShowActions} ~~ {
 		DO: DoAll
 				DestroyView {Actions}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowActions], `Actions >>`]}
+				DoExpr {@CCViewsActions=false}
 				SetState {Idle}
 
 ~~ }
@@ -3487,12 +3498,24 @@ STATE: {ShowSettings} ~~ {
 ~~ }
 
 
-STATE: {SetupButtons} ~~ {
+STATE: {SetupViews} ~~ {
 
 	IF: Always
 		DO: DoAll
 				DoExpr {uisetlabel[uigetcontrol[Main, Follow], ifthen[@CCStay, `Follow`, `Stay`]]}
 				~~ DoExpr {uisetlabel[uigetcontrol[Main, Combat], ifthen[testpvar[CCOriginalVitalsEnableCombat], `ifthen[@CCOriginalVitalsEnableCombat, \`Combat Off\`, \`Combat On\`]`, `ifthen[vtgetsetting[EnableCombat], \`Combat Off\`, \`Combat On\`]`]]}
+
+	~~ If actions was previously open show it again
+	IF: Expr {@CCViewsActions==true}
+		DO: DoAll
+				CreateView {Actions} {:CheCommand-Actions.xml}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowActions], `Actions <<`]}
+
+	~~ If jump was previously open show it again
+	IF: Expr {@CCViewsJump==true}
+		DO: DoAll
+				CreateView {Jump} {:CheCommand-Jump.xml}
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowJump], `Jump <<`]}
 
 	IF: Always
 		DO: SetState {Idle}
