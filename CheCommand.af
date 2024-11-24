@@ -241,7 +241,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Fayza`, listcreate[`Journal of a Soldier`, `Energy Infused Rock`]]} ~~ Gurog Creation, Deewains
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kuyiza bint Zayi the Translator`, listcreate[`Carefully rolled scroll`, `Large Tome`]]} ~~ Bloodstone Investigation
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sir Donovan`, listcreate[`Bloodstone Report`, `Research Notes`, `Shattered Master Bloodstone Shard`, `Delicate Bloodstone Wand`, `Sturdy Bloodstone Wand`]]} ~~ Bloodstone Investigation
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Virindi Delegate`, listcreate[`Olthoi Hive Queen Carapace`, `Virindi Sentinel's Message Shard`]]} ~~ Hive Queen Assault, Dream Reaver Investigation
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Virindi Delegate`, listcreate[`Olthoi Hive Queen Carapace`, `Virindi Sentinel's Message Shard`, `Splinter of Hatred`, `Splinter of Anger`, `Splinter of Misery`]]} ~~ Hive Queen Assault, Dream Reaver Investigation
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mhoire Lieutenant`, `Geraine's Tome \\(1\\)`]} ~~ Geraine's Hosts
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Darviss`, `Spectral Nanjou Master's Sword`]} ~~ Ninja Academy
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Kinchou`, `Coded Tanada Scroll`]} ~~ Tanada Intercept
@@ -254,7 +254,6 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Adrenkus`, `Seed of Essence`]} ~~ Harvesting the Bulb of Mornings
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sanctum Guardian Spirit`, `Pulsating Spirit-trap Gem`]} ~~ Harvesting the Bulb of Twilight
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Norus`, `Seed of Essence`]} ~~ Harvesting the Bulb of Twilight
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Virindi Delegate`, listcreate[`Splinter of Hatred`, `Splinter of Anger`, `Splinter of Misery`]]} ~~
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rynthid Crystal Access Device`, `Focused Splinter of Hatred`]} ~~
 
 				~~ Luminance Quests
