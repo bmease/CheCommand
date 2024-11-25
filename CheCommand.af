@@ -348,6 +348,7 @@ STATE: {Default} ~~ {
 				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Complete Dispatch`]} ~~ Shard of the Herald
 				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Empowered Robe of the Perfect Light`]} ~~ Halt Dericost
 				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Coral Shield`]} ~~ Coral Golem Kill Task
+				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Gladiator Diemos Statue`]} ~~ Diemos
 
 	~~ Open Remote view
 	IF: Always
