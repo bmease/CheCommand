@@ -212,6 +212,8 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$CCRoutes, `002E02D1`, `CC-Feeding Tube`]}
 				DoExpr {dictadditem[$CCRoutes, `5879052B`, `CC-Path of Rage`]}
 				DoExpr {dictadditem[$CCRoutes, `5E450375`, `CC-Black Death Catacombs`]}
+				DoExpr {dictadditem[$CCRoutes, `5652038A`, `CC-Halt Dericost Mnemosynes`]}
+				DoExpr {dictadditem[$CCRoutes, `56520245`, `CC-Halt Dericost`]}
 
 	~~ Setup Auto Giving
 	IF: Always
