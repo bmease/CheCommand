@@ -332,6 +332,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Norshuntyr`, `Essence of Norshuntyr`]} ~~ VR Boss
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Paradox-touched Olthoi Queen`, `Carapace Shard`]} ~~ Paradox-touched Olthoi Queen
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Forge Golem`, `Forge Vault Key`]} ~~
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Gladiator Diemos`, `Gladiator Diemos Token`]} ~~
 
 	~~ Setup Auto Trash
 	IF: Always
