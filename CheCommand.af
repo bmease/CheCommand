@@ -3521,6 +3521,10 @@ STATE: {SetupViews} ~~ {
 				CreateView {Jump} {:CheCommand-Jump.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowJump], `Jump <<`]}
 
+	~~ If timer is running open timer view
+	IF: Expr {testvar[CCTimer]==true}
+		DO: CreateView {Timer} {:CheCommand-Timer.xml}
+
 	IF: Always
 		DO: SetState {Idle}
 
