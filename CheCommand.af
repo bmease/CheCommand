@@ -2673,7 +2673,10 @@ STATE: {LootCorpse} ~~ {
 				DoExpr {$CorpseItemsWanted=listfilter[$CorpseItems, `wobjectgetstringprop[$1, $STRING_PROP_NAME]==$LootCorpseItem`]}
 
 	~~ Warn if unable to pickup item
-	IF: ChatMatch {You have solved this quest too recently!}
+	IF: Any
+			ChatMatch {You have solved}
+			ChatMatch {You cannot pick up more than}
+			ChatMatch {You must wait}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Unable to loot \`+$LootCorpseItem]`, `false`]}
 				DoExpr {ifthen[getobjectinternaltype[wobjectgetopencontainer[]]==$TYPE_OBJECT, `actiontryuseitem[wobjectgetopencontainer[]]`, `false`]}  ~~ Close the container
@@ -2766,6 +2769,8 @@ STATE: {UsePortal} ~~ {
 			Any
 				ChatMatch {You must complete a quest to interact with that portal.}
 				ChatMatch {You completed the quest this portal requires too long ago!}
+				ChatMatch {You must be a member of the}
+				ChatMatch {Nothing happens}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Unable to use portal!\`]`, `false`]}
 				SetState {LeaderCheck}
