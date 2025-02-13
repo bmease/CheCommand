@@ -214,6 +214,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$CCRoutes, `5E450375`, `CC-Black Death Catacombs`]}
 				DoExpr {dictadditem[$CCRoutes, `5652038A`, `CC-Halt Dericost Mnemosynes`]}
 				DoExpr {dictadditem[$CCRoutes, `56520245`, `CC-Halt Dericost`]}
+				DoExpr {dictadditem[$CCRoutes, `79E9033A`, `CC-Bloodstone Investigation 3`]}
 
 	~~ Setup Auto Giving
 	IF: Always
@@ -222,7 +223,7 @@ STATE: {Default} ~~ {
 
 				~~ Sundering Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Liora Fenn`, `Bitter Tongue's Head`]} ~~ Drudge Hideout Infiltration
-				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Emissary of Asheron`, listcreate[`Virindi Observer's Message Shard`, `Dark Apostate Shard`, `Engorged Bloodstone Shards`, `Virindi Armorer's Message Shard`, `Dericost Gem of Luminance`]]} ~~ Return to Frore, Empyrean Rescue
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Emissary of Asheron`, listcreate[`Virindi Observer's Message Shard`, `Dark Apostate Shard`, `Engorged Bloodstone Shards`, `Virindi Armorer's Message Shard`, `Dericost Gem of Luminance`, `Shard of the Apostate Grand Director's Broken Mask`, `Apostate Grand Director's Mask`]]} ~~ Return to Frore, Empyrean Rescue, Apostate Finale
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Zervakarix`, `Viridian Rise Pocket Watch`]} ~~ Return to Frore
 
 				~~ Legendary Quests
@@ -264,6 +265,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Sanctum Guardian Spirit`, `Pulsating Spirit-trap Gem`]} ~~ Harvesting the Bulb of Twilight
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Norus`, `Seed of Essence`]} ~~ Harvesting the Bulb of Twilight
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rynthid Crystal Access Device`, `Focused Splinter of Hatred`]} ~~
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Ancient Altar`, `Ancient Skull and Bones`]} ~~
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
@@ -281,6 +283,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `The Deep`, `Altered Dark Remoran Fin`]} ~~ Society
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Lord Kresovus`, `Sigil of Linvak Tukal`]} ~~ Aerbax's Prodigal Lugian
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Master of the Gauntlet`, `Holcha's Head`]} ~~ Holcha's Head
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Ayesha of the Radiant Blood`, `Corrupted Mana Shard`]} ~~ Radiant Blood Society Flagging
 
 	~~ Setup Auto Looting
 	IF: Always
@@ -315,6 +318,11 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Apparition of Apathy`, `Shroud of Apathy`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Apparition of Envy`, `Shroud of Envy`]} ~~ Shroud of Emotion
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Treasure of Apparition of Spite`, `Shroud of Spite`]} ~~ Shroud of Emotion
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Ronin Hirachi`, `Ancient Skull`]} ~~
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Ronin Shimakawa`, `Ancient Arm Bone`]} ~~
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Ronin Ginmura`, `Shaped Arm Bone`]} ~~
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of First Lieutenant`, `First Lieutenant's Insignia.`]} ~~
+
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Zrikux`, `Orders for Zrikux`]} ~~ Falacot Depot
@@ -333,6 +341,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Paradox-touched Olthoi Queen`, `Carapace Shard`]} ~~ Paradox-touched Olthoi Queen
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Forge Golem`, `Forge Vault Key`]} ~~
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Gladiator Diemos`, `Gladiator Diemos Token`]} ~~
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Sir Bellas`, `Blank Augmentation Gem`]} ~~
 
 	~~ Setup Auto Trash
 	IF: Always
@@ -349,6 +358,10 @@ STATE: {Default} ~~ {
 				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Empowered Robe of the Perfect Light`]} ~~ Halt Dericost
 				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Coral Shield`]} ~~ Coral Golem Kill Task
 				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Gladiator Diemos Statue`]} ~~ Diemos
+				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Letter from Uber P`]} ~~ Mouf P
+				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Virindi Cage`]} ~~ Purge of Corruption
+				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Entryway Key`]} ~~ Lum
+				DoExpr {listadd[$AUTO_TRASH_ITEMS, `Cellar Key`]} ~~ Lum
 
 	~~ Open Remote view
 	IF: Always
