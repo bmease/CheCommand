@@ -1863,7 +1863,9 @@ STATE: {HandleKilltask} ~~ {
 	~~ Handle `#killtask frozen valley`
 	IF: Expr {(frozen valley)#getvar[capturegroup_ktaction]}
 		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavFrozenValley`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavPortalspaceActivator`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `FrozenValley`]]}
+
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFrozenValley`]}
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
