@@ -1898,6 +1898,7 @@ STATE: {HandleFlagging} ~~ {
 		DO: DoAll
 				DoExpr {echo[`#flag frozen valley: Flags with all NPCs in Frozen Valley`, $COLOR_INFO]}
 				DoExpr {echo[`#flag neftet: Flags with all NPCs in Neftet`, $COLOR_INFO]}
+				DoExpr {echo[`#flag rynthid: Flags with all NPCs in Rynthid`, $COLOR_INFO]}
 				SetState {Idle}
 
 	~~ Handle `#flag frozen valley`
@@ -1912,6 +1913,12 @@ STATE: {HandleFlagging} ~~ {
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavNeftet`]}
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
+				SetState {CallMeta}
+
+	~~ Handle `#flag rynthid`
+	IF: Expr {(rynthid)#getvar[capturegroup_flagaction]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagRynthid`]}
 				SetState {CallMeta}
 
 	~~ Handle no match for flagaction
