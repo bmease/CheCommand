@@ -88,7 +88,7 @@ STATE: {Default} ~~ {
 	~~ Initialize CC variables
 	IF: Always
 		DO: DoAll
-				DoExpr {setvar[CCVersion, `0.6.0`]}
+				DoExpr {setvar[CCVersion, `0.7.0`]}
 
 				DoExpr {setpvar[CCDebug, ifthen[testpvar[CCDebug], `@CCDebug`, `$LEVEL_DEBUG`]]}
 				DoExpr {setpvar[CCConfirm, ifthen[testpvar[CCConfirm], `@CCConfirm`, `true`]]}
