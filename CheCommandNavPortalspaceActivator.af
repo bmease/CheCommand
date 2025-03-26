@@ -112,6 +112,15 @@ STATE: {NavToDestination} ~~ {
 				DoExpr {dictadditem[$DESTINATION_LANDCELLS, `Rynthid`, listcreate[`2C320000`]]}
 				DoExpr {dictadditem[$DESTINATION_LANDCELLS, `VR`, listcreate[`B3490000`, `B1460000`]]}
 
+	IF: Always
+		DO: DoAll
+				DoExpr {setvar[DESTINATION_NAME, dictcreate[]]}
+				DoExpr {dictadditem[$DESTINATION_NAME, `AsheronsCastle`, `Asheron's Castle`]}
+				DoExpr {dictadditem[$DESTINATION_NAME, `Hoshino`, `Hoshino`]}
+				DoExpr {dictadditem[$DESTINATION_NAME, `FrozenValley`, `Frozen Valley`]}
+				DoExpr {dictadditem[$DESTINATION_NAME, `Rynthid`, `Rynthid`]}
+				DoExpr {dictadditem[$DESTINATION_NAME, `VR`, `Viridian Rise`]}
+
 	~~ Finish if at destination
 	IF: Expr {listcontains[dictgetitem[$DESTINATION_LANDCELLS, $destination], cstrf[getplayerlandblock[], `X8`]]==true}
 		DO: SetState {Finished}
@@ -226,13 +235,16 @@ STATE: {Finished} ~~ {
 	IF: Always
 		DO:	DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Finished navigating to destination\`, $COLOR_INFO]`, `false`]}
 
+	IF: Always
+		DO: DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished navigating to \`+dictgetitem[$DESTINATION_NAME, $destination]]`, `false`]}
+
 	~~ Reset all options to what they originally were
 	IF: Always
 		DO: SetOpt {EnableNav} {$OriginalEnableNav}
 
 	~~ Clear all variables
 	IF: Always
-		DO: DoExpr {listmap[listcreate[`item`, `using`, `metaname`, `arguments`, `destination`, `DESTINATION_LANDCELLS`, `DESTINATION_ITEMS`], `clearvar[$1]`]}
+		DO: DoExpr {listmap[listcreate[`item`, `using`, `metaname`, `arguments`, `destination`, `DESTINATION_LANDCELLS`, `DESTINATION_ITEMS` `DESTINATION_NAME`], `clearvar[$1]`]}
 
 	IF: Always
 		DO: ChatExpr {`/vt meta load `+$CCReturnMeta}
