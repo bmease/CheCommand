@@ -2880,6 +2880,10 @@ STATE: {LeaderCheck} ~~ {
 	IF: Expr {@CCLeader==$CHARACTER_NAME}
 		DO: CallState {EnableOptions} {Idle}
 
+	~~ If not following go straight to EnableOptions
+	IF: Expr {@CCStay==true}
+		DO: CallState {EnableOptions} {Idle}
+
 	~~ If following re-enable follow when leader is nearby
 	IF: All
 			Expr {@CCStay==false}
