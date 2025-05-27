@@ -928,6 +928,26 @@ STATE: {Idle} ~~ {
 				DoExpr {chatbox[`/t `+$capturegroup_name+`, CheCommand `+$CCVersion]}
 				SetState {Idle}
 
+	~~ Cast the Focusing Stones's Brillence on a player for the issuer of the command
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#brill(?: (?<brillname>.*))?\"$} {}
+			Expr {$capturegroup_name==false}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {Brill}
+
+	~~ Cast the Royal Bouquet's Blessing on a player for the issuer of the command
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#blessing(?: (?<blessingname>.*))?\"$} {}
+			Expr {$capturegroup_name==false}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {Blessing}
+
 	~~ Update Timer countdown
 	IF: All
 			Expr {testvar[CCTimer]!=false}
@@ -3376,6 +3396,48 @@ STATE: {ReadContracts} ~~ {
 	IF: Expr {getitemcountininventorybynamerx[`(Hunting\: Lost City of Neftet)|(Contract for)`]==0}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished reading contracts\`]`, `false`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {Brill} ~~ {
+
+	IF: Expr {getcombatstate[]!=`Magic`}
+		DO: DoAll
+				DoExpr {setcombatstate[`Magic`]}
+				SetState {Brill}
+
+	IF: Expr {testvar[capturegroup_brillname]==false}
+		DO: DoAll
+				ChatExpr {`/ub use Focusing Stone on `+wobjectgetname[wobjectgetselection[]]}
+				SetState {Idle}
+
+	IF: Expr {testvar[capturegroup_brillname]==true}
+		DO: DoAll
+				ChatExpr {`/ub use Focusing Stone on `+$capturegroup_brillname}
+				DoExpr {clearvar[capturegroup_blessingname]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {Blessing} ~~ {
+
+	IF: Expr {getcombatstate[]!=`Magic`}
+		DO: DoAll
+				DoExpr {setcombatstate[`Magic`]}
+				SetState {Blessing}
+
+	IF: Expr {testvar[capturegroup_blessingname]==false}
+		DO: DoAll
+				ChatExpr {`/ub use Royal Bouquet on `+wobjectgetname[wobjectgetselection[]]}
+				SetState {Idle}
+
+	IF: Expr {testvar[capturegroup_blessingname]==true}
+		DO: DoAll
+				ChatExpr {`/ub use Royal Bouquet on `+$capturegroup_blessingname}
+				DoExpr {clearvar[capturegroup_blessingname]}
 				SetState {Idle}
 
 ~~ }
