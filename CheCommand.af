@@ -2644,6 +2644,10 @@ STATE: {Loot} ~~ {
 	IF: Expr {testvar[CorpseBlacklist]==false}
 		DO: DoExpr {$CorpseBlacklist=listcreate[]}
 
+	~~ Drop to peace mode for looting
+	IF: Always
+		DO: DoExpr {setcombatstate[peace]}
+
 	~~ Find Potential Corpses
 	IF: Always
 		DO: DoAll
