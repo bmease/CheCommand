@@ -3549,18 +3549,21 @@ STATE: {ShowNavto} ~~ {
 	IF: All
 			Not Expr {uiviewvisible[Navto]}
 			Not Expr {uiviewvisible[Recalls]}
+			Not Expr {uiviewvisible[Empyrean]}
 		DO: DoAll
 				CreateView {Navto} {:CheCommand-TownNetwork.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
 				SetState {Idle}
 
-	~~ Close Jump view
+	~~ Close Navto view
 	IF: Any
 			Expr {uiviewvisible[Navto]}
 			Expr {uiviewvisible[Recalls]}
+			Expr {uiviewvisible[Empyrean]}
 		DO: DoAll
 				DestroyView {Navto}
 				DestroyView {Recalls}
+				DestroyView {Empyrean}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
 				SetState {Idle}
 
@@ -3570,7 +3573,7 @@ STATE: {ShowNavto} ~~ {
 
 STATE: {ShowRecalls} ~~ {
 
-	~~ Show Navto view
+	~~ Show Recalls view
 	IF: Not Expr {uiviewvisible[Recalls]}
 		DO: DoAll
 				DestroyView {Navto}
@@ -3578,11 +3581,29 @@ STATE: {ShowRecalls} ~~ {
 				~~ DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
 				SetState {Idle}
 
-	~~ Close Jump view
+	~~ Close Recalls view
 	IF: Expr {uiviewvisible[Recalls]}
 		DO: DoAll
 				DestroyView {Recalls}
 				~~ DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ShowEmpyreanPortalspaceActivator} ~~ {
+
+	~~ Show Empyrean Portalspace Activator view
+	IF: Not Expr {uiviewvisible[Empyrean]}
+		DO: DoAll
+				DestroyView {Navto}
+				CreateView {Empyrean} {:CheCommand-Empyrean.xml}
+				SetState {Idle}
+
+	~~ Close Empyrean Portalspace Activator view
+	IF: Expr {uiviewvisible[Empyrean]}
+		DO: DoAll
+				DestroyView {Empyrean}
 				SetState {Idle}
 
 ~~ }
