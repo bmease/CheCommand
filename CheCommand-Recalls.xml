@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<view width="441" height="156" title="Meta - Custom Network">
+<view width="441" height="181" title="Meta - Recalls">
     <control type="layout">
-        
+
         <!-- Column 1 -->
         <control type="button" name="Lifestone" left="5" top="5" width="100" height="20" text="Lifestone" actionexpr="chatbox[\#navto lifestone]" />
         <control type="button" name="Lifestone Recall" left="5" top="30" width="100" height="20" text="Lifestone Recall" actionexpr="chatbox[\#navto lifestone recall]" />
@@ -30,6 +30,9 @@
         <control type="button" name="Neftet" left="335" top="55" width="100" height="20" text="Neftet" actionexpr="chatbox[\#navto neftet]" />
         <control type="button" name="Olthoi" left="335" top="80" width="100" height="20" text="Olthoi" actionexpr="chatbox[\#navto olthoi]" />
         <control type="button" name="Rynthid" left="335" top="105" width="100" height="20" text="Rynthid" actionexpr="chatbox[\#navto rynthid]" />
+
+        <control type="button" name="Viridian Rise" left="335" top="130" width="100" height="20" text="Viridian Rise" actionexpr="chatbox[\#navto viridian rise]" />
+        <control type="button" name="Viridian Rise Tree" left="335" top="155" width="100" height="20" text="Viridian Rise Tree" actionexpr="chatbox[\#navto viridian rise tree]" />
 
     </control>
 </view>

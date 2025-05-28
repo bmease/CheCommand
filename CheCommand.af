@@ -1124,6 +1124,8 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {echo[`#navto neftet: Navigate to Neftet (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto singularity caul: Navigate to Singularity Caul (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto rynthid: Navigate to Rynthid (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto viridian rise: Navigate to Viridian Rise (requires spell)`, $COLOR_INFO]}
+				DoExpr {echo[`#navto viridian rise tree: Navigate to Viridian Rise Tree (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto sanctuary: Navigate to Sanctuary (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto secondary: Navigate to Secondary Portal Recall (requires spell)`, $COLOR_INFO]}
 				DoExpr {echo[`#navto ulgrims: Navigate to Ulgrim's Recall (requires spell)`, $COLOR_INFO]}
@@ -1288,6 +1290,18 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {(rynthid)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
 				DoExpr {$CCRecallSpell=6150} ~~ Rynthid Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto viridian rise`
+	IF: Expr {(viridian rise)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=6321} ~~ Viridian Rise Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto viridian rise tree`
+	IF: Expr {(viridian rise tree)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=6322} ~~ Viridian Rise Tree Recall
 				SetState {HandleRecall}
 
 	~~ Handle `#navto gearknight`
