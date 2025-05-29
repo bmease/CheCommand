@@ -3,36 +3,36 @@
     <control type="layout">
 
         <!-- Column 1 -->
-        <control type="button" name="Lifestone" left="5" top="5" width="100" height="20" text="Lifestone" actionexpr="chatbox[\#navto lifestone]" />
-        <control type="button" name="Lifestone Recall" left="5" top="30" width="100" height="20" text="Lifestone Recall" actionexpr="chatbox[\#navto lifestone recall]" />
-        <control type="button" name="Portal Recall" left="5" top="55" width="100" height="20" text="Portal Recall" actionexpr="chatbox[\#navto portal recall]" />
-        <control type="button" name="Primary" left="5" top="80" width="100" height="20" text="Primary" actionexpr="chatbox[\#navto primary]" />
-        <control type="button" name="Secondary" left="5" top="105" width="100" height="20" text="Secondary" actionexpr="chatbox[\#navto secondary]" />
+        <control type="button" name="Lifestone" left="5" top="5" width="100" height="20" text="Lifestone" setstate="ChatCommand" actionexpr="setvar[command, `#navto lifestone`]" />
+        <control type="button" name="Lifestone Recall" left="5" top="30" width="100" height="20" text="Lifestone Recall" setstate="ChatCommand" actionexpr="setvar[command, `#navto lifestone recall`]" />
+        <control type="button" name="Portal Recall" left="5" top="55" width="100" height="20" text="Portal Recall" setstate="ChatCommand" actionexpr="setvar[command, `#navto portal recall`]" />
+        <control type="button" name="Primary" left="5" top="80" width="100" height="20" text="Primary" setstate="ChatCommand" actionexpr="setvar[command, `#navto primary`]" />
+        <control type="button" name="Secondary" left="5" top="105" width="100" height="20" text="Secondary" setstate="ChatCommand" actionexpr="setvar[command, `#navto secondary`]" />
 
         <!-- Column 2 -->
-        <control type="button" name="Facility Hub" left="115" top="5" width="100" height="20" text="Facility Hub" actionexpr="chatbox[\#navto facility hub]" />
-        <control type="button" name="Colosseum" left="115" top="30" width="100" height="20" text="Colosseum" actionexpr="chatbox[\#navto colosseum]" />
-        <control type="button" name="Glenden Wood" left="115" top="55" width="100" height="20" text="Glenden Wood" actionexpr="chatbox[\#navto glenden wood]" />
-        <control type="button" name="Ulgrim's" left="115" top="80" width="100" height="20" text="Ulgrim's" actionexpr="chatbox[\#navto ulgrims]" />
-        <control type="button" name="Candeth" left="115" top="105" width="100" height="20" text="Candeth" actionexpr="chatbox[\#navto candeth]" />
+        <control type="button" name="Facility Hub" left="115" top="5" width="100" height="20" text="Facility Hub" setstate="ChatCommand" actionexpr="setvar[command, `#navto facilirty hub`]" />
+        <control type="button" name="Colosseum" left="115" top="30" width="100" height="20" text="Colosseum" setstate="ChatCommand" actionexpr="setvar[command, `#navto colosseum`]" />
+        <control type="button" name="Glenden Wood" left="115" top="55" width="100" height="20" text="Glenden Wood" setstate="ChatCommand" actionexpr="setvar[command, `#navto glenden wood`]" />
+        <control type="button" name="Ulgrim's" left="115" top="80" width="100" height="20" text="Ulgrim's" setstate="ChatCommand" actionexpr="setvar[command, `#navto ulgrims`]" />
+        <control type="button" name="Candeth" left="115" top="105" width="100" height="20" text="Candeth" setstate="ChatCommand" actionexpr="setvar[command, `#navto candeth`]" />
 
         <!-- Column 3 -->
-        <control type="button" name="Aerlinthe" left="225" top="5" width="100" height="20" text="Aerlinthe" actionexpr="chatbox[\#navto aerlinthe]" />
-        <control type="button" name="Aphus Lassel" left="225" top="30" width="100" height="20" text="Aphus Lassel" actionexpr="chatbox[\#navto aphus lassel]" />
-        <control type="button" name="Bur" left="225" top="55" width="100" height="20" text="Bur" actionexpr="chatbox[\#navto bur]" />
-        <control type="button" name="Mount Lethe" left="225" top="80" width="100" height="20" text="Mount Lethe" actionexpr="chatbox[\#navto mount lethe]" />
-        <control type="button" name="Sanctuary" left="225" top="105" width="100" height="20" text="Sanctuary" actionexpr="chatbox[\#navto sanctuary]" />
-        <control type="button" name="Singularity Caul" left="225" top="130" width="100" height="20" text="Singularity Caul" actionexpr="chatbox[\#navto singularity caul]" />
+        <control type="button" name="Aerlinthe" left="225" top="5" width="100" height="20" text="Aerlinthe" setstate="ChatCommand" actionexpr="setvar[command, `#navto aerlinthe`]" />
+        <control type="button" name="Aphus Lassel" left="225" top="30" width="100" height="20" text="Aphus Lassel" setstate="ChatCommand" actionexpr="setvar[command, `#navto aphus lassel`]" />
+        <control type="button" name="Bur" left="225" top="55" width="100" height="20" text="Bur" setstate="ChatCommand" actionexpr="setvar[command, `#navto bur`]" />
+        <control type="button" name="Mount Lethe" left="225" top="80" width="100" height="20" text="Mount Lethe" setstate="ChatCommand" actionexpr="setvar[command, `#navto mount lethe`]" />
+        <control type="button" name="Sanctuary" left="225" top="105" width="100" height="20" text="Sanctuary" setstate="ChatCommand" actionexpr="setvar[command, `#navto sanctuary`]" />
+        <control type="button" name="Singularity Caul" left="225" top="130" width="100" height="20" text="Singularity Caul" setstate="ChatCommand" actionexpr="setvar[command, `#navto singularity caul`]" />
 
         <!-- Column 4 -->
-        <control type="button" name="Gear Knight" left="335" top="5" width="100" height="20" text="Gear Knight" actionexpr="chatbox[\#navto gear knight]" />
-        <control type="button" name="Graveyard" left="335" top="30" width="100" height="20" text="Graveyard" actionexpr="chatbox[\#navto graveyard]" />
-        <control type="button" name="Neftet" left="335" top="55" width="100" height="20" text="Neftet" actionexpr="chatbox[\#navto neftet]" />
-        <control type="button" name="Olthoi" left="335" top="80" width="100" height="20" text="Olthoi" actionexpr="chatbox[\#navto olthoi]" />
-        <control type="button" name="Rynthid" left="335" top="105" width="100" height="20" text="Rynthid" actionexpr="chatbox[\#navto rynthid]" />
+        <control type="button" name="Gear Knight" left="335" top="5" width="100" height="20" text="Gear Knight" setstate="ChatCommand" actionexpr="setvar[command, `#navto gear knight`]" />
+        <control type="button" name="Graveyard" left="335" top="30" width="100" height="20" text="Graveyard" setstate="ChatCommand" actionexpr="setvar[command, `#navto graveyard`]" />
+        <control type="button" name="Neftet" left="335" top="55" width="100" height="20" text="Neftet" setstate="ChatCommand" actionexpr="setvar[command, `#navto neftet`]" />
+        <control type="button" name="Olthoi" left="335" top="80" width="100" height="20" text="Olthoi" setstate="ChatCommand" actionexpr="setvar[command, `#navto olthoi`]" />
+        <control type="button" name="Rynthid" left="335" top="105" width="100" height="20" text="Rynthid" setstate="ChatCommand" actionexpr="setvar[command, `#navto rynthid`]" />
 
-        <control type="button" name="Viridian Rise" left="335" top="130" width="100" height="20" text="Viridian Rise" actionexpr="chatbox[\#navto viridian rise]" />
-        <control type="button" name="Viridian Rise Tree" left="335" top="155" width="100" height="20" text="Viridian Rise Tree" actionexpr="chatbox[\#navto viridian rise tree]" />
+        <control type="button" name="Viridian Rise" left="335" top="130" width="100" height="20" text="Viridian Rise" setstate="ChatCommand" actionexpr="setvar[command, `#navto viridian rise`]" />
+        <control type="button" name="Viridian Rise Tree" left="335" top="155" width="100" height="20" text="Viridian Rise Tree" setstate="ChatCommand" actionexpr="setvar[command, `#navto viridian rise tree`]" />
 
     </control>
 </view>

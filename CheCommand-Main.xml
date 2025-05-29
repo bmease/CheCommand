@@ -3,24 +3,24 @@
 
     <control type="layout">
 
-        <control type="button" name="Portal" left="6" top="6" width="75" height="35" text="Portal" setstate="Idle" actionexpr="chatbox[\#action portal]" />
-        <control type="button" name="NPC" left="87" top="6" width="75" height="35" text="NPC" setstate="Idle" actionexpr="chatbox[\#action npc]" />
+        <control type="button" name="Portal" left="6" top="6" width="75" height="35" text="Portal" setstate="ChatCommand" actionexpr="setvar[command, `#action portal`]" />
+        <control type="button" name="NPC" left="87" top="6" width="75" height="35" text="NPC" setstate="ChatCommand" actionexpr="setvar[command, `#action npc`]" />
 
         <control type="button" name="Follow" left="6" top="48" width="75" height="15" text="Follow" setstate="ToggleStay" />
-        <control type="button" name="Forcebuff" left="87" top="48" width="75" height="15" text="Forcebuff" setstate="Idle" actionexpr="chatbox[\#action buff]" />
+        <control type="button" name="Forcebuff" left="87" top="48" width="75" height="15" text="Forcebuff" setstate="ChatCommand" actionexpr="setvar[command, `#action buff`]" />
 
-        <control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="Idle" actionexpr="chatbox[\#vtoption enablecombat true]" />
-        <control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablecombat false]" />
+        <control type="button" name="Combat On" left="6" top="69" width="75" height="15" text="Combat On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablecombat true`]" />
+        <control type="button" name="Combat Off" left="87" top="69" width="75" height="15" text="Combat Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablecombat false`]" />
 
-        <control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="Idle" actionexpr="chatbox[\#vtoption enablenav true]" />
-        <control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablenav false]" />
+        <control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablenav true`]" />
+        <control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablenav false`]" />
 
-        <control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="Idle" actionexpr="chatbox[\#vtoption enablelooting true]" />
-        <control type="button" name="Loot Off" left="87" top="111" width="35" height="15" text="Off" setstate="Idle" actionexpr="chatbox[\#vtoption enablelooting false]" />
-        <control type="button" name="Rares" left="128" top="111" width="35" height="15" text="Rares" setstate="Idle" actionexpr="chatbox[\#vtoption lootonlyrarecorpses true]" />
+        <control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablelooting true`]" />
+        <control type="button" name="Loot Off" left="87" top="111" width="35" height="15" text="Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablelooting false`]" />
+        <control type="button" name="Rares" left="128" top="111" width="35" height="15" text="Rares" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption lootonlyrarecorpses true`]" />
 
-        <control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" actionexpr="chatbox[\#vtoption enablebuffing true]" />
-        <control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" actionexpr="chatbox[\#vtoption enablebuffing false]" />
+        <control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablebuffing true`]" />
+        <control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablebuffing false`]" />
 
         <control type="button" name="ShowActions" left="6" top="174" width="75" height="15" text="Actions >>" setstate="ShowActions" />
         <control type="button" name="ShowSettings" left="6" top="195" width="75" height="15" text="Settings >>" setstate="ShowSettings" />

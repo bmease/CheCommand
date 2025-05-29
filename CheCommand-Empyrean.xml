@@ -3,16 +3,16 @@
     <control type="layout">
 
         <!-- Column 1 -->
-        <control type="button" name="Asherons Castle" left="5" top="5" width="100" height="20" text="Asheron's Castle" actionexpr="chatbox[\#navto asherons castle]" />
+        <control type="button" name="Asherons Castle" left="5" top="5" width="100" height="20" text="Asheron's Castle" setstate="ChatCommand" actionexpr="setvar[command, `#navto asherons castle`]" />
 
         <!-- Column 2 -->
-        <control type="button" name="Frozen Valley" left="115" top="5" width="100" height="20" text="Forzen Valley" actionexpr="chatbox[\#navto frozen valley]" />
-        <control type="button" name="Rynthid" left="115" top="30" width="100" height="20" text="Rynthid" actionexpr="chatbox[\#navto empyrean rynthid]" />
-        <control type="button" name="Hoshino" left="115" top="55" width="100" height="20" text="Hoshino" actionexpr="chatbox[\#navto hoshino]" />
+        <control type="button" name="Frozen Valley" left="115" top="5" width="100" height="20" text="Frozen Valley" setstate="ChatCommand" actionexpr="setvar[command, `#frozen valley`]" />
+        <control type="button" name="Rynthid" left="115" top="30" width="100" height="20" text="Rynthid" setstate="ChatCommand" actionexpr="setvar[command, `#navto empyrean rynthid`]" />
+        <control type="button" name="Hoshino" left="115" top="55" width="100" height="20" text="Hoshino" setstate="ChatCommand" actionexpr="setvar[command, `#navto hoshino`]" />
 
         <!-- Column 3 -->
-        <control type="button" name="VR" left="225" top="5" width="100" height="20" text="Viridian Rise" actionexpr="chatbox[\#navto empyrean virindian rise]" />
-        <control type="button" name="Singularity Caul" left="225" top="30" width="100" height="20" text="Singularity Caul" actionexpr="chatbox[\#navto empyrean singularity caul]" />
+        <control type="button" name="VR" left="225" top="5" width="100" height="20" text="Viridian Rise" setstate="ChatCommand" actionexpr="setvar[command, `#navto empyrean viridian rise`]" />
+        <control type="button" name="Singularity Caul" left="225" top="30" width="100" height="20" text="Singularity Caul" setstate="ChatCommand" actionexpr="setvar[command, `#navto empyrean singularity caul`]" />
 
     </control>
 </view>

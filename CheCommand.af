@@ -96,6 +96,8 @@ STATE: {Default} ~~ {
 				DoExpr {setpvar[CCFellowname, ifthen[testpvar[CCFellowname], `@CCFellowname`, `Not Set`]]}
 				DoExpr {setpvar[CCCharacterList, ifthen[testpvar[CCCharacterList], `@CCCharacterList`, `listcreate[]`]]}
 
+				DoExpr {setpvar[CCChatCommand, ifthen[testpvar[CCChatCommand], `@CCChatCommand`, `Say`]]}
+
 				~~ Amount of seconds between checking stuck
 				DoExpr {setpvar[CCStuckAnnounceDelay, ifthen[testpvar[CCStuckAnnounceDelay], `@CCStuckAnnounceDelay`, `5`]]}
 
@@ -1291,6 +1293,12 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {(rynthid)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
 				DoExpr {$CCRecallSpell=6150} ~~ Rynthid Recall
+				SetState {HandleRecall}
+
+	~~ Handle `#navto olthoi`
+	IF: Expr {(olthoi)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {$CCRecallSpell=4198} ~~ Olthoi North Recall
 				SetState {HandleRecall}
 
 	~~ Handle `#navto viridian rise`
@@ -3645,6 +3653,7 @@ STATE: {ShowSettings} ~~ {
 		DO: DoAll
 				CreateView {Settings} {:CheCommand-Settings.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowSettings], `Settings <<`]}
+				DoExpr {uisetlabel[uigetcontrol[Settings, ChatCommand], `Chat: `+@CCChatCommand]}  ~~ Set the current ChatCommand
 				SetState {Idle}
 
 	~~ Close Settings view
@@ -3689,15 +3698,45 @@ STATE: {ToggleStay} ~~ {
 
 	IF: Expr {@CCStay==true}
 		DO: DoAll
-				ChatExpr {`#action follow`}
 				DoExpr {uisetlabel[uigetcontrol[Main, Follow], `Stay`]}
-				SetState {Idle}
+				DoExpr {$command=`#action follow`}
+				SetState {ChatCommand}
 
 	IF: Expr {@CCStay==false}
 		DO: DoAll
-				ChatExpr {`#action stay`}
 				DoExpr {uisetlabel[uigetcontrol[Main, Follow], `Follow`]}
+				DoExpr {$command=`#action stay`}
+				SetState {ChatCommand}
+
+~~ }
+
+
+STATE: {ToggleChatCommand} ~~ {
+
+	~~ Toggle ChatCommand to say
+	IF: Expr {@CCChatCommand==`Fellow`}
+		DO: DoAll
+				DoExpr {setpvar[CCChatCommand, `Say`]}
+				DoExpr {uisetlabel[uigetcontrol[Settings, ChatCommand], `Chat: Say`]}
 				SetState {Idle}
+
+	~~ Toggle ChatCommand to fellow
+	IF: Expr {@CCChatCommand==`Say`}
+		DO: DoAll
+				DoExpr {setpvar[CCChatCommand, `Fellow`]}
+				DoExpr {uisetlabel[uigetcontrol[Settings, ChatCommand], `Chat: Fellow`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ChatCommand} ~~ {
+	IF: Always
+		DO: DoAll
+				ChatExpr {`/`+@CCChatCommand+` `+$command}
+				DoExpr {clearvar[command]}
+				SetState {Idle}
+
 
 ~~ }
 

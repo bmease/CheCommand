@@ -1,53 +1,55 @@
 <?xml version="1.0"?>
-<view width="330" height="430" title="Settings">
+<view width="330" height="460" title="Settings">
     <control type="layout">
 
-        <control type="button" name="Attack Range 5" left="5" top="5" width="100" height="20" text="Attack Range 5" actionexpr="chatbox[\#vtoption attackdistance 0\.0208333333333333]" />
-        <control type="button" name="Attack Range 10" left="115" top="5" width="100" height="20" text="Attack Range 10" actionexpr="chatbox[\#vtoption attackdistance 0\.0416666666666667 ]" />
-        <control type="button" name="Attack Range 15" left="225" top="5" width="100" height="20" text="Attack Range 15" actionexpr="chatbox[\#vtoption attackdistance 0\.0625]" />
+        <control type="button" name="Attack Range 5" left="5" top="5" width="100" height="20" text="Attack Range 5" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.02083`]" />
+        <control type="button" name="Attack Range 10" left="115" top="5" width="100" height="20" text="Attack Range 10" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.0417`]" />
+        <control type="button" name="Attack Range 15" left="225" top="5" width="100" height="20" text="Attack Range 15" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.0625`]" />
 
-        <control type="button" name="Attack Range 20" left="5" top="30" width="100" height="20" text="Attack Range 20" actionexpr="chatbox[\#vtoption attackdistance 0\.0833333333333333]" />
-        <control type="button" name="Attack Range 25" left="115" top="30" width="100" height="20" text="Attack Range 25" actionexpr="chatbox[\#vtoption attackdistance 0\.104166666666667]" />
-        <control type="button" name="Attack Range 30" left="225" top="30" width="100" height="20" text="Attack Range 30" actionexpr="chatbox[\#vtoption attackdistance 0\.125]" />
+        <control type="button" name="Attack Range 20" left="5" top="30" width="100" height="20" text="Attack Range 20" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.084`]" />
+        <control type="button" name="Attack Range 25" left="115" top="30" width="100" height="20" text="Attack Range 25" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.10417`]" />
+        <control type="button" name="Attack Range 30" left="225" top="30" width="100" height="20" text="Attack Range 30" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.125`]" />
 
-        <control type="button" name="Attack Range 35" left="5" top="55" width="100" height="20" text="Attack Range 35" actionexpr="chatbox[\#vtoption attackdistance 0\.147]" />
-        <control type="button" name="Attack Range 40" left="115" top="55" width="100" height="20" text="Attack Range 40" actionexpr="chatbox[\#vtoption attackdistance 0\.168]" />
-        <control type="button" name="Attack Range 45" left="225" top="55" width="100" height="20" text="Attack Range 45" actionexpr="chatbox[\#vtoption attackdistance 0\.189]" />
+        <control type="button" name="Attack Range 35" left="5" top="55" width="100" height="20" text="Attack Range 35" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.147`]" />
+        <control type="button" name="Attack Range 40" left="115" top="55" width="100" height="20" text="Attack Range 40" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.168`]" />
+        <control type="button" name="Attack Range 45" left="225" top="55" width="100" height="20" text="Attack Range 45" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.189`]" />
 
-        <control type="button" name="Attack Range Max" left="5" top="80" width="320" height="20" text="Attack Range Max" actionexpr="chatbox[\#vtoption attackdistance 0\.294]" />
-
-
-        <control type="button" name="Approach 0" left="5" top="130" width="100" height="20" text="Approach 0" actionexpr="chatbox[\#vtoption approachdistance 0]" />
-        <control type="button" name="Approach 5" left="115" top="130" width="100" height="20" text="Approach 5" actionexpr="chatbox[\#vtoption approachdistance 0\.021]" />
-        <control type="button" name="Approach 10" left="225" top="130" width="100" height="20" text="Approach 10" actionexpr="chatbox[\#vtoption approachdistance 0\.042]" />
-
-        <control type="button" name="Approach 20" left="5" top="155" width="100" height="20" text="Approach 20" actionexpr="chatbox[\#vtoption approachdistance 0\.084]" />
-        <control type="button" name="Approach 30" left="115" top="155" width="100" height="20" text="Approach 30" actionexpr="chatbox[\#vtoption approachdistance 0\.126]" />
-        <control type="button" name="Approach 45" left="225" top="155" width="100" height="20" text="Approach 45" actionexpr="chatbox[\#vtoption approachdistance 0\.189]" />
-
-        <control type="button" name="Approach Max" left="5" top="180" width="320" height="20" text="Approach Max" actionexpr="chatbox[\#vtoption approachdistance 0\.294]" />
+        <control type="button" name="Attack Range Max" left="5" top="80" width="320" height="20" text="Attack Range Max" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption attackdistance 0\.294`]" />
 
 
-        <control type="button" name="Follow 0.1" left="5" top="230" width="100" height="20" text="Follow 0.1" actionexpr="chatbox[\#vtoption navclosestoprange 0\.000416666666666667]" />
-        <control type="button" name="Follow 0.5" left="115" top="230" width="100" height="20" text="Follow 0.5" actionexpr="chatbox[\#vtoption navclosestoprange 0\.00208333333333333]" />
-        <control type="button" name="Follow 1" left="225" top="230" width="100" height="20" text="Follow 1" actionexpr="chatbox[\#vtoption navclosestoprange 0\.00416666666666667]" />
+        <control type="button" name="Approach 0" left="5" top="130" width="100" height="20" text="Approach 0" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption approachdistance 0`]" />
+        <control type="button" name="Approach 5" left="115" top="130" width="100" height="20" text="Approach 5" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption approachdistance 0\.021`]" />
+        <control type="button" name="Approach 10" left="225" top="130" width="100" height="20" text="Approach 10" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption approachdistance 0\.042`]" />
 
-        <control type="button" name="Follow 1.5" left="5" top="255" width="100" height="20" text="Follow 1.5" actionexpr="chatbox[\#vtoption navclosestoprange 0\.00625]" />
-        <control type="button" name="Follow 2" left="115" top="255" width="100" height="20" text="Follow 2" actionexpr="chatbox[\#vtoption navclosestoprange 0\.0083333]" />
-        <control type="button" name="Follow 5" left="225" top="255" width="100" height="20" text="Follow 5" actionexpr="chatbox[\#vtoption navclosestoprange 0\.0208333333333333]" />
+        <control type="button" name="Approach 20" left="5" top="155" width="100" height="20" text="Approach 20" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption approachdistance 0\.084`]" />
+        <control type="button" name="Approach 30" left="115" top="155" width="100" height="20" text="Approach 30" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption approachdistance 0\.126`]" />
+        <control type="button" name="Approach 45" left="225" top="155" width="100" height="20" text="Approach 45" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption approachdistance 0\.189`]" />
+
+        <control type="button" name="Approach Max" left="5" top="180" width="320" height="20" text="Approach Max" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption approachdistance 0\.294`]" />
 
 
-        <control type="button" name="Attack Low" left="5" top="305" width="100" height="20" text="Attack Low" actionexpr="chatbox[\#vtoption defaultmeleeattackheight 3]" />
-        <control type="button" name="Attack Medium" left="115" top="305" width="100" height="20" text="Attack Medium" actionexpr="chatbox[\#vtoption defaultmeleeattackheight 2]" />
-        <control type="button" name="Attack High" left="225" top="305" width="100" height="20" text="Attack High" actionexpr="chatbox[\#vtoption defaultmeleeattackheight 1]" />
+        <control type="button" name="Follow 0.1" left="5" top="230" width="100" height="20" text="Follow 0.1" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption navclosestoprange 0\.000417`]" />
+        <control type="button" name="Follow 0.5" left="115" top="230" width="100" height="20" text="Follow 0.5" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption navclosestoprange 0\.002083`]" />
+        <control type="button" name="Follow 1" left="225" top="230" width="100" height="20" text="Follow 1" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption navclosestoprange 0\.00417`]" />
 
-        <control type="button" name="Summons On" left="5" top="330" width="155" height="20" text="Summons On" actionexpr="chatbox[\#vtoption summonpets true]" />
-        <control type="button" name="Summons Off" left="170" top="330" width="155" height="20" text="Summons Off" actionexpr="chatbox[\#vtoption summonpets false]" />
+        <control type="button" name="Follow 1.5" left="5" top="255" width="100" height="20" text="Follow 1.5" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption navclosestoprange 0\.00625`]" />
+        <control type="button" name="Follow 2" left="115" top="255" width="100" height="20" text="Follow 2" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption navclosestoprange 0\.0083`]" />
+        <control type="button" name="Follow 5" left="225" top="255" width="100" height="20" text="Follow 5" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption navclosestoprange 0\.02083`]" />
 
-        <control type="button" name="Dispel Items On" left="5" top="355" width="155" height="20" text="Dispel Items On" actionexpr="chatbox[\#vtoption usedispelitems true]" />
-        <control type="button" name="Dispel Items Off" left="170" top="355" width="155" height="20" text="Dispel Items Off" actionexpr="chatbox[\#vtoption usedispelitems false]" />
 
-        <control type="button" name="Pass Eternally Burning Coal" left="5" top="405" width="320" height="20" text="Pass Eternally Burning Coal" actionexpr="chatbox[\#pass Eternally Burning Coal]" />
+        <control type="button" name="Attack Low" left="5" top="305" width="100" height="20" text="Attack Low" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption defaultmeleeattackheight 3`]" />
+        <control type="button" name="Attack Medium" left="115" top="305" width="100" height="20" text="Attack Medium" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption defaultmeleeattackheight 2`]" />
+        <control type="button" name="Attack High" left="225" top="305" width="100" height="20" text="Attack High" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption defaultmeleeattackheight 1`]" />
+
+        <control type="button" name="Summons On" left="5" top="330" width="155" height="20" text="Summons On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption summonpets true`]" />
+        <control type="button" name="Summons Off" left="170" top="330" width="155" height="20" text="Summons Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption summonpets false`]" />
+
+        <control type="button" name="Dispel Items On" left="5" top="355" width="155" height="20" text="Dispel Items On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption usedispelitems true`]" />
+        <control type="button" name="Dispel Items Off" left="170" top="355" width="155" height="20" text="Dispel Items Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption usedispelitems false`]" />
+
+        <control type="button" name="ChatCommand" left="5" top="380" width="155" height="20" text="ChatCommand" setstate="ToggleChatCommand" />
+
+        <control type="button" name="Pass Eternally Burning Coal" left="5" top="430" width="320" height="20" text="Pass Eternally Burning Coal" setstate="ChatCommand" actionexpr="setvar[command, `#pass Eternally Burning Coal`]" />
 
     </control>
 </view>
