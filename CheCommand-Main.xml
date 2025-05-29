@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<view width="168" height="217" title="Remote">
+<view width="168" height="238" title="Remote">
 
     <control type="layout">
 
@@ -15,19 +15,21 @@
         <control type="button" name="Nav On" left="6" top="90" width="75" height="15" text="Nav On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablenav true`]" />
         <control type="button" name="Nav Off" left="87" top="90" width="75" height="15" text="Nav Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablenav false`]" />
 
-        <control type="button" name="Loot All" left="6" top="111" width="75" height="15" text="Loot All" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablelooting true`]" />
-        <control type="button" name="Loot Off" left="87" top="111" width="35" height="15" text="Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablelooting false`]" />
-        <control type="button" name="Rares" left="128" top="111" width="35" height="15" text="Rares" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption lootonlyrarecorpses true`]" />
+        <control type="button" name="NavP On" left="6" top="111" width="75" height="15" text="NavP On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption NavPriorityBoost true`]" />
+        <control type="button" name="NavP Off" left="87" top="111" width="75" height="15" text="NavP Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption NavPriorityBoost false`]" />
 
-        <control type="button" name="Buff On" left="6" top="132" width="75" height="15" text="Buff On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablebuffing true`]" />
-        <control type="button" name="Buff Off" left="87" top="132" width="75" height="15" text="Buff Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablebuffing false`]" />
+        <control type="button" name="Loot All" left="6" top="132" width="75" height="15" text="Loot All" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablelooting true`]" />
+        <control type="button" name="Loot Off" left="87" top="132" width="35" height="15" text="Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablelooting false`]" />
+        <control type="button" name="Rares" left="128" top="132" width="35" height="15" text="Rares" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption lootonlyrarecorpses true`]" />
 
-        <control type="button" name="ShowActions" left="6" top="174" width="75" height="15" text="Actions >>" setstate="ShowActions" />
-        <control type="button" name="ShowSettings" left="6" top="195" width="75" height="15" text="Settings >>" setstate="ShowSettings" />
+        <control type="button" name="Buff On" left="6" top="153" width="75" height="15" text="Buff On" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablebuffing true`]" />
+        <control type="button" name="Buff Off" left="87" top="153" width="75" height="15" text="Buff Off" setstate="ChatCommand" actionexpr="setvar[command, `#vtoption enablebuffing false`]" />
 
-        <control type="button" name="ShowNavto" left="87" top="174" width="75" height="15" text="Navto >>" setstate="ShowNavto" />
-        <control type="button" name="ShowJump" left="87" top="195" width="75" height="15" text="Jump >>" setstate="ShowJump" />
+        <control type="button" name="ShowActions" left="6" top="195" width="75" height="15" text="Actions >>" setstate="ShowActions" />
+        <control type="button" name="ShowSettings" left="6" top="216" width="75" height="15" text="Settings >>" setstate="ShowSettings" />
 
+        <control type="button" name="ShowNavto" left="87" top="195" width="75" height="15" text="Navto >>" setstate="ShowNavto" />
+        <control type="button" name="ShowJump" left="87" top="216" width="75" height="15" text="Jump >>" setstate="ShowJump" />
 
     </control>
 
