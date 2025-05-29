@@ -3363,6 +3363,7 @@ STATE: {UseNPC} ~~ {
 
 	~~ Use Brellegia's Marker if it's closer than an npc. Brellegia's Marker is an object class Foci instead of NPC
 	IF: All
+			Expr {getobjectinternaltype[wobjectfindnearestbyobjectclass[$FOCI]]==$TYPE_OBJECT}
 			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$FOCI]], getplayercoordinates[]]<coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]}
 			Expr {wobjectgetstringprop[wobjectfindnearestbyobjectclass[$FOCI], $STRING_PROP_NAME]==`Brellegia's Marker`}
 		DO: DoAll
@@ -3371,7 +3372,14 @@ STATE: {UseNPC} ~~ {
 				SetState {UseNPC}
 
 	~~ Use NPC if it's closer than Brellegia's Marker
-	IF:	Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]<coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$FOCI]], getplayercoordinates[]]}
+	IF:	Expr {getobjectinternaltype[wobjectfindnearestbyobjectclass[$FOCI]]==$TYPE_OBJECT&&coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]<coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$FOCI]], getplayercoordinates[]]}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$NPC]]}
+				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $STRING_PROP_NAME]}
+				SetState {UseNPC}
+
+	~~ Use NPC if Brellegia's Marker is not nearby
+	IF: Not Expr {getobjectinternaltype[wobjectfindnearestbyobjectclass[$FOCI]]==$TYPE_OBJECT}
 		DO: DoAll
 				DoExpr {actiontryuseitem[wobjectfindnearestbyobjectclass[$NPC]]}
 				DoExpr {$name=wobjectgetstringprop[wobjectfindnearestbyobjectclass[$NPC], $STRING_PROP_NAME]}
