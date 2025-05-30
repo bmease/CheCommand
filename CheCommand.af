@@ -2569,37 +2569,37 @@ STATE: {HandleCheck} ~~ {
 				DoExpr {$remaining_seconds=$total_seconds%3600}
 				DoExpr {$minutes=floor[$remaining_seconds/60]}
 				DoExpr {$seconds=$remaining_seconds%60}
-				ChatExpr {`/f Buffs: `+$hours+` hours, `+$minutes+` minutes, `+$seconds+` seconds`}
+				ChatExpr {`/t `+@CCLeader+`, Buffs: `+$hours+` hours, `+$minutes+` minutes, `+$seconds+` seconds`}
 				SetState {Idle}
 
 	~~ Handle `#check luminance`
 	IF: Expr {(luminance)#getvar[capturegroup_checktext]}
 		DO: DoAll
-				ChatExpr {`/f Luminance: `+cstrf[getcharquadprop[6], `N0`]}
+				ChatExpr {`/t `+@CCLeader+`, Luminance: `+cstrf[getcharquadprop[6], `N0`]}
 				SetState {Idle}
 
 	~~ Handle `#check level`
 	IF: Expr {(level)#getvar[capturegroup_checktext]}
 		DO: DoAll
-				ChatExpr {`/f Level: `+getcharintprop[25]}
+				ChatExpr {`/t `+@CCLeader+`, Level: `+getcharintprop[25]}
 				SetState {Idle}
 
 	~~ Handle `#check landblock`
 	IF: Expr {(landblock)#getvar[capturegroup_checktext]}
 		DO: DoAll
-				ChatExpr {`/f Landblock: `+hexstr[getplayerlandblock[]]}
+				ChatExpr {`/t `+@CCLeader+`, Landblock: `+hexstr[getplayerlandblock[]]}
 				SetState {Idle}
 
 	~~ Handle `#check landcell`
 	IF: Expr {(landcell)#getvar[capturegroup_checktext]}
 		DO: DoAll
-				ChatExpr {`/f Landblock: `+hexstr[getplayerlandcell[]]}
+				ChatExpr {`/t `+@CCLeader+`, Landblock: `+hexstr[getplayerlandcell[]]}
 				SetState {Idle}
 
 	~~ Handle `#check settings`
 	IF: Expr {(settings)#getvar[capturegroup_checktext]}
 		DO: DoAll
-				ChatExpr {`/f Toggle Vitals: `+ifthen[@CCVitals, `On`, `Off`]+`, Buff: `+ifthen[vtgetsetting[EnableBuffing], `On`, `Off`]+`, Combat: `+ifthen[vtgetsetting[EnableCombat], `On`, `Off`]+`, Nav: `+ifthen[vtgetsetting[EnableNav], `On`, `Off`]+`, Loot: `+ifthen[vtgetsetting[EnableLooting], `On`, `Off`]}
+				ChatExpr {`/t `+@CCLeader+`, Toggle Vitals: `+ifthen[@CCVitals, `On`, `Off`]+`, Buff: `+ifthen[vtgetsetting[EnableBuffing], `On`, `Off`]+`, Combat: `+ifthen[vtgetsetting[EnableCombat], `On`, `Off`]+`, Nav: `+ifthen[vtgetsetting[EnableNav], `On`, `Off`]+`, Loot: `+ifthen[vtgetsetting[EnableLooting], `On`, `Off`]}
 				SetState {Idle}
 
 	~~ Handle no match for checktext
