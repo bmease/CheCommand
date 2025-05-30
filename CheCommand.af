@@ -951,18 +951,28 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {Blessing}
 
-	~~ Update Timer countdown
+	~~ Update Timer countdown original
+	~~ IF: All
+	~~ 		Expr {testvar[CCTimer]!=false}
+	~~ 		Expr {uiviewvisible[Timer]}
+	~~ 	DO: DoAll
+	~~ 			DoExpr {$total_seconds=$CCTimerAmount-stopwatchelapsedseconds[$CCTimer]}
+	~~ 			DoExpr {$hours=floor[$total_seconds/3600]}
+	~~ 			DoExpr {$remaining_seconds=$total_seconds%3600}
+	~~ 			DoExpr {$minutes=floor[$remaining_seconds/60]}
+	~~ 			DoExpr {$seconds=$remaining_seconds%60}
+	~~ 			DoExpr {uisetlabel[uigetcontrol[Timer, Timer], cstrf[$minutes, `00`]+`:`+cstrf[$seconds, `00`]]}
+	~~ 			SetState {Idle}
+
+	~~ Update Timer countdown left hand side
 	IF: All
 			Expr {testvar[CCTimer]!=false}
 			Expr {uiviewvisible[Timer]}
-		DO: DoAll
-				DoExpr {$total_seconds=$CCTimerAmount-stopwatchelapsedseconds[$CCTimer]}
-				DoExpr {$hours=floor[$total_seconds/3600]}
-				DoExpr {$remaining_seconds=$total_seconds%3600}
-				DoExpr {$minutes=floor[$remaining_seconds/60]}
-				DoExpr {$seconds=$remaining_seconds%60}
-				DoExpr {uisetlabel[uigetcontrol[Timer, Timer], cstrf[$minutes, `00`]+`:`+cstrf[$seconds, `00`]]}
-				SetState {Idle}
+			Expr {$total_seconds=$CCTimerAmount-stopwatchelapsedseconds[$CCTimer]}
+			Expr {uisetlabel[uigetcontrol[Timer, Timer], cstrf[floor[$total_seconds%3600/60], `00`]+`:`+cstrf[$total_seconds%3600%60, `00`]]}
+			Never
+		DO: None
+
 
 ~~ }
 
