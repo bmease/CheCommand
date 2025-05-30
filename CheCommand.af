@@ -3671,6 +3671,96 @@ STATE: {ShowActions} ~~ {
 ~~ }
 
 
+STATE: {PickupSelect} ~~ {
+
+	~~ Issue the `#pickup` commmand for the selected item
+	IF: Always
+		DO: DoAll
+				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {$command=`#pickup `+$item}
+				DoExpr {clearvar[item]}
+				SetState {ChatCommand}
+
+~~ }
+
+
+STATE: {LootSelect} ~~ {
+
+	~~ Warn if no container open
+	IF: Expr {wobjectgetopencontainer[]==false}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No corpse or container open!`, $COLOR_WARN]}
+				SetState {Idle}
+
+	~~ Issue the `#loot` command for the selected item in the selected corpse
+	IF: Always
+		DO: DoAll
+				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {$corpse=wobjectgetname[wobjectgetopencontainer[]]}
+				DoExpr {$command=`#loot `+$item+` from `+$corpse}
+				DoExpr {listmap[listcreate[`item`, `corpse`], `clearvar[$1]`]}
+				SetState {ChatCommand}
+
+~~ }
+
+
+STATE: {GiveSelect} ~~ {
+
+	~~ Display the Give Selection view
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[`[WARN] Clicked GiveSelect!`, $COLOR_WARN]}
+				CreateView {GiveSelect} {:CheCommand-GiveSelect.xml}
+				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {uisetlabel[uigetcontrol[GiveSelect, Item], $item]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {SetGiveItem} ~~ {
+
+	IF: Always
+		DO: DoAll
+				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {uisetlabel[uigetcontrol[GiveSelect, Item], $item]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {SetGiveRecipient} ~~ {
+
+	IF: Always
+		DO: DoAll
+				DoExpr {$recipient=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {uisetlabel[uigetcontrol[GiveSelect, Recipient], $recipient]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {GiveSelectComplete} ~~ {
+
+	~~ Issue the `#give` command for the selected item only
+	IF: Expr {testvar[recipient]==false}
+		DO: DoAll
+				DoExpr {$command=`#give `+$item}
+				DoExpr {listmap[listcreate[`item`, `recipient`], `clearvar[$1]`]}
+				DestroyView {GiveSelect}
+				SetState {ChatCommand}
+
+	~~ Issue the `#give` command for the selected item and the selected recipient
+	IF: Always
+		DO: DoAll
+				DoExpr {$command=`#give `+$item+` to `+$recipient}
+				DoExpr {listmap[listcreate[`item`, `recipient`], `clearvar[$1]`]}
+				DestroyView {GiveSelect}
+				SetState {ChatCommand}
+
+~~ }
+
+
 STATE: {ShowSettings} ~~ {
 
 	~~ Show Settings view
