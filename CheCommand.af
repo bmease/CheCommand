@@ -3846,6 +3846,16 @@ STATE: {ToggleChatCommand} ~~ {
 
 
 STATE: {ChatCommand} ~~ {
+
+	~~ Warn if sending chat commands to Fellow and not in a fellow
+	IF: All
+			Expr {@CCChatCommand==`Fellow`}
+			Expr {getfellowshipstatus[]!=1}
+		DO: DoAll
+				DoExpr {echo[`[WARN] Not in fellow but sending commands to fellow!`, $COLOR_WARN]}
+				SetState {Idle}
+
+	~~ Send chat command
 	IF: Always
 		DO: DoAll
 				ChatExpr {`/`+@CCChatCommand+` `+$command}
