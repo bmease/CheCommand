@@ -2978,6 +2978,7 @@ STATE: {HandleFellow} ~~ {
 				DoExpr {echo[`#fellow close: Close the fellow`, $COLOR_INFO]}
 				DoExpr {echo[`#fellow create: Create a fellow and add all characters in @CCCharacterList`, $COLOR_INFO]}
 				DoExpr {echo[`#fellow disband: Disband the fellow`, $COLOR_INFO]}
+				DoExpr {echo[`#fellow leader: Make the issuer of the command leader`, $COLOR_INFO]}
 				DoExpr {echo[`#fellow nearby: Add all characters close to the issuer of the command`, $COLOR_INFO]}
 				DoExpr {echo[`#fellow open: Open the fellow`, $COLOR_INFO]}
 				DoExpr {echo[`#fellow quit: All characters quit the fellow`, $COLOR_INFO]}
@@ -3020,6 +3021,20 @@ STATE: {HandleFellow} ~~ {
 	~~ Handle `#fellow disband` for followers
 	IF: All
 			Expr {(disband)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==false}
+		DO:	SetState {Idle}
+
+	~~ Handle `#fellow leader` for leader
+	IF: All
+			Expr {(leader)#getvar[capturegroup_fellowtext]}
+			Expr {getfellowshipisleader[]==true}
+		DO:	DoAll
+				ChatExpr {`/ub fellow leader `+$capturegroup_name}
+				SetState {Idle}
+
+	~~ Handle `#fellow leader` for followers
+	IF: All
+			Expr {(leader)#getvar[capturegroup_fellowtext]}
 			Expr {getfellowshipisleader[]==false}
 		DO:	SetState {Idle}
 
