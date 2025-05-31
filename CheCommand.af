@@ -1835,6 +1835,10 @@ STATE: {ProfileLoad} ~~ {
 				DoExpr {echo[`[WARN] No profile found`, $COLOR_WARN]}
 				SetState {Idle}
 
+	~~ Turn on vitals if they are off
+	IF: Expr {@CCVitals==false}
+		DO: CallState {ToggleVitals} {ProfileLoad}
+
 	~~ load profile
 	IF: Expr {listindexof[@CCProfileKeys, $capturegroup_profilename]!=-1}
 		DO: DoAll
@@ -3889,13 +3893,11 @@ STATE: {ChatCommand} ~~ {
 
 ~~ ~~ }
 
+STATE: {ToggleVitals} ~~ {
 
-~~ Use Virindi Hotkey System to map this state to a key like `tab` to toggle on and off combat/healing/buffing
-STATE: {HotkeyToggleVitals} ~~ {
 	IF: Expr {@CCVitals==true}
 		DO: DoAll
 				DoExpr {@CCVitals=false} ~~ Toggle vitals
-				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Turning off vitals\`, $COLOR_INFO]`, `false`]}
 				DoExpr {setpvar[CCOriginalVitalsEnableBuffing, cstr[vtgetsetting[EnableBuffing]]]}
 				DoExpr {setpvar[CCOriginalVitalsEnableCombat, cstr[vtgetsetting[EnableCombat]]]}
 				DoExpr {setpvar[CCOriginalVitalsEnableLooting, cstr[vtgetsetting[EnableLooting]]]}
@@ -3920,12 +3922,11 @@ STATE: {HotkeyToggleVitals} ~~ {
 				DoExpr {vtsetsetting[Recharge-Helper-HitP, `0`]}
 				DoExpr {vtsetsetting[Recharge-Helper-Stam, `0`]}
 				DoExpr {vtsetsetting[Recharge-Helper-Mana, `0`]}
-				SetState {Idle}
+				Return
 
 	IF: Expr {@CCVitals==false}
 		DO: DoAll
 				DoExpr {@CCVitals=true} ~~ Toggle vitals
-				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Turning on vitals\`, $COLOR_INFO]`, `false`]}
 				DoExpr {vtsetsetting[EnableBuffing, @CCOriginalVitalsEnableBuffing]}
 				DoExpr {vtsetsetting[EnableCombat, @CCOriginalVitalsEnableCombat]}
 				DoExpr {vtsetsetting[EnableLooting, @CCOriginalVitalsEnableLooting]}
@@ -3938,7 +3939,23 @@ STATE: {HotkeyToggleVitals} ~~ {
 				DoExpr {vtsetsetting[Recharge-Helper-HitP, @CCOriginalVitalsRechargeHelperHitP]}
 				DoExpr {vtsetsetting[Recharge-Helper-Stam, @CCOriginalVitalsRechargeHelperStam]}
 				DoExpr {vtsetsetting[Recharge-Helper-Mana, @CCOriginalVitalsRechargeHelperMana]}
-				SetState {Idle}
+				Return
+
+~~ }
+
+
+~~ Use Virindi Hotkey System to map this state to a key like `tab` to toggle on and off combat/healing/buffing
+STATE: {HotkeyToggleVitals} ~~ {
+
+	IF: Expr {@CCVitals==true}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Turning off vitals\`, $COLOR_INFO]`, `false`]}
+				CallState {ToggleVitals} {Idle}
+
+	IF: Expr {@CCVitals==false}
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Turning on vitals\`, $COLOR_INFO]`, `false`]}
+				CallState {ToggleVitals} {Idle}
 
 	IF: Always
 		DO: SetState {Idle}
