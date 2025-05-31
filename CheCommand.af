@@ -113,6 +113,9 @@ STATE: {Default} ~~ {
 				~~ Distance to use the nearest Portal
 				DoExpr {setpvar[CCPortalThreshold, ifthen[testpvar[CCPortalThreshold], `@CCPortalThreshold`, `30`]]}
 
+				~~ Distance to use the nearest NPC
+				DoExpr {setpvar[CCNPCThreshold, ifthen[testpvar[CCNPCThreshold], `@CCNPCThreshold`, `30`]]}
+
 				~~ Distance the leader needs to be within to leave LeaderCheck
 				DoExpr {setpvar[CCLeaderCheckDistance, ifthen[testpvar[CCLeaderCheckDistance], `@CCLeaderCheckDistance`, `60`]]}
 
@@ -3374,6 +3377,14 @@ STATE: {UseNPC} ~~ {
 		DO: DoAll
 				DoExpr {actiontryuseitem[@CCEquipOnTurnin]}
 				DoExpr {$equipped=true}
+
+	~~ Warn if no NPC nearby
+	IF: Any
+			Expr {wobjectfindnearestbyobjectclass[$NPC]==false}
+			Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbyobjectclass[$NPC]], getplayercoordinates[]]>=@CCNPCThreshold} ~~ no NPC within threshold
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No NPC within range!\`]`, `false`]}
+				SetState {LeaderCheck}
 
 	~~ Stop using NPC if you receieve a response
 	IF:	Any
