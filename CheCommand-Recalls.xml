@@ -10,7 +10,7 @@
         <control type="button" name="Secondary" left="5" top="105" width="100" height="20" text="Secondary" setstate="ChatCommand" actionexpr="setvar[command, `#navto secondary`]" />
 
         <!-- Column 2 -->
-        <control type="button" name="Facility Hub" left="115" top="5" width="100" height="20" text="Facility Hub" setstate="ChatCommand" actionexpr="setvar[command, `#navto facilirty hub`]" />
+        <control type="button" name="Facility Hub" left="115" top="5" width="100" height="20" text="Facility Hub" setstate="ChatCommand" actionexpr="setvar[command, `#navto facility hub`]" />
         <control type="button" name="Colosseum" left="115" top="30" width="100" height="20" text="Colosseum" setstate="ChatCommand" actionexpr="setvar[command, `#navto colosseum`]" />
         <control type="button" name="Glenden Wood" left="115" top="55" width="100" height="20" text="Glenden Wood" setstate="ChatCommand" actionexpr="setvar[command, `#navto glenden wood`]" />
         <control type="button" name="Ulgrim's" left="115" top="80" width="100" height="20" text="Ulgrim's" setstate="ChatCommand" actionexpr="setvar[command, `#navto ulgrims`]" />
