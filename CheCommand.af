@@ -2291,6 +2291,13 @@ STATE: {Give} ~~ {
 		DO: DoAll
 				DoExpr {actiontryuseitem[@CCEquipOnTurnin]}
 
+	~~ Warn if unable to give
+	IF: ChatMatch {doesn't know what to do with that.$}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Unable to give \`+$item]`, `false`]}
+				DoExpr {listmap[listcreate[`item`, `name`], `clearvar[$1]`]}
+				CallState {EnableOptions} {Idle}
+
 	~~ Successfully handed off item
 	IF: Any
 			ChatMatch {^You give}
