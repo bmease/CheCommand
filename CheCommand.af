@@ -3731,7 +3731,6 @@ STATE: {GiveSelect} ~~ {
 	~~ Display the Give Selection view
 	IF: Always
 		DO: DoAll
-				DoExpr {echo[`[WARN] Clicked GiveSelect!`, $COLOR_WARN]}
 				CreateView {GiveSelect} {:CheCommand-GiveSelect.xml}
 				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
 				DoExpr {uisetlabel[uigetcontrol[GiveSelect, Item], $item]}
