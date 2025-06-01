@@ -3853,6 +3853,8 @@ STATE: {ShowNavto} ~~ {
 			Not Expr {uiviewvisible[Navto]}
 			Not Expr {uiviewvisible[Recalls]}
 			Not Expr {uiviewvisible[Empyrean]}
+			Not Expr {uiviewvisible[Subway]}
+			Not Expr {uiviewvisible[JungleSubway]}
 		DO: DoAll
 				CreateView {Navto} {:CheCommand-TownNetwork.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
@@ -3868,6 +3870,7 @@ STATE: {ShowNavto} ~~ {
 				DestroyView {Recalls}
 				DestroyView {Empyrean}
 				DestroyView {Subway}
+				DestroyView {JungleSubway}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
 				SetState {Idle}
 
