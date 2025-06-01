@@ -1832,6 +1832,10 @@ STATE: {ProfileLoad} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
 
+	~~ Close the Profiles view if open
+	IF: Expr {uiviewvisible[Profiles]}
+		DO: DestroyView {Profiles}
+
 	~~ Warn if no profile found
 	IF: Expr {listindexof[@CCProfileKeys, $capturegroup_profilename]==-1}
 		DO: DoAll
@@ -3829,6 +3833,72 @@ STATE: {SetupViews} ~~ {
 		DO: SetState {Idle}
 
 ~~ }
+
+
+STATE: {ShowProfiles} ~~ {
+
+	~~ Close the settings view
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowSettings], `Settings >>`]}
+				DestroyView {Settings}
+
+	~~ Open the Profiles view
+	IF: Always
+		DO: DoAll
+				DoExpr {$ProfileOffset=0}
+				CreateView {Profiles} {:CheCommand-Profiles.xml}
+				SetState {SetProfiles}
+
+~~ }
+
+
+STATE: {SetProfiles} ~~ {
+
+	~~ Set all the buttons with the names of the profiles
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile1], ifthen[listcount[@CCProfileKeys]>=1+$ProfileOffset, `@CCProfileKeys{{0+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile2], ifthen[listcount[@CCProfileKeys]>=2+$ProfileOffset, `@CCProfileKeys{{1+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile3], ifthen[listcount[@CCProfileKeys]>=3+$ProfileOffset, `@CCProfileKeys{{2+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile4], ifthen[listcount[@CCProfileKeys]>=4+$ProfileOffset, `@CCProfileKeys{{3+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile5], ifthen[listcount[@CCProfileKeys]>=5+$ProfileOffset, `@CCProfileKeys{{4+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile6], ifthen[listcount[@CCProfileKeys]>=6+$ProfileOffset, `@CCProfileKeys{{5+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile7], ifthen[listcount[@CCProfileKeys]>=7+$ProfileOffset, `@CCProfileKeys{{6+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile8], ifthen[listcount[@CCProfileKeys]>=8+$ProfileOffset, `@CCProfileKeys{{7+$ProfileOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile9], ifthen[listcount[@CCProfileKeys]>=9+$ProfileOffset, `@CCProfileKeys{{8+$ProfileOffset}}`, `empty`]]}
+
+	~~ Return to Idle
+	IF: Always
+		DO: SetState {Idle}
+
+~~ }
+
+
+STATE: {ProfileNextPage} ~~ {
+
+	~~ Increment to the next page
+	IF: Always
+		DO: DoAll
+				DoExpr {$ProfileOffset=$ProfileOffset+9}
+				SetState {SetProfiles}
+
+~~ }
+
+
+STATE: {ProfilePreviousPage} ~~ {
+
+	~~ Don't go into a negative offset
+	IF: Expr {$ProfileOffset<=0}
+		DO: SetState {SetProfiles}
+
+	~~ Decrement to the previous page
+	IF: Always
+		DO: DoAll
+				DoExpr {$ProfileOffset=$ProfileOffset-9}
+				SetState {SetProfiles}
+~~ }
+
 
 STATE: {ToggleStay} ~~ {
 

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<view width="240" height="350" title="Profiles">
+    <control type="layout">
+        <control type="button" name="btnProfile1" left="20" top="20" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{0+$ProfileOffset}}" />
+        <control type="button" name="btnProfile2" left="20" top="50" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{1+$ProfileOffset}}" />
+        <control type="button" name="btnProfile3" left="20" top="80" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{2+$ProfileOffset}}" />
+        <control type="button" name="btnProfile4" left="20" top="110" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{3+$ProfileOffset}}" />
+        <control type="button" name="btnProfile5" left="20" top="140" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{4+$ProfileOffset}}" />
+        <control type="button" name="btnProfile6" left="20" top="170" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{5+$ProfileOffset}}" />
+        <control type="button" name="btnProfile7" left="20" top="200" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{6+$ProfileOffset}}" />
+        <control type="button" name="btnProfile8" left="20" top="230" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{7+$ProfileOffset}}" />
+        <control type="button" name="btnProfile9" left="20" top="260" width="200" height="25" text="" setstate="ProfileLoad" actionexpr="$capturegroup_profilename=@CCProfileKeys{{8+$ProfileOffset}}" />
+
+        <control type="button" name="btnPrevious" left="20" top="300" width="80" height="25" text="Previous" setstate="ProfilePreviousPage" />
+        <control type="button" name="btnNext" left="140" top="300" width="80" height="25" text="Next" setstate="ProfileNextPage" />
+    </control>
+</view>
