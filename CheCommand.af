@@ -1187,6 +1187,7 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {echo[`#navto plateau village: Navigate to Plateau Village`, $COLOR_INFO]}
 				DoExpr {echo[`#navto rithwic: Navigate to Rithwic`, $COLOR_INFO]}
 				DoExpr {echo[`#navto stonehold: Navigate to Stonehold`, $COLOR_INFO]}
+				DoExpr {echo[`#navto candeth keep: Navigate to Candeth Keep`, $COLOR_INFO]}
 
 				SetState {Idle}
 
@@ -1714,6 +1715,29 @@ STATE: {HandleNavigation} ~~ {
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavTownNetwork`]}
 				DoExpr {$CCArguments=dictcreate[`CheCommandNavTownNetwork`, dictcreate[`destination`, `Stonehold`]]}
+				SetState {CallMeta}
+
+	~~ Subway
+
+	~~ Handle `#navto candeth keep`
+	IF: Expr {(candeth keep)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Candeth Keep`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto jungle subs`
+	IF: Expr {(jungle subs)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Jungle Subs`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto withered`
+	IF: Expr {(withered)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Withered`]]}
 				SetState {CallMeta}
 
 
@@ -3620,6 +3644,24 @@ STATE: {ShowEmpyreanPortalspaceActivator} ~~ {
 	IF: Expr {uiviewvisible[Empyrean]}
 		DO: DoAll
 				DestroyView {Empyrean}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ShowSubway} ~~ {
+
+	~~ Show Subway view
+	IF: Not Expr {uiviewvisible[Subway]}
+		DO: DoAll
+				DestroyView {Navto}
+				CreateView {Subway} {:CheCommand-Subway.xml}
+				SetState {Idle}
+
+	~~ Close Empyrean Portalspace Activator view
+	IF: Expr {uiviewvisible[Subway]}
+		DO: DoAll
+				DestroyView {Subway}
 				SetState {Idle}
 
 ~~ }
