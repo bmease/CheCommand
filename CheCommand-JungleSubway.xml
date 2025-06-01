@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<view width="330" height="155" title="Meta - Subway">
+<view width="330" height="155" title="Meta - Jungle Subway">
     <control type="layout">
         <!-- Column 1 -->
         <control type="button" name="Aerlinthe" left="5" top="5" width="100" height="20" text="Aerlinthe" setstate="ChatCommand" actionexpr="setvar[command, \#navto northern aerlinthe island]" />
