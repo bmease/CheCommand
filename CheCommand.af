@@ -1903,7 +1903,7 @@ STATE: {HandleNavigation} ~~ {
 				SetState {CallMeta}
 
 	~~ Handle `#navto mukkir-infested black spear temple`
-	IF: Expr {(mukkir-infested black spear temple)#getvar[capturegroup_navdestination]}
+	IF: Expr {(mukkir infested black spear temple)#getvar[capturegroup_navdestination]}
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
 				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Mukkir-Infested Black Spear Temple`]]}
