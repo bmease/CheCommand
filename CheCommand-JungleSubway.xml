@@ -13,15 +13,15 @@
         <control type="button" name="Empyrean Facility Upper Level" left="115" top="5" width="100" height="20" text="Empyrean Facility" setstate="ChatCommand" actionexpr="setvar[command, \#navto empyrean facility upper level]" />
         <control type="button" name="Frozen Valley Camp" left="115" top="30" width="100" height="20" text="Frozen Valley" setstate="ChatCommand" actionexpr="setvar[command, \#navto frozen valley camp]" />
         <control type="button" name="Halls of Metos" left="115" top="55" width="100" height="20" text="Metos" setstate="ChatCommand" actionexpr="setvar[command, \#navto halls of metos]" />
-        <control type="button" name="Mountain Retreat" left="115" top="80" width="100" height="20" text="Retreat" setstate="ChatCommand" actionexpr="setvar[command, \#navto mountain retreat portal]" />
+        <control type="button" name="Mountain Retreat" left="115" top="80" width="100" height="20" text="Retreat" setstate="ChatCommand" actionexpr="setvar[command, \#navto mountain retreat]" />
         <control type="button" name="Mukkir-Infested Black Spear Temple" left="115" top="105" width="100" height="20" text="Black Spear" setstate="ChatCommand" actionexpr="setvar[command, \#navto mukkir infested black spear temple]" />
-        <control type="button" name="Nexus" left="115" top="130" width="100" height="20" text="Nexus" setstate="ChatCommand" actionexpr="setvar[command, \#navto nexus portal]" />
+        <control type="button" name="Nexus" left="115" top="130" width="100" height="20" text="Nexus" setstate="ChatCommand" actionexpr="setvar[command, \#navto nexus]" />
 
         <!-- Column 3 -->
         <control type="button" name="North Direlands" left="225" top="5" width="100" height="20" text="North Direlands" setstate="ChatCommand" actionexpr="setvar[command, \#navto north direlands]" />
         <control type="button" name="Obsidian Rim" left="225" top="30" width="100" height="20" text="Obsidian Rim" setstate="ChatCommand" actionexpr="setvar[command, \#navto obsidian rim]" />
         <control type="button" name="South Direlands" left="225" top="55" width="100" height="20" text="South Direlands" setstate="ChatCommand" actionexpr="setvar[command, \#navto south direlands]" />
-        <control type="button" name="Underground City" left="225" top="80" width="100" height="20" text="Underground City" setstate="ChatCommand" actionexpr="setvar[command, \#navto underground city portal]" />
+        <control type="button" name="Underground City" left="225" top="80" width="100" height="20" text="Underground City" setstate="ChatCommand" actionexpr="setvar[command, \#navto underground city]" />
         <control type="button" name="Vissidal Island" left="225" top="105" width="100" height="20" text="Vissidal Island" setstate="ChatCommand" actionexpr="setvar[command, \#navto vissidal island]" />
     </control>
 </view>
