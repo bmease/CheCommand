@@ -137,7 +137,7 @@ STATE: {ToTownNetwork} ~~ {
 	IF: Always
 		DO: DoAll
 				SetOpt {EnableNav} {True}
-				SetOpt {NavCloseStopRange} {0.0083333}
+				SetOpt {NavCloseStopRange} {0.00625}
 
 	~~ Navigate into the Town Network portal
 	IF: Always
@@ -191,10 +191,26 @@ STATE: {AnnexToSubway} ~~ {
 
 STATE: {NavigateSubway} ~~ {
 
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
 	IF: Always
 		DO: DoAll
 				DoExpr {setvar[DESTINATION_WING, dictcreate[]]}
 				DoExpr {dictadditem[$DESTINATION_WING, `Withered`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Mid Direlands`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Abayar's Laboratory`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Dark Design`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Creepy Canyons`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Thrungus Hole`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Black Death Catacombs`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Insatiable Vault`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Ravenous Vault`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Augmentation Realm Main Level`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Obsidian Rim`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Path of the Blind`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Singularity Bore`, $Bottom]}
+				DoExpr {dictadditem[$DESTINATION_WING, `Egg Orchard`, $Bottom]}
 				DoExpr {dictadditem[$DESTINATION_WING, `Candeth Keep`, $CandethKeep]}
 				DoExpr {dictadditem[$DESTINATION_WING, `Jungle Subs`, $JungleSubs]}
 
@@ -210,13 +226,15 @@ STATE: {NavigateSubway} ~~ {
 	IF: Expr {dictgetitem[$DESTINATION_WING, $destination]==$Bottom}
 		DO: SetState {NavigateToBottomOfSubway}
 
-
 	~~ If portal is up top, navigate to portal (Jungle subs / Candeth Keep)
 	IF: Expr {dictgetitem[$DESTINATION_WING, $destination]!=$Bottom}
 		DO: SetState {ToPortal}
 ~~ }
 
 STATE: {NavigateToBottomOfSubway} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
 
 	IF: Always
 		DO: DoAll
@@ -229,6 +247,9 @@ STATE: {NavigateToBottomOfSubway} ~~ {
 ~~ }
 
 STATE: {JumpDownPit} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
 
 	IF: Always
 		DO: ChatExpr {`/ub jumpsw 179 250`}
@@ -257,6 +278,45 @@ STATE: {ToPortal} ~~ {
 	IF: Expr {$destination==`Withered`}
 		DO: EmbedNav ToWithered {ToWithered}
 
+	IF: Expr {$destination==`Mid Direlands`}
+		DO: EmbedNav ToMidDirelands {ToMidDirelands}
+
+	IF: Expr {$destination==`Abayar's Laboratory`}
+		DO: EmbedNav ToAbayarsLab {ToAbayarsLab}
+
+	IF: Expr {$destination==`Dark Design`}
+		DO: EmbedNav ToDarkDesign {ToDarkDesign}
+
+	IF: Expr {$destination==`Creepy Canyons`}
+		DO: EmbedNav ToCreepyCanyons {ToCreepyCanyons}
+
+	IF: Expr {$destination==`Thrungus Hole`}
+		DO: EmbedNav ToThrungusHole {ToThrungusHole}
+
+	IF: Expr {$destination==`Black Death Catacombs`}
+		DO: EmbedNav ToBlackDeathCatacombs {ToBlackDeathCatacombs}
+
+	IF: Expr {$destination==`Insatiable Vault`}
+		DO: EmbedNav ToInsatiableVault {ToInsatiableVault}
+
+	IF: Expr {$destination==`Ravenous Vault`}
+		DO: EmbedNav ToRavenousVault {ToRavenousVault}
+
+	IF: Expr {$destination==`Augmentation Realm Main Level`}
+		DO: EmbedNav ToAugmentationRealmMainLevel {ToAugmentationRealmMainLevel}
+
+	IF: Expr {$destination==`Obsidian Rim`}
+		DO: EmbedNav ToObsidianRim {ToObsidianRim}
+
+	IF: Expr {$destination==`Path of the Blind`}
+		DO: EmbedNav ToPathOfTheBlind {ToPathOfTheBlind}
+
+	IF: Expr {$destination==`Singularity Bore`}
+		DO: EmbedNav ToSingBore {ToSingBore}
+
+	IF: Expr {$destination==`Egg Orchard`}
+		DO: EmbedNav ToEggOrchard {ToEggOrchard}
+		
 	~~ Finished navigating
 	IF:	NavEmpty
 		DO: SetState {Finished}
@@ -279,7 +339,6 @@ STATE: {Finished} ~~ {
 	IF: Always
 		DO: ChatExpr {`/vt meta load `+$CCReturnMeta}
 ~~ }
-
 
 NAV: ToTownNetwork once ~~ {
 	pnt 95.4570833206177 2.25772916475932 0.24168750445048
@@ -343,4 +402,94 @@ NAV: ToWithered once ~~ {
 	pnt -100.774129327138 58.1824031829834 -0.299979146321615
 	pnt -100.765644550323 58.1825611750285 -0.299979146321615
 	ptl -100.765644550323 58.1825611750285 -0.299979146321615 -100.754292074839 58.1833833058675 -0.300262480974197 14 {Withered}
+~~ }
+
+NAV: ToMidDirelands once ~~ {
+	pnt -100.774848461151 58.1502560297648 -0.299979146321615
+	pnt -100.774758148193 58.203041712443 -0.299979146321615
+	ptl -100.774758148193 58.203041712443 -0.299979146321615 -100.774659570058 58.2123999913534 -0.300262480974197 14 {Mid Direlands Portal}
+~~ }
+
+NAV: ToAbayarsLab once ~~ {
+	pnt -100.774848461151 58.1502560297648 -0.299979146321615
+	pnt -100.774398867289 58.183265431722 -0.299979146321615
+	pnt -100.7900293986 58.1836214065552 -0.299979146321615
+	ptl -100.7900293986 58.1836214065552 -0.299979146321615 -100.801272900899 58.1829166412354 -0.300262480974197 14 {Abayar's Laboratory}
+~~ }
+
+NAV: ToDarkDesign once ~~ {
+	pnt -100.82781829834 58.1001198450724 -0.299979146321615
+	pnt -100.856392415365 58.0998235066732 -0.299979146321615
+	pnt -100.85811662674 58.1135874430339 -0.299979146321615
+	ptl -100.85811662674 58.1135874430339 -0.299979146321615 -100.857796669006 58.1220708211263 -0.300262480974197 14 {Dark Design}
+~~ }
+
+NAV: ToCreepyCanyons once ~~ {
+	pnt -100.82781829834 58.1001198450724 -0.299979146321615
+	pnt -100.856392415365 58.0998235066732 -0.299979146321615
+	pnt -100.875203577677 58.1008419036865 -0.299979146321615
+	ptl -100.875203577677 58.1008419036865 -0.299979146321615 -100.885297075907 58.1012903213501 -0.300262480974197 14 {Creepy Canyons}
+~~ }
+
+NAV: ToThrungusHole once ~~ {
+	pnt -100.829277324677 58.0584368387858 -0.299979146321615
+	pnt -100.857146485647 58.0587177912394 -0.299979146321615
+	pnt -100.858244291941 58.0391155878703 -0.299979146321615
+	ptl -100.858244291941 58.0391155878703 -0.299979146321615 -100.858608341217 58.029600016276 -0.300262480974197 14 {Thrungus Hole}
+~~ }
+
+NAV: ToBlackDeathCatacombs once ~~ {
+	pnt -100.829277324677 58.0584368387858 -0.299979146321615
+	pnt -100.857146485647 58.0587177912394 -0.299979146321615
+	pnt -100.87443300883 58.0586861928304 -0.299979146321615
+	ptl -100.87443300883 58.0586861928304 -0.299979146321615 -100.884618330002 58.0589791615804 -0.300262480974197 14 {Black Death Catacombs Portal}
+~~ }
+
+NAV: ToInsatiableVault once ~~ {
+	pnt -100.775276597341 58.0045435587565 -0.299979146321615
+	pnt -100.775104141235 57.9757811228434 -0.299979146321615
+	pnt -100.792059326172 57.9751616160075 -0.299979146321615
+	ptl -100.792059326172 57.9751616160075 -0.299979146321615 -100.802297083537 57.9758499781291 -0.300262480974197 14 {Insatiable Vault}
+~~ }
+
+NAV: ToRavenousVault once ~~ {
+	pnt -100.775276597341 58.0045435587565 -0.299979146321615
+	pnt -100.775104141235 57.9757811228434 -0.299979146321615
+	pnt -100.775158882141 57.9572533925374 -0.299979146321615
+	ptl -100.775158882141 57.9572533925374 -0.299979146321615 -100.775650819143 57.946962483724 -0.300262480974197 14 {Ravenous Vault}
+~~ }
+
+NAV: ToAugmentationRealmMainLevel once ~~ {
+	pnt -100.775276597341 58.0045435587565 -0.299979146321615
+	pnt -100.775104141235 57.9757811228434 -0.299979146321615
+	pnt -100.757950655619 57.9746064503988 -0.299979146321615
+	ptl -100.757950655619 57.9746064503988 -0.299979146321615 -100.74615166982 57.9738875071208 -0.300262480974197 14 {Augmentation Realm Main Level}
+~~ }
+
+NAV: ToObsidianRim once ~~ {
+	pnt -100.721220334371 58.0583209991455 -0.299979146321615
+	pnt -100.692338180542 58.0579523722331 -0.299979146321615
+	pnt -100.691820144653 58.0416009267171 -0.299979146321615
+	ptl -100.691820144653 58.0416009267171 -0.299979146321615 -100.690376377106 58.0309708277384 -0.300262480974197 14 {Obsidian Rim Portal}
+~~ }
+
+NAV: ToPathOfTheBlind once ~~ {
+	pnt -100.721220334371 58.0583209991455 -0.299979146321615
+	pnt -100.692338180542 58.0579523722331 -0.299979146321615
+	pnt -100.678922017415 58.0579822540283 -0.299979146321615
+	ptl -100.678922017415 58.0579822540283 -0.299979146321615 -100.667445818583 58.0580708185832 -0.300262480974197 14 {Path of the Blind}
+~~ }
+
+NAV: ToSingBore once ~~ {
+	pnt -100.721055666606 58.0994677225749 -0.299979146321615
+	pnt -100.691213385264 58.0994282404582 -0.299979146321615
+	pnt -100.691246859233 58.1154715855916 -0.299979146321615
+	ptl -100.691246859233 58.1154715855916 -0.299979146321615 -100.691033331553 58.1258499781291 -0.300262480974197 14 {Singularity Bore}
+~~ }
+
+NAV: ToEggOrchard once ~~ {
+	pnt -100.721055666606 58.0994677225749 -0.299979146321615
+	pnt -100.691213385264 58.0994282404582 -0.299979146321615
+	pnt -100.677195040385 58.0994105656942 -0.299979146321615
+	ptl -100.677195040385 58.0994105656942 -0.299979146321615 -100.667758337657 58.0989999771118 -0.300262480974197 14 {Egg Orchard}
 ~~ }

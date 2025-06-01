@@ -1740,6 +1740,97 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Withered`]]}
 				SetState {CallMeta}
 
+	~~ Handle `#navto mid direlands`
+	IF: Expr {(mid direlands)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Mid Direlands`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto abayar's laboratory`
+	IF: Expr {(abayar's laboratory)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Abayar's Laboratory`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto dark design`
+	IF: Expr {(dark design)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Dark Design`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto creepy canyons`
+	IF: Expr {(creepy canyons)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Creepy Canyons`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto thrungus hole`
+	IF: Expr {(thrungus hole)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Thrungus Hole`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto black death catacombs`
+	IF: Expr {(black death catacombs)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Black Death Catacombs`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto insatiable vault`
+	IF: Expr {(insatiable vault)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Insatiable Vault`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto ravenous vault`
+	IF: Expr {(ravenous vault)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Ravenous Vault`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto augmentation realm main level`
+	IF: Expr {(augmentation realm main level)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Augmentation Realm Main Level`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto obsidian rim`
+	IF: Expr {(obsidian rim)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Obsidian Rim`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto path of the blind`
+	IF: Expr {(path of the blind)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Path of the Blind`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto singularity bore`
+	IF: Expr {(singularity bore)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Singularity Bore`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto egg orchard`
+	IF: Expr {(egg orchard)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Egg Orchard`]]}
+				SetState {CallMeta}
+
 
 	~~ Handle no match for navdestination
 	IF: Expr {$LEVEL_WARN>=@CCDebug}
@@ -3604,6 +3695,7 @@ STATE: {ShowNavto} ~~ {
 				DestroyView {Navto}
 				DestroyView {Recalls}
 				DestroyView {Empyrean}
+				DestroyView {Subway}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
 				SetState {Idle}
 

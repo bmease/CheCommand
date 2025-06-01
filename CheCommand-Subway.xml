@@ -1,20 +1,30 @@
 <?xml version="1.0"?>
-<view width="440" height="390" title="Meta - Subway">
+<view width="440" height="150" title="Meta - Subway">
     <control type="layout">
-        <!-- Column 1 -->
-        <control type="button" name="Candeth Keep" left="5" top="5" width="100" height="20" text="Candeth Keep" setstate="ChatCommand" actionexpr="setvar[command, \#navto candeth keep]" />
-        <control type="button" name="Empty" left="5" top="30" width="100" height="20" text="Empty"/>\
+        <!-- Column 1 -->        
+        <control type="button" name="Dark Design" left="5" top="5" width="100" height="20" text="Dark Design" setstate="ChatCommand" actionexpr="setvar[command, \#navto dark design]" />
+        <control type="button" name="Creepy Canyons" left="5" top="30" width="100" height="20" text="Creepy Canyons" setstate="ChatCommand" actionexpr="setvar[command, \#navto creepy canyons]" />
+        <control type="button" name="Thrungus Hole" left="5" top="55" width="100" height="20" text="Thrungus Hole" setstate="ChatCommand" actionexpr="setvar[command, \#navto thrungus hole]" />
+        <control type="button" name="Black Death Catacombs" left="5" top="80" width="100" height="20" text="BDC" setstate="ChatCommand" actionexpr="setvar[command, \#navto black death catacombs]" />        
 
-        <!-- Column 2 -->
-        <control type="button" name="Jungle Subs" left="115" top="5" width="100" height="20" text="Jungle Subs" setstate="ChatCommand" actionexpr="setvar[command, \#navto jungle subs]" />
-        <control type="button" name="Empty" left="115" top="30" width="100" height="20" text="Empty" />
+        <!-- Column 2 -->        
+        <control type="button" name="Obsidian Rim" left="115" top="5" width="100" height="20" text="Obsidian Rim" setstate="ChatCommand" actionexpr="setvar[command, \#navto obsidian rim]" />
+        <control type="button" name="Path of the Blind" left="115" top="30" width="100" height="20" text="Path of the Blind" setstate="ChatCommand" actionexpr="setvar[command, \#navto path of the blind]" />
+        <control type="button" name="Singularity Bore" left="115" top="55" width="100" height="20" text="Singularity Bore" setstate="ChatCommand" actionexpr="setvar[command, \#navto singularity bore]" />
+        <control type="button" name="Egg Orchard" left="115" top="80" width="100" height="20" text="Egg Orchard" setstate="ChatCommand" actionexpr="setvar[command, \#navto egg orchard]" />
 
-        <!-- Column 3 -->
-        <control type="button" name="Withered" left="225" top="5" width="100" height="20" text="Withered" setstate="ChatCommand" actionexpr="setvar[command, \#navto withered]" />
+        <!-- Column 3 -->                 
+        <control type="button" name="Insatiable Vault" left="225" top="5" width="100" height="20" text="Insatiable Vault" setstate="ChatCommand" actionexpr="setvar[command, \#navto insatiable vault]" />
+        <control type="button" name="Ravenous Vault" left="225" top="30" width="100" height="20" text="Ravenous Vault" setstate="ChatCommand" actionexpr="setvar[command, \#navto ravenous vault]" />
+        <control type="button" name="Augmentation Realm Main Level" left="225" top="55" width="100" height="20" text="Bellas" setstate="ChatCommand" actionexpr="setvar[command, \#navto augmentation realm main level]" />
 
         <!-- Column 4 -->
-        <control type="button" name="Empty" left="335" top="5" width="100" height="20" text="Empty" />
+        <control type="button" name="Withered" left="335" top="5" width="100" height="20" text="Withered" setstate="ChatCommand" actionexpr="setvar[command, \#navto withered]" />
+        <control type="button" name="Mid Direlands" left="335" top="30" width="100" height="20" text="Mid Direlands" setstate="ChatCommand" actionexpr="setvar[command, \#navto mid direlands]" />
+        <control type="button" name="Abayars Laboratory" left="335" top="55" width="100" height="20" text="Abayar's Lab" setstate="ChatCommand" actionexpr="setvar[command, \#navto abayar's laboratory]" />
 
-        <control type="button" name="Navto" left="335" top="360" width="100" height="20" text="Navto >>" setstate="ShowNavto" />
+        <!-- Bottom Row -->
+        <control type="button" name="Jungle Subs" left="225" top="120" width="100" height="20" text="Jungle Subs" setstate="ChatCommand" actionexpr="setvar[command, \#navto jungle subs]" />
+        <control type="button" name="Candeth Keep" left="335" top="120" width="100" height="20" text="Candeth Keep" setstate="ChatCommand" actionexpr="setvar[command, \#navto candeth keep]" />
     </control>
 </view>
