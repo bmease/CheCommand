@@ -3865,6 +3865,8 @@ STATE: {ShowNavto} ~~ {
 			Expr {uiviewvisible[Navto]}
 			Expr {uiviewvisible[Recalls]}
 			Expr {uiviewvisible[Empyrean]}
+			Expr {uiviewvisible[Subway]}
+			Expr {uiviewvisible[JungleSubway]}
 		DO: DoAll
 				DestroyView {Navto}
 				DestroyView {Recalls}
