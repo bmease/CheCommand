@@ -3989,6 +3989,19 @@ STATE: {ShowProfiles} ~~ {
 
 STATE: {SetProfiles} ~~ {
 
+	~~ Show all buttons
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile1], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile2], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile3], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile4], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile5], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile6], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile7], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile8], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile9], 1]}
+
 	~~ Set all the buttons with the names of the profiles
 	IF: Always
 		DO: DoAll
@@ -4001,6 +4014,19 @@ STATE: {SetProfiles} ~~ {
 				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile7], ifthen[listcount[@CCProfileKeys]>=7+$ProfileOffset, `@CCProfileKeys{{6+$ProfileOffset}}`, `empty`]]}
 				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile8], ifthen[listcount[@CCProfileKeys]>=8+$ProfileOffset, `@CCProfileKeys{{7+$ProfileOffset}}`, `empty`]]}
 				DoExpr {uisetlabel[uigetcontrol[Profiles, btnProfile9], ifthen[listcount[@CCProfileKeys]>=9+$ProfileOffset, `@CCProfileKeys{{8+$ProfileOffset}}`, `empty`]]}
+
+	~~ Hide the empty buttons
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=1+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile1], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=2+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile2], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=3+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile3], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=4+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile4], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=5+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile5], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=6+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile6], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=7+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile7], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=8+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile8], 0]`]}
+				DoExpr {ifthen[listcount[@CCProfileKeys]>=9+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile9], 0]`]}
 
 	~~ Return to Idle
 	IF: Always
