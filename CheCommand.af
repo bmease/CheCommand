@@ -4002,6 +4002,9 @@ STATE: {SetProfiles} ~~ {
 				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile8], 1]}
 				DoExpr {uisetvisible[uigetcontrol[Profiles, btnProfile9], 1]}
 
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnNext], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Profiles, btnPrevious], 1]}
+
 	~~ Set all the buttons with the names of the profiles
 	IF: Always
 		DO: DoAll
@@ -4027,6 +4030,14 @@ STATE: {SetProfiles} ~~ {
 				DoExpr {ifthen[listcount[@CCProfileKeys]>=7+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile7], 0]`]}
 				DoExpr {ifthen[listcount[@CCProfileKeys]>=8+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile8], 0]`]}
 				DoExpr {ifthen[listcount[@CCProfileKeys]>=9+$ProfileOffset, `false`, `uisetvisible[uigetcontrol[Profiles, btnProfile9], 0]`]}
+
+	~~ Hide the Previous button if you can't go back
+	IF: Expr {$ProfileOffset<=0}
+		DO: DoExpr {uisetvisible[uigetcontrol[Profiles, btnPrevious], 0]}
+
+	~~ Hide the Next button if you can't go foward
+	IF: Expr {listcount[@CCProfileKeys]<=9+$ProfileOffset}
+		DO: DoExpr {uisetvisible[uigetcontrol[Profiles, btnNext], 0]}
 
 	~~ Return to Idle
 	IF: Always
