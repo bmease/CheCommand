@@ -4412,6 +4412,7 @@ STATE: {ShowNavto} ~~ {
 			Not Expr {uiviewvisible[Empyrean]}
 			Not Expr {uiviewvisible[Subway]}
 			Not Expr {uiviewvisible[JungleSubway]}
+			Not Expr {uiviewvisible[Quests]}
 		DO: DoAll
 				CreateView {Navto} {:CheCommand-TownNetwork.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
@@ -4424,12 +4425,14 @@ STATE: {ShowNavto} ~~ {
 			Expr {uiviewvisible[Empyrean]}
 			Expr {uiviewvisible[Subway]}
 			Expr {uiviewvisible[JungleSubway]}
+			Expr {uiviewvisible[Quests]}
 		DO: DoAll
 				DestroyView {Navto}
 				DestroyView {Recalls}
 				DestroyView {Empyrean}
 				DestroyView {Subway}
 				DestroyView {JungleSubway}
+				DestroyView {Quests}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
 				SetState {Idle}
 
@@ -4506,6 +4509,23 @@ STATE: {ShowJungleSubway} ~~ {
 	IF: Expr {uiviewvisible[JungleSubway]}
 		DO: DoAll
 				DestroyView {JungleSubway}
+				SetState {Idle}
+
+~~ }
+
+STATE: {ShowQuests} ~~ {
+
+	~~ Show Quests view
+	IF: Not Expr {uiviewvisible[Quests]}
+		DO: DoAll
+				DestroyView {Navto}
+				CreateView {Quests} {:CheCommand-Quests.xml}
+				SetState {Idle}
+
+	~~ Close Quests view
+	IF: Expr {uiviewvisible[Quests]}
+		DO: DoAll
+				DestroyView {Quests}
 				SetState {Idle}
 
 ~~ }

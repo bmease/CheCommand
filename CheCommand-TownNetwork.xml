@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<view width="440" height="390" title="Meta - Town Network">
+<view width="440" height="415" title="Meta - Town Network">
     <control type="layout">
         <!-- Column 1 -->
         <control type="button" name="Arwic" left="5" top="5" width="100" height="20" text="Arwic" setstate="ChatCommand" actionexpr="setvar[command, \#navto arwic]" />
@@ -15,6 +15,7 @@
         <control type="button" name="Stonehold" left="5" top="255" width="100" height="20" text="Stonehold" setstate="ChatCommand" actionexpr="setvar[command, \#navto stonehold]" />
 
         <control type="button" name="JungleSubway" left="5" top="360" width="100" height="20" text="Jungle Subway >>" setstate="ShowJungleSubway" />
+        <control type="button" name="Quests" left="5" top="385" width="100" height="20" text="Quests >>" setstate="ShowQuests" />
 
         <!-- Column 2 -->
         <control type="button" name="Al-Arqas" left="115" top="5" width="100" height="20" text="Al-Arqas" setstate="ChatCommand" actionexpr="setvar[command, \#navto al\-arqas]" />
