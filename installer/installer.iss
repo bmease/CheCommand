@@ -26,6 +26,9 @@ LicenseFile=\\wsl.localhost\Ubuntu\home\brad\Code\CheCommand\LICENSE
 OutputBaseFilename=CheCommand-v{#MyAppVersion}
 SolidCompression=yes
 WizardStyle=modern
+; Prevent InnoSetup recalling the last used installation groupname and folder.
+UsePreviousGroup=no
+UsePreviousAppDir=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
