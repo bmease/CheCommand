@@ -421,6 +421,7 @@ STATE: {Init} ~~ {
 
 				DoExpr {setvar[BlueSeen, listcreate[]]}
 
+	~~ Enter Setup if `@CCCharacterList` or `@CCFellowname` is not set
 	IF: Any
 			Expr {listcount[@CCCharacterList]==0}
 			Expr {@CCFellowname==`Not Set`}
@@ -448,17 +449,207 @@ STATE: {Init} ~~ {
 
 
 STATE: {Setup} ~~ {
+
+	~~ Close all panels
+	IF: Always
+		DO: DoAll
+				DestroyView {Actions}
+				DestroyView {Empyrean}
+				DestroyView {GiveSelect}
+				DestroyView {Jump}
+				DestroyView {Main}
+				DestroyView {Profiles}
+				DestroyView {Recalls}
+				DestroyView {Settings}
+				DestroyView {Subway}
+				DestroyView {Timer}
+				DestroyView {TownNetwork}
+
+	~~ Show Setup panel
+	IF: Not Expr {uiviewvisible[Setup]}
+		DO: DoAll
+				DoExpr {$CharacterOffset=0}
+				CreateView {Setup} {:CheCommand-Setup.xml}
+				SetState {SetSetup}
+
+	~~ Display help information
 	IF: Always
 		DO: DoAll
 				DoExpr {echo[`SETUP:`, $COLOR_DEBUG]}
-				DoExpr {echo[`1) Add characters: /ub mexec @CCCharacterList=listcreate[\`First Character\`, \`Second Character\`, \`Third Character\`]`, $COLOR_DEBUG]}
-				DoExpr {echo[`2) Set fellow name: /ub mexec @CCFellowname=\`Example Army\``, $COLOR_DEBUG]}
-				DoExpr {echo[`3) Restart: !start`, $COLOR_DEBUG]}
+				DoExpr {echo[`1) Create a fellowship with the name you'd like to use and the members who should listen to your commands.`, $COLOR_DEBUG]}
+				DoExpr {echo[`2) Issue the command #addfellow to set the characters who should listen to commands and the fellow name it will create.`, $COLOR_DEBUG]}
+				DoExpr {echo[`3) Issue the command #addchar Character Name for any additional characters who should listen to your commands.`, $COLOR_DEBUG]}
+				DoExpr {echo[`4) Issue the command #finish when done to restart in normal mode.`, $COLOR_DEBUG]}
+				DoExpr {echo[``, $COLOR_DEBUG]}
+				DoExpr {echo[`I will listen to the following characters: `+@CCCharacterList, $COLOR_DEBUG]}
+				DoExpr {echo[`I will create fellows with the name: `+@CCFellowname, $COLOR_DEBUG]}
 
-	IF:	ChatMatch {![Ss]tart}
+	~~ Handle `#finish` for any character in ub netclients
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#finish\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[listmap[netclients[], `dictgetitem[$1, PlayerId]`], wobjectgetid[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]]]}
 		DO: DoAll
-				DoExpr {@CCLeader=listgetitem[@CCCharacterList, 0]}
+				DoExpr {ifthen[testpvar[CCLeader], `false`, `@CCLeader=listgetitem[@CCCharacterList, 0]`]}
 				Chat {/vt meta load CheCommand}
+
+	~~ Handle `#addfellow` for any character in ub netclients and a fellow is not formed
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#addfellow\"$} {}
+			Expr {getfellowshipstatus[]==false}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[listmap[netclients[], `dictgetitem[$1, PlayerId]`], wobjectgetid[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]]]}
+		DO: DoAll
+				DoExpr {echo[`[WARN] Not in a fellow and unable to add fellow characters!`, $COLOR_WARN]}
+				SetState {Setup}
+
+	~~ Handle `#addfellow` for any character in ub netclients and a fellow is formed
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#addfellow\"$} {}
+			Expr {getfellowshipstatus[]==true}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[listmap[netclients[], `dictgetitem[$1, PlayerId]`], wobjectgetid[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]]]}
+		DO: DoAll
+				DoExpr {@CCCharacterList=getfellownames[]}
+				DoExpr {@CCFellowname=getfellowshipname[]}
+				SetState {SetSetup}
+
+	~~ Handle `#addchar` for any character in ub netclients
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#addchar (?<name>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[listmap[netclients[], `dictgetitem[$1, PlayerId]`], wobjectgetid[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]]]}
+		DO: DoAll
+				DoExpr {listadd[@CCCharacterList, $capturegroup_name]}
+				DoExpr {clearvar[$capturegroup_name]}
+				SetState {SetSetup}
+
+	~~ Handle `#removepos` for any character in ub netclients
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#removepos (?<position>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[listmap[netclients[], `dictgetitem[$1, PlayerId]`], wobjectgetid[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]]]}
+		DO: DoAll
+				DoExpr {echo[`[INFO] Removing `+listgetitem[@CCCharacterList, cnumber[$capturegroup_position]]+` from Character List.`, $COLOR_INFO]}
+				DoExpr {listremoveat[@CCCharacterList, cnumber[$capturegroup_position]]}
+				DoExpr {clearvar[$capturegroup_position]}
+				SetState {SetSetup}
+
+~~ }
+
+
+STATE: {SetSetup} ~~ {
+
+	~~ Show all buttons
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter1], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter2], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter3], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter4], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter5], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter6], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter7], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter8], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter9], 1]}
+
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter1-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter2-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter3-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter4-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter5-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter6-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter7-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter8-delete], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnCharacter9-delete], 1]}
+
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnNext], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Setup, btnPrevious], 1]}
+
+	~~ Set all the buttons with the names of the profiles
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter1], ifthen[listcount[@CCCharacterList]>=1+$CharacterOffset, `@CCCharacterList{{0+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter2], ifthen[listcount[@CCCharacterList]>=2+$CharacterOffset, `@CCCharacterList{{1+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter3], ifthen[listcount[@CCCharacterList]>=3+$CharacterOffset, `@CCCharacterList{{2+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter4], ifthen[listcount[@CCCharacterList]>=4+$CharacterOffset, `@CCCharacterList{{3+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter5], ifthen[listcount[@CCCharacterList]>=5+$CharacterOffset, `@CCCharacterList{{4+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter6], ifthen[listcount[@CCCharacterList]>=6+$CharacterOffset, `@CCCharacterList{{5+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter7], ifthen[listcount[@CCCharacterList]>=7+$CharacterOffset, `@CCCharacterList{{6+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter8], ifthen[listcount[@CCCharacterList]>=8+$CharacterOffset, `@CCCharacterList{{7+$CharacterOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Setup, btnCharacter9], ifthen[listcount[@CCCharacterList]>=9+$CharacterOffset, `@CCCharacterList{{8+$CharacterOffset}}`, `empty`]]}
+
+	~~ Hide the empty buttons
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[listcount[@CCCharacterList]>=1+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter1], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=2+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter2], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=3+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter3], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=4+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter4], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=5+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter5], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=6+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter6], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=7+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter7], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=8+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter8], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=9+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter9], 0]`]}
+
+				DoExpr {ifthen[listcount[@CCCharacterList]>=1+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter1-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=2+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter2-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=3+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter3-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=4+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter4-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=5+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter5-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=6+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter6-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=7+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter7-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=8+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter8-delete], 0]`]}
+				DoExpr {ifthen[listcount[@CCCharacterList]>=9+$CharacterOffset, `false`, `uisetvisible[uigetcontrol[Setup, btnCharacter9-delete], 0]`]}
+
+	~~ Hide the Previous button if you can't go back
+	IF: Expr {$CharacterOffset<=0}
+		DO: DoExpr {uisetvisible[uigetcontrol[Setup, btnPrevious], 0]}
+
+	~~ Hide the Next button if you can't go foward
+	IF: Expr {listcount[@CCCharacterList]<=9+$CharacterOffset}
+		DO: DoExpr {uisetvisible[uigetcontrol[Setup, btnNext], 0]}
+
+	~~ Return to Setup
+	IF: Always
+		DO: SetState {Setup}
+
+
+~~ }
+
+
+STATE: {SetupNextPage} ~~ {
+
+	~~ Increment to the next page
+	IF: Always
+		DO: DoAll
+				DoExpr {$CharacterOffset=$CharacterOffset+9}
+				SetState {SetSetup}
+
+~~ }
+
+
+STATE: {SetupPreviousPage} ~~ {
+
+	~~ Don't go into a negative offset
+	IF: Expr {$CharacterOffset<=0}
+		DO: SetState {SetSetup}
+
+	~~ Decrement to the previous page
+	IF: Always
+		DO: DoAll
+				DoExpr {$CharacterOffset=$CharacterOffset-9}
+				SetState {SetSetup}
 ~~ }
 
 
@@ -630,6 +821,7 @@ STATE: {Idle} ~~ {
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I am near my luminance cap!\`]`, `false`]}
 				SetState {Idle}
 
+	~~ Display message if receiving a Chorizite Threaded Pack Token
 	IF: ChatMatch {(?:Lord Kresovus|Neelic|Raksaa|Sergeant Trebuus) gives you Chorizite Threaded Pack Token}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I received a Chorizite Threaded Pack Token!\`]`, `false`]}
@@ -680,6 +872,16 @@ STATE: {Idle} ~~ {
 				DoExpr {echo[`[INFO] ==============`, $COLOR_INFO]}
 				DestroyView {Timer}
 				SetState {Idle}
+
+	~~ Handle `#setup` for any character in ub netclients
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#setup\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[listmap[netclients[], `dictgetitem[$1, PlayerId]`], wobjectgetid[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]]]}
+		DO: DoAll
+				SetState {Setup}
 
 	~~ Handle Actions
 	IF:	All
