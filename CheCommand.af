@@ -919,6 +919,15 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleNavigation}
 
+	~~ Handle Quests
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#quest (?<questdestination>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleQuests}
+
 	~~ Handle Routes
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#route\"$} {}
@@ -2172,6 +2181,344 @@ STATE: {HandleNavigation} ~~ {
 	IF: Expr {$LEVEL_WARN>=@CCDebug}
 		DO: DoAll
 				DoExpr {echo[`[WARN] No matching destination for #navto`, $COLOR_WARN]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {HandleQuests} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	IF: Expr {(help)#getvar[capturegroup_questdestination]}
+		DO: DoAll
+				DoExpr {echo[`#quest bloodstone investigation: Navigate to the quest Bloodstone Investigation`, $COLOR_INFO]}
+				DoExpr {echo[`#quest count phainors amulet: Navigate to the quest Count Phainor's Amulet`, $COLOR_INFO]}
+				DoExpr {echo[`#quest deewains: Navigate to the quest Deewain's Dark Cavern`, $COLOR_INFO]}
+				DoExpr {echo[`#quest curator: Navigate to the quest Defeating the Curator of Torment`, $COLOR_INFO]}
+				DoExpr {echo[`#quest dream reaver: Navigate to the quest Dream Reaver Investigation`, $COLOR_INFO]}
+				DoExpr {echo[`#quest empyrean rescue: Navigate to the quest Empyrean Rescue`, $COLOR_INFO]}
+				DoExpr {echo[`#quest end of days: Navigate to the quest End of Days`, $COLOR_INFO]}
+				DoExpr {echo[`#quest fear factory: Navigate to the quest Fear Factory`, $COLOR_INFO]}
+				DoExpr {echo[`#quest first sister: Navigate to the quest First Sister`, $COLOR_INFO]}
+				DoExpr {echo[`#quest izexi: Navigate to the quest Foundry of Izexi`, $COLOR_INFO]}
+				DoExpr {echo[`#quest four corners: Navigate to the quest Four Corners of Dereth`, $COLOR_INFO]}
+				DoExpr {echo[`#quest geraines host: Navigate to the quest Geraine's Hosts`, $COLOR_INFO]}
+				DoExpr {echo[`#quest geraines study: Navigate to the quest Geraine's Study`, $COLOR_INFO]}
+				DoExpr {echo[`#quest gurog creation: Navigate to the quest Gurog Creation`, $COLOR_INFO]}
+				DoExpr {echo[`#quest halt dericost: Navigate to the quest Halt Dericost Ritual`, $COLOR_INFO]}
+				DoExpr {echo[`#quest hive queen: Navigate to the quest Hive Queen Assault`, $COLOR_INFO]}
+				DoExpr {echo[`#quest hoshino fortress infiltration: Navigate to the quest Hoshino Fortress Infiltration`, $COLOR_INFO]}
+				DoExpr {echo[`#quest hoshino must die: Navigate to the quest Hoshino Must Die`, $COLOR_INFO]}
+				DoExpr {echo[`#quest janthefs: Navigate to the quest Janthef's Release`, $COLOR_INFO]}
+				DoExpr {echo[`#quest liberation of uziz: Navigate to the quest Liberation of Uziz`, $COLOR_INFO]}
+				DoExpr {echo[`#quest lost lore: Navigate to the quest Lost Lore`, $COLOR_INFO]}
+				DoExpr {echo[`#quest lugian assault: Navigate to the quest Lugian Assault`, $COLOR_INFO]}
+				DoExpr {echo[`#quest mhoire castle: Navigate to the quest Mhoire Castle`, $COLOR_INFO]}
+				DoExpr {echo[`#quest nanjou stockade: Navigate to the quest Nanjou Stockade`, $COLOR_INFO]}
+				DoExpr {echo[`#quest ninja academy: Navigate to the quest Ninja Academy`, $COLOR_INFO]}
+				DoExpr {echo[`#quest oubliette: Navigate to the quest Oubliette of Mhoire Castle`, $COLOR_INFO]}
+				DoExpr {echo[`#quest purging the corruption: Navigate to the quest Purging the Corruption`, $COLOR_INFO]}
+				DoExpr {echo[`#quest releasing the light: Navigate to the quest Releasing the Light`, $COLOR_INFO]}
+				DoExpr {echo[`#quest mouf p: Navigate to the quest Rescuing Mouf P`, $COLOR_INFO]}
+				DoExpr {echo[`#quest rynthid foothold: Navigate to the quest Rynthid Foothold`, $COLOR_INFO]}
+				DoExpr {echo[`#quest rynthid foundry: Navigate to the quest Rynthid Foundry`, $COLOR_INFO]}
+				DoExpr {echo[`#quest rynthid training: Navigate to the quest Rynthid Training`, $COLOR_INFO]}
+				DoExpr {echo[`#quest save karul: Navigate to the quest Save Karul`, $COLOR_INFO]}
+				DoExpr {echo[`#quest second sister: Navigate to the quest Second Sister`, $COLOR_INFO]}
+				DoExpr {echo[`#quest seed of power: Navigate to the quest Seed of Power`, $COLOR_INFO]}
+				DoExpr {echo[`#quest serpent burial grounds: Navigate to the quest Serpent Burial Grounds`, $COLOR_INFO]}
+				DoExpr {echo[`#quest shroud of emotion: Navigate to the quest Shroud of Emotion`, $COLOR_INFO]}
+				DoExpr {echo[`#quest slave master: Navigate to the quest Slave Master`, $COLOR_INFO]}
+				DoExpr {echo[`#quest tanada intercept: Navigate to the quest Tanada Intercept and Slaughter`, $COLOR_INFO]}
+				DoExpr {echo[`#quest third sister: Navigate to the quest Third Sister`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Handle `#quest bloodstone investigation`
+	IF: Expr {(bloodstone investigation)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `bloodstone investigation`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest count phainors amulet`
+	IF: Expr {(count phainors amulet)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `count phainors amulet`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest deewains`
+	IF: Expr {(deewains)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `deewains`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest curator`
+	IF: Expr {(curator)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `curator`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest dream reaver`
+	IF: Expr {(dream reaver)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `dream reaver`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest empyrean rescue`
+	IF: Expr {(empyrean rescue)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `empyrean rescue`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest end of days`
+	IF: Expr {(end of days)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `end of days`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest fear factory`
+	IF: Expr {(fear factory)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `fear factory`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest first sister`
+	IF: Expr {(first sister)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `first sister`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest izexi`
+	IF: Expr {(izexi)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `izexi`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest four corners`
+	IF: Expr {(four corners)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `four corners`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest geraines host`
+	IF: Expr {(geraines host)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `geraines host`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest geraines study`
+	IF: Expr {(geraines study)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `geraines study`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest gurog creation`
+	IF: Expr {(gurog creation)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `gurog creation`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest halt dericost`
+	IF: Expr {(halt dericost)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `halt dericost`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest hive queen`
+	IF: Expr {(hive queen)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `hive queen`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest hoshino fortress`
+	IF: Expr {(hoshino fortress)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `hoshino fortress`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest hoshino must die`
+	IF: Expr {(hoshino must die)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `hoshino must die`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest janthefs`
+	IF: Expr {(janthefs)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `janthefs`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest liberation of uziz`
+	IF: Expr {(liberation of uziz)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `liberation of uziz`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest lost lore`
+	IF: Expr {(lost lore)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `lost lore`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest lugian assault`
+	IF: Expr {(lugian assault)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `lugian assault`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest mhoire castle`
+	IF: Expr {(mhoire castle)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `mhoire castle`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest nanjou stockade`
+	IF: Expr {(nanjou stockade)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `nanjou stockade`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest ninja academy`
+	IF: Expr {(ninja academy)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `ninja academy`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest oubliette`
+	IF: Expr {(oubliette)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `oubliette`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest purging the corruption`
+	IF: Expr {(purging the corruption)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `purging the corruption`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest releasing the light`
+	IF: Expr {(releasing the light)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `releasing the light`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest mouf p`
+	IF: Expr {(mouf p)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `mouf p`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest rynthid foothold`
+	IF: Expr {(rynthid foothold)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `rynthid foothold`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest rynthid foundry`
+	IF: Expr {(rynthid foundry)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `rynthid foundry`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest rynthid training`
+	IF: Expr {(rynthid training)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `rynthid training`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest save karul`
+	IF: Expr {(save karul)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `save karul`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest second sister`
+	IF: Expr {(second sister)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `second sister`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest seed of power`
+	IF: Expr {(seed of power)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `seed of power`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest serpent burial grounds`
+	IF: Expr {(serpent burial grounds)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `serpent burial grounds`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest shroud of emotion`
+	IF: Expr {(shroud of emotion)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `shroud of emotion`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest slave master`
+	IF: Expr {(slave master)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `slave master`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest tanada intercept`
+	IF: Expr {(tanada intercept)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `tanada intercept`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#quest third sister`
+	IF: Expr {(third sister)#getvar[capturegroup_questdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `third sister`]]}
+				SetState {CallMeta}
+
+	~~ Handle no match for questdestination
+	IF: Expr {$LEVEL_WARN>=@CCDebug}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No matching quest for #quest`, $COLOR_WARN]}
 				SetState {Idle}
 
 ~~ }
