@@ -416,7 +416,12 @@ STATE: {ToPortal} ~~ {
 
 	IF: Expr {$destination==`Frozen Valley Camp`}
 		DO: EmbedNav ToFrozenValleyCamp {ToFrozenValleyCamp}
-		
+	
+	IF: ChatMatch {You must complete a quest to interact with that portal.}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, I need to complete a quest to use the portal to \`+$destination]`, `false`]}
+				SetState {Finished}
+
 	~~ Finished navigating
 	IF:	NavEmpty
 		DO: SetState {Finished}
