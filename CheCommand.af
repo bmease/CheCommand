@@ -2046,6 +2046,127 @@ STATE: {HandleNavigation} ~~ {
 				DoExpr {$CCArguments=dictcreate[`CheCommandNavSubway`, dictcreate[`destination`, `Egg Orchard`]]}
 				SetState {CallMeta}
 
+	~~ Jungle Subway
+
+	~~ Handle `#navto south direlands`
+	IF: Expr {(south direlands)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `South Direlands`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto vissidal island`
+	IF: Expr {(vissidal island)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Vissidal Island`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto beach fort`
+	IF: Expr {(beach fort)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Beach Fort`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto black spawn den`
+	IF: Expr {(black spawn den)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Black Spawn Den`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto obsidian rim`
+	IF: Expr {(obsidian rim)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Obsidian Rim`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto north direlands`
+	IF: Expr {(north direlands)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `North Direlands`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto crater pathway`
+	IF: Expr {(crater pathway)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Crater Pathway`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto dark isle`
+	IF: Expr {(dark isle)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Dark Isle`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto mukkir-infested black spear temple`
+	IF: Expr {(mukkir infested black spear temple)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Mukkir-Infested Black Spear Temple`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto the colosseum`
+	IF: Expr {(the colosseum)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `The Colosseum`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto nexus`
+	IF: Expr {(nexus)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Nexus`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto mountain retreat`
+	IF: Expr {(mountain retreat)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Mountain Retreat`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto empyrean facility upper level`
+	IF: Expr {(empyrean facility upper level)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Empyrean Facility Upper Level`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto underground city`
+	IF: Expr {(underground city)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Underground City`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto northern aerlinthe island`
+	IF: Expr {(northern aerlinthe island)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Northern Aerlinthe Island`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto halls of metos`
+	IF: Expr {(halls of metos)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Halls of Metos`]]}
+				SetState {CallMeta}
+
+	~~ Handle `#navto frozen valley camp`
+	IF: Expr {(frozen valley camp)#getvar[capturegroup_navdestination]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavJungleSubway`]}
+				DoExpr {$CCArguments=dictcreate[`CheCommandNavJungleSubway`, dictcreate[`destination`, `Frozen Valley Camp`]]}
+				SetState {CallMeta}
+
 
 	~~ Handle no match for navdestination
 	IF: Expr {$LEVEL_WARN>=@CCDebug}
@@ -3934,6 +4055,8 @@ STATE: {ShowNavto} ~~ {
 			Not Expr {uiviewvisible[Navto]}
 			Not Expr {uiviewvisible[Recalls]}
 			Not Expr {uiviewvisible[Empyrean]}
+			Not Expr {uiviewvisible[Subway]}
+			Not Expr {uiviewvisible[JungleSubway]}
 		DO: DoAll
 				CreateView {Navto} {:CheCommand-TownNetwork.xml}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto <<`]}
@@ -3944,11 +4067,14 @@ STATE: {ShowNavto} ~~ {
 			Expr {uiviewvisible[Navto]}
 			Expr {uiviewvisible[Recalls]}
 			Expr {uiviewvisible[Empyrean]}
+			Expr {uiviewvisible[Subway]}
+			Expr {uiviewvisible[JungleSubway]}
 		DO: DoAll
 				DestroyView {Navto}
 				DestroyView {Recalls}
 				DestroyView {Empyrean}
 				DestroyView {Subway}
+				DestroyView {JungleSubway}
 				DoExpr {uisetlabel[uigetcontrol[Main, ShowNavto], `Navto >>`]}
 				SetState {Idle}
 
@@ -4007,6 +4133,24 @@ STATE: {ShowSubway} ~~ {
 	IF: Expr {uiviewvisible[Subway]}
 		DO: DoAll
 				DestroyView {Subway}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ShowJungleSubway} ~~ {
+
+	~~ Show Subway view
+	IF: Not Expr {uiviewvisible[JungleSubway]}
+		DO: DoAll
+				DestroyView {Navto}
+				CreateView {JungleSubway} {:CheCommand-JungleSubway.xml}
+				SetState {Idle}
+
+	~~ Close Empyrean Portalspace Activator view
+	IF: Expr {uiviewvisible[JungleSubway]}
+		DO: DoAll
+				DestroyView {JungleSubway}
 				SetState {Idle}
 
 ~~ }

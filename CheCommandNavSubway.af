@@ -48,6 +48,10 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[OriginalEnableNav, vtgetsetting[EnableNav]]}
 				DoExpr {setvar[OriginalNavCloseStopRange, vtgetsetting[NavCloseStopRange]]}
 				DoExpr {setvar[OriginalOpenDoors, vtgetsetting[OpenDoors]]}
+				DoExpr {setvar[OriginalEnableCombat, vtgetsetting[EnableCombat]]}
+				DoExpr {setvar[OriginalAttackDistance, vtgetsetting[AttackDistance]]}
+				DoExpr {setvar[OriginalNavPriorityBoost, vtgetsetting[NavPriorityBoost]]}
+				DoExpr {setvar[OriginalApproachDistance, vtgetsetting[ApproachDistance]]}
 
 				DoExpr {setvar[metaname, `CheCommandNavSubway`]}
 				DoExpr {setvar[AphusLasselRecallSpell, 2931]}
@@ -58,7 +62,7 @@ STATE: {Default} ~~ {
 				DoExpr {setvar[JungleSubs, `Jungle Subs`]}
 
 	IF:	Always
-		DO:	DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[DEBUG] Che Nav Town Network v0.0.1 by Che de Pa of Sundering\`, $COLOR_DEBUG]`, `false`]}
+		DO:	DoExpr {ifthen[$LEVEL_DEBUG>=@CCDebug, `echo[\`[DEBUG] Che Nav Subway v0.0.1 by Che de Pa of Sundering\`, $COLOR_DEBUG]`, `false`]}
 
 	IF: Always
 		DO: SetState {ParseArguments}
@@ -138,6 +142,10 @@ STATE: {ToTownNetwork} ~~ {
 		DO: DoAll
 				SetOpt {EnableNav} {True}
 				SetOpt {NavCloseStopRange} {0.00625}
+				SetOpt {EnableCombat} {True}
+				SetOpt {AttackDistance} {0.0083333}
+				SetOpt {NavPriorityBoost} {False}
+				SetOpt {ApproachDistance} {0.0041666}
 
 	~~ Navigate into the Town Network portal
 	IF: Always
@@ -334,6 +342,10 @@ STATE: {Finished} ~~ {
 				SetOpt {EnableNav} {$OriginalEnableNav}
 				SetOpt {NavCloseStopRange} {$OriginalNavCloseStopRange}
 				SetOpt {OpenDoors} {$OriginalOpenDoors}
+				SetOpt {EnableCombat} {$OriginalEnableCombat}
+				SetOpt {AttackDistance} {$OriginalAttackDistance}
+				SetOpt {NavPriorityBoost} {$OriginalNavPriorityBoost}
+				SetOpt {ApproachDistance} {$OriginalApproachDistance}
 
 	~~ Return to the meta that called this one
 	IF: Always
