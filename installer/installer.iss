@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "CheCommand"
-#define MyAppVersion "0.8.3"
+#define MyAppVersion "0.9.0"
 #define MyAppPublisher "Che de Pa of Sundering"
 #define MyAppURL "https://github.com/bmease/CheCommand"
 
