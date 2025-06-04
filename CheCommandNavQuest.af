@@ -117,6 +117,7 @@ STATE: {Dispatch} ~~ {
 				DoExpr {dictadditem[$DESTINATION_STATE, `liberation of uziz`, `InitLiberationUziz`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `purging the corruption`, `InitPurgingCorruption`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `dream reaver`, `InitDreamReaver`]}
+				DoExpr {dictadditem[$DESTINATION_STATE, `serpent burial grounds`, `InitSerpentBurialGrounds`]}
 
 	~~ Warn if no state is found for destination
 	IF: Expr {dicthaskey[$DESTINATION_STATE, $destination]==false}
@@ -127,6 +128,39 @@ STATE: {Dispatch} ~~ {
 	IF: Expr {dicthaskey[$DESTINATION_STATE, $destination]==true}
 		DO: DoExpr {vtsetmetastate[dictgetitem[$DESTINATION_STATE, $destination]]}
 
+~~ }
+
+
+STATE: {UseItem} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	IF: Expr {testvar[using]==false}
+		DO:	DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Using \`+$item, $COLOR_INFO]`, `false`]}
+				DoExpr {$using=true}
+
+	~~ Use item
+	IF: Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$NPC, $item]]==$TYPE_OBJECT}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$NPC, $item]]}
+				SetState {UseItem}
+
+	IF:	Any
+			All
+				ChatCapture {^(?<tellname>.*?) tells you, \"(?<npctext>.*)\"$} {}
+				Expr {$capturegroup_tellname==$item}
+			All
+				ChatCapture {^(?<tellname>.*?) gives you (?<npctext>.*)$} {}
+				Expr {$capturegroup_tellname==$item}
+			All
+				ChatCapture {^(?<tellname>.*?) cast (?<npctext>.*)$} {}
+				Expr {$capturegroup_tellname==$item}
+		DO:	DoAll
+				DoExpr {clearvar[using]}
+				DoExpr {clearvar[item]}
+				Return
 ~~ }
 
 
@@ -210,6 +244,26 @@ STATE: {InitDreamReaver} ~~ {
 ~~ }
 
 
+STATE: {InitSerpentBurialGrounds} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ If in Stonehold start running to Kraytuss
+	IF: BlockE 64D50000
+		DO: SetState {ToKraytussNallah}
+
+	~~ Navigate to Stonehold
+	IF: Always
+		DO: DoAll
+				DoExpr {dictadditem[$CCArguments, `CheCommandNavTownNetwork`, dictcreate[`destination`, `Stonehold`]]}
+				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
+				DoExpr {$CCReturnMeta=$metaname}
+				ChatExpr {`/vt meta load CheCommandNavTownNetwork`}
+
+~~ }
+
+
 STATE: {ToFrigidGrotto} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
@@ -280,6 +334,46 @@ STATE: {ToMaskedPreface} ~~ {
 		DO: DoAll
 				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Masked Preface\`, $COLOR_INFO]`, `false`]}
 				EmbedNav ToMaskedPreface {ToMaskedPreface}
+
+	~~ Finished using portal go to Finished
+	IF: All
+			NavEmpty
+			Expr {isportaling[]==false}
+		DO: SetState {Finished}
+
+~~ }
+
+
+STATE: {ToKraytussNallah} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Navigate to Kraytuss Nallah
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Kraytuss Nallah\`, $COLOR_INFO]`, `false`]}
+				EmbedNav ToKraytussNallah {ToKraytussNallah}
+
+	~~ Finished using portal go to Finished
+	IF:	NavEmpty
+		DO: DoAll
+				DoExpr {$item=`Kraytuss Nallah`}
+				CallState {UseItem} {ToSerpentBurialGrounds}
+
+~~ }
+
+
+STATE: {ToSerpentBurialGrounds} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Navigate to Serpent Burial Grounds
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Serpent Burial Grounds\`, $COLOR_INFO]`, `false`]}
+				EmbedNav ToSerpentBurialGrounds {ToSerpentBurialGrounds}
 
 	~~ Finished using portal go to Finished
 	IF: All
@@ -548,4 +642,70 @@ NAV: ToMaskedPreface once ~~ {
 	pnt 10.6861190160116 -48.1266180038452 0.0500208298365275
 	pnt 10.6795005162557 -48.1245481014252 0.0500208298365275
 	ptl 10.6795005162557 -48.1245481014252 0.0500208298365275 10.670195833842 -48.1173241615295 0.0497375018894672 14 {Masked Preface}
+~~ }
+
+
+NAV: ToKraytussNallah once ~~ {
+	pnt -21.825 68.6583333333333 0.325020853678385
+	pnt -21.8027577082316 68.7131093025207 0.325020853678385
+	pnt -21.7653446833293 68.7888218561808 0.325020853678385
+	pnt -21.7401436964671 68.8338614463806 0.325020853678385
+	pnt -21.6946604728699 68.8441389401754 0.325020853678385
+	pnt -21.6785829226176 68.8373140017192 0.325020853678385
+~~ }
+
+
+NAV: ToSerpentBurialGrounds once ~~ {
+	pnt -21.6785829226176 68.8373140017192 0.325020853678385
+	pnt -21.7708263238271 68.8361240386963 0.325020853678385
+	pnt -21.845391368866 68.8174049377441 0.325020853678385
+	pnt -21.9515179951986 68.7773849487305 0.324894332885742
+	pnt -22.0687565485636 68.7280531247457 0.310169474283854
+	pnt -22.2135979334513 68.6654306411743 0.274040412902832
+	pnt -22.3114978790283 68.6430296421051 0.255856990814209
+	pnt -22.415154838562 68.6420222918193 0.238496891657511
+	pnt -22.5357993284861 68.5866553465525 0.219054285685221
+	pnt -22.7449294348558 68.4922908703486 0.18419926961263
+	pnt -22.8381845474243 68.4596326539914 0.176005458831787
+	pnt -22.9239615122477 68.4370393117269 0.176100889841715
+	pnt -23.11909532547 68.3826005299886 0.180637454986572
+	pnt -23.2667606671651 68.3455818812052 0.183354171117147
+	pnt -23.3749240875244 68.337753868103 0.183354171117147
+	pnt -23.5309904893239 68.3346717834473 0.177882321675618
+	pnt -23.6835748672485 68.3307694753011 0.172222932179769
+	pnt -23.7270206451416 68.3311222076416 0.16860245068868
+	pnt -23.8182264328003 68.3280037562052 0.161001968383789
+	pnt -23.8562140146891 68.3185591379801 0.158354171117147
+	pnt -23.8953514099121 68.2726257324219 0.156460364659627
+	pnt -23.9467746098836 68.2240219116211 0.150289614995321
+	pnt -24.0000447909037 68.1918637593587 0.149339087804159
+	pnt -24.0695790290833 68.1487375895182 0.14168750445048
+	pnt -24.0992820421855 68.1402258237203 0.14168750445048
+	pnt -24.1375386397044 68.1392746607463 0.14168750445048
+	pnt -24.2052165190379 68.1395317395528 0.136213779449463
+	pnt -24.2881289084752 68.1396441141764 0.132491183280945
+	pnt -24.3615946451823 68.1397435506185 0.131533257166545
+	pnt -24.4055022557577 68.1176189740499 0.126030556360881
+	pnt -24.4689122517904 68.067066860199 0.125020829836528
+	pnt -24.5114390055339 68.0455646514893 0.125020829836528
+	pnt -24.5570623397827 68.0246738115946 0.12619788646698
+	pnt -24.5862371444702 68.0088978449504 0.131060353914897
+	pnt -24.6102081934611 67.9849231402079 0.135055526097616
+	pnt -24.6718930880229 67.9802555084229 0.144639492034912
+	pnt -24.775851726532 67.9905474662781 0.171925799051921
+	pnt -24.8789295514425 68.0185827255249 0.20064435005188
+	pnt -24.9770702521006 68.0465777397156 0.236870463689168
+	pnt -25.0830069541931 68.0779146512349 0.271559874216716
+	pnt -25.1755130132039 68.0814841270447 0.320577843983968
+	pnt -25.2585748672485 68.0654824574788 0.372595882415771
+	pnt -25.2942448298136 68.0534872372945 0.384716415405273
+	pnt -25.2959058125814 68.012265364329 0.424914296468099
+	pnt -25.2974014282227 67.9534426689148 0.480198383331299
+	pnt -25.2925443013509 67.8648220380147 0.557881100972493
+	pnt -25.2950459162394 67.7823943853378 0.598610305786133
+	pnt -25.3055391311646 67.7002677639325 0.617126782735189
+	pnt -25.3304382324219 67.6363122304281 0.623390642801921
+	pnt -25.3519027709961 67.6045440673828 0.624703661600749
+	pnt -25.3603174845378 67.5842807769775 0.623301251729329
+	ptl -25.3603174845378 67.5842807769775 0.623301251729329 -25.3675541559855 67.5762666702271 0.621811807155609 14 {Serpent Burial Grounds}
 ~~ }
