@@ -116,6 +116,7 @@ STATE: {Dispatch} ~~ {
 				DoExpr {dictadditem[$DESTINATION_STATE, `mouf p`, `InitMoufP`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `liberation of uziz`, `InitLiberationUziz`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `purging the corruption`, `InitPurgingCorruption`]}
+				DoExpr {dictadditem[$DESTINATION_STATE, `dream reaver`, `InitDreamReaver`]}
 
 	~~ Warn if no state is found for destination
 	IF: Expr {dicthaskey[$DESTINATION_STATE, $destination]==false}
@@ -174,7 +175,7 @@ STATE: {InitPurgingCorruption} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Finished}
 
-	~~ If in Candeth Keep start running to Frigid Grotto
+	~~ If in Candeth Keep start running to Curator of Torments Study
 	IF: BlockE 2B120000
 		DO: SetState {ToCuratorOfTormentsStudy}
 
@@ -185,6 +186,26 @@ STATE: {InitPurgingCorruption} ~~ {
 				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
 				DoExpr {$CCReturnMeta=$metaname}
 				ChatExpr {`/vt meta load CheCommandNavSubway`}
+
+~~ }
+
+
+STATE: {InitDreamReaver} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ If in Khayyaban start running to Masked Preface
+	IF: BlockE 9F440000
+		DO: SetState {ToMaskedPreface}
+
+	~~ Navigate to Khayyaban
+	IF: Always
+		DO: DoAll
+				DoExpr {dictadditem[$CCArguments, `CheCommandNavTownNetwork`, dictcreate[`destination`, `Khayyaban`]]}
+				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
+				DoExpr {$CCReturnMeta=$metaname}
+				ChatExpr {`/vt meta load CheCommandNavTownNetwork`}
 
 ~~ }
 
@@ -239,6 +260,26 @@ STATE: {ToCuratorOfTormentsStudy} ~~ {
 		DO: DoAll
 				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Curator of Torments Study\`, $COLOR_INFO]`, `false`]}
 				EmbedNav ToCuratorOfTormentsStudy {ToCuratorOfTormentsStudy}
+
+	~~ Finished using portal go to Finished
+	IF: All
+			NavEmpty
+			Expr {isportaling[]==false}
+		DO: SetState {Finished}
+
+~~ }
+
+
+STATE: {ToMaskedPreface} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Navigate to Masked Preface
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Masked Preface\`, $COLOR_INFO]`, `false`]}
+				EmbedNav ToMaskedPreface {ToMaskedPreface}
 
 	~~ Finished using portal go to Finished
 	IF: All
@@ -338,6 +379,7 @@ NAV: ToVirindiEdifice once ~~ {
 	pnt 18.17508567969 -19.351940425237 0.070678186416626
 	ptl -30.8 -20.2166666666667 2.08333134651184E-05 18.175 -19.3416666666667 0.071265272796154 14 {Virindi Edifice}
 ~~ }
+
 
 NAV: ToCuratorOfTormentsStudy once ~~ {
 	pnt -67.0473333358765 -87.5435416668654 0.200020837783813
@@ -469,4 +511,41 @@ NAV: ToCuratorOfTormentsStudy once ~~ {
 	pnt -39.2001080830892 -78.9789665222168 0.162511825561523
 	pnt -39.2015636444092 -78.9736553827922 0.162390534083049
 	ptl -39.2015636444092 -78.9736553827922 0.162390534083049 -39.2054512341817 -78.9659708023071 0.16178323328495 14 {Curator of Torment's Study}
+~~ }
+
+
+NAV: ToMaskedPreface once ~~ {
+	pnt 25.625 -47.4476958354314 0.152296177546183
+	pnt 25.6525091171265 -47.5146841049194 0.158563264211019
+	pnt 25.6946746190389 -47.6721422195435 0.217580111821493
+	pnt 25.7127113660177 -47.7436422983805 0.249949375788371
+	pnt 25.7766629219055 -47.9548048655192 0.3471786181132
+	pnt 25.8355283737183 -48.2290620962779 0.397737153371175
+	pnt 25.901910273234 -48.5598344802856 0.434492079416911
+	pnt 25.963273302714 -48.8932381470998 0.44639679590861
+	pnt 26.0487567265828 -49.1111118952433 0.458354187011719
+	pnt 26.0744367520014 -49.1873018900553 0.456317806243897
+	pnt 26.0919663826625 -49.2709552764893 0.456603240966797
+	pnt 26.094071662426 -49.3609088897705 0.458354187011719
+	pnt 26.0804276029269 -49.3797485987345 0.458354187011719
+	pnt 26.0543680071831 -49.3909783045451 0.458354187011719
+	ptl 10.6795005162557 -48.1245481014252 0.0500208298365275 26.0386541366577 -49.3916458129883 0.45807084441185 14 {Serpent Hills Settlement Portal}
+	pnt 11.6791416664918 -50.4963916619619 0.056315279006958
+	pnt 11.643199857076 -50.4270621935527 0.0519323150316874
+	pnt 11.6133538564046 -50.3583387692769 0.0576592683792114
+	pnt 11.5805503209432 -50.2774338404338 0.0699291070302328
+	pnt 11.5103344599406 -50.1286337534587 0.0717153708140055
+	pnt 11.4530420303345 -49.9833661397298 0.0565958658854167
+	pnt 11.403130086263 -49.8998812278112 0.0581032196680705
+	pnt 11.1829244613647 -49.5742592811584 0.0646658897399902
+	pnt 11.1197904586792 -49.3829457600911 0.0725033680597941
+	pnt 11.0581108729045 -49.2535865783691 0.0677404244740804
+	pnt 10.9241215705872 -48.9896899382273 0.0490152557690938
+	pnt 10.8948582450549 -48.8488327026367 0.0454256852467855
+	pnt 10.8775262097518 -48.7140412012736 0.0439813494682312
+	pnt 10.8062510172526 -48.3506181716919 0.046323569615682
+	pnt 10.7397563934326 -48.1651571432749 0.04831356604894
+	pnt 10.6861190160116 -48.1266180038452 0.0500208298365275
+	pnt 10.6795005162557 -48.1245481014252 0.0500208298365275
+	ptl 10.6795005162557 -48.1245481014252 0.0500208298365275 10.670195833842 -48.1173241615295 0.0497375018894672 14 {Masked Preface}
 ~~ }
