@@ -2428,6 +2428,13 @@ STATE: {HandleFlagging} ~~ {
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagRynthid`]}
 				SetState {CallMeta}
 
+	~~ Handle `#flag rynthid`
+	IF: Expr {(hoshino)#getvar[capturegroup_flagaction]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavHoshino`]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagHoshino`]}
+				SetState {CallMeta}
+
 	~~ Handle no match for flagaction
 	IF: Expr {$LEVEL_WARN>=@CCDebug}
 		DO: DoAll
