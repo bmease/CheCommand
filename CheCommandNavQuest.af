@@ -118,6 +118,7 @@ STATE: {Dispatch} ~~ {
 				DoExpr {dictadditem[$DESTINATION_STATE, `purging the corruption`, `InitPurgingCorruption`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `dream reaver`, `InitDreamReaver`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `serpent burial grounds`, `InitSerpentBurialGrounds`]}
+				DoExpr {dictadditem[$DESTINATION_STATE, `halt dericost`, `InitHaltDericost`]}
 
 	~~ Warn if no state is found for destination
 	IF: Expr {dicthaskey[$DESTINATION_STATE, $destination]==false}
@@ -264,6 +265,30 @@ STATE: {InitSerpentBurialGrounds} ~~ {
 ~~ }
 
 
+STATE: {InitHaltDericost} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ If in Frozey Valley start running to Lady Daenerah
+	IF: BlockE 7AE80000
+		DO: SetState {ToLadyDaenerah}
+
+	~~ If in Al-Arqas navigate to Menhir Ring
+	IF: BlockE 8F580000
+		DO: SetState {ToMenhirRings}
+
+	~~ Navigate to Frozen Valley
+	IF: Always
+		DO: DoAll
+				DoExpr {dictadditem[$CCArguments, `CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `FrozenValley`]]}
+				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
+				DoExpr {$CCReturnMeta=$metaname}
+				ChatExpr {`/vt meta load CheCommandNavPortalspaceActivator`}
+
+~~ }
+
+
 STATE: {ToFrigidGrotto} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
@@ -355,7 +380,7 @@ STATE: {ToKraytussNallah} ~~ {
 				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Kraytuss Nallah\`, $COLOR_INFO]`, `false`]}
 				EmbedNav ToKraytussNallah {ToKraytussNallah}
 
-	~~ Finished using portal go to Finished
+	~~ Finished navigation goto Finished
 	IF:	NavEmpty
 		DO: DoAll
 				DoExpr {$item=`Kraytuss Nallah`}
@@ -383,6 +408,51 @@ STATE: {ToSerpentBurialGrounds} ~~ {
 
 ~~ }
 
+
+STATE: {ToLadyDaenerah} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Navigate to Lady Daenerah
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Lady Daenerah\`, $COLOR_INFO]`, `false`]}
+				EmbedNav ToLadyDaenerah {ToLadyDaenerah}
+
+	~~ Finished navigation goto Finished
+	IF:	NavEmpty
+		DO: DoAll
+				DoExpr {$item=`Lady Daenerah`}
+				CallState {UseItem} {ToMenhirRings}
+
+~~ }
+
+
+STATE: {ToMenhirRings} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ If in Al-Arqas navigate to Menhir Ring
+	IF: BlockE 8F580000
+		DO: EmbedNav ToMenhirRing {ToMenhirRing}
+
+	~~ Finished navigation goto Finished
+	IF:	All
+			BlockE 56520000
+			NavEmpty
+		DO: SetState {Finished}
+
+	~~ Navigate to Al-Arqas
+	IF: BlockE 7AE80000
+		DO: DoAll
+				DoExpr {dictadditem[$CCArguments, `CheCommandNavTownNetwork`, dictcreate[`destination`, `Al-Arqas`]]}
+				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
+				DoExpr {$CCReturnMeta=$metaname}
+				ChatExpr {`/vt meta load CheCommandNavTownNetwork`}
+
+~~ }
 
 STATE: {Finished} ~~ {
 
@@ -708,4 +778,55 @@ NAV: ToSerpentBurialGrounds once ~~ {
 	pnt -25.3519027709961 67.6045440673828 0.624703661600749
 	pnt -25.3603174845378 67.5842807769775 0.623301251729329
 	ptl -25.3603174845378 67.5842807769775 0.623301251729329 -25.3675541559855 67.5762666702271 0.621811807155609 14 {Serpent Burial Grounds}
+~~ }
+
+
+NAV: ToLadyDaenerah once ~~ {
+	pnt -4.30213374694188 83.7619579633077 0.500020853678385
+	pnt -4.32519019047419 83.7624692678451 0.500020853678385
+	pnt -4.32525282303492 83.7881924788157 0.500020853678385
+~~ }
+
+
+NAV: ToMenhirRing once ~~ {
+	pnt 13.2160458246867 -31.2992375055949 0.0388579845428467
+	pnt 13.2251360575358 -31.3999028364817 0.0728694756825765
+	pnt 13.2220916112264 -31.4483268419902 0.101370525360107
+	pnt 13.2099743525187 -31.5649068832397 0.110027233759562
+	pnt 13.1876581827799 -31.6485776901245 0.124665268262227
+	pnt 13.1774849573771 -31.7247344970703 0.125760650634766
+	pnt 13.160933303833 -31.8467737197876 0.129949768384298
+	pnt 13.1465002695719 -31.9726701100667 0.122548365592957
+	pnt 13.1291073481242 -32.127504603068 0.123146216074626
+	pnt 13.1098873138428 -32.2990407148997 0.1126007715861
+	pnt 13.0990385691325 -32.395551109314 0.112150088946025
+	pnt 13.0840555826823 -32.523969078064 0.116687496503194
+	pnt 13.0627729415894 -32.7066986719767 0.108354163169861
+	pnt 13.0786893844604 -32.8781882286072 0.113052193323771
+	pnt 13.0998765309652 -33.1127849896749 0.111455416679382
+	pnt 13.1529711405436 -33.2750392913818 0.0872666835784912
+	pnt 13.2065295537313 -33.3627678553263 0.0681820631027222
+	pnt 13.172872988383 -33.3921668370565 0.0660869439442952
+	ptl -32.8586695988973 -37.0122833251953 2.08333134651184E-05 13.158845837911 -33.4034958521525 0.0650843754410744 14 {Djinaya Wind Cottages Portal}
+	pnt 11.0986041704814 -22.2770041783651 0.0401052117347717
+	pnt 10.9976626396179 -22.2582776069641 0.0397850155830383
+	pnt 10.8824869891008 -22.2207600275675 0.0416874965031942
+	pnt 10.7909598032633 -22.1891123453776 0.046607514222463
+	pnt 10.6771917978923 -22.1490928014119 0.0559369881947835
+	pnt 10.576199944814 -22.1141707102458 0.0531850655873617
+	pnt 10.5170419692993 -22.0936190923055 0.0536557555198669
+	pnt 10.4334211349487 -22.0666030883789 0.0736352205276489
+	pnt 10.3281776110331 -22.0307388305664 0.085172700881958
+	pnt 10.2109368006388 -21.9902161916097 0.0884322325388591
+	pnt 10.1496056477229 -21.9719036738078 0.102746796607971
+	pnt 10.0428660710653 -21.9351826945941 0.0541011373202006
+	pnt 9.90669689178467 -21.8883557677269 0.0337664445241292
+	pnt 9.7844788869222 -21.8466564178467 0.0365060369173686
+	pnt 9.68960234324137 -21.8176166852315 0.0360527753829956
+	pnt 9.62957595189412 -21.8056625684102 0.0498353123664856
+	pnt 9.52854347229004 -21.7805749416351 0.0474729220072428
+	pnt 9.42093861897786 -21.7517978191376 0.0474492311477661
+	pnt 9.37318543593089 -21.732423210144 0.0436196168263753
+	pnt 9.36909849643707 -21.7915924390157 0.0435619950294495
+	tlk -32.8586695988973 -37.0122833251953 2.08333134651184E-05 9.38138541380564 -21.8005537509918 0.0434933342039585 37 {Menhir}
 ~~ }

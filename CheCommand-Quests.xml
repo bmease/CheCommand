@@ -19,7 +19,7 @@
         <!-- <control type="button" name="GerainesHost" left="115" top="30" width="100" height="20" text="Geraine's Host" setstate="ChatCommand" actionexpr="setvar[command, \#quest geraines host]" /> -->
         <!-- <control type="button" name="GerainesStudy" left="115" top="55" width="100" height="20" text="Geraine's Study" setstate="ChatCommand" actionexpr="setvar[command, \#quest geraines study]" /> -->
         <!-- <control type="button" name="GurogCreation" left="115" top="80" width="100" height="20" text="Gurog Creation" setstate="ChatCommand" actionexpr="setvar[command, \#quest gurog creation]" /> -->
-        <!-- <control type="button" name="HaltDericost" left="115" top="105" width="100" height="20" text="Halt Dericost" setstate="ChatCommand" actionexpr="setvar[command, \#quest halt dericost]" /> -->
+        <control type="button" name="HaltDericost" left="115" top="105" width="100" height="20" text="Halt Dericost" setstate="ChatCommand" actionexpr="setvar[command, \#quest halt dericost]" />
         <!-- <control type="button" name="HiveQueen" left="115" top="130" width="100" height="20" text="Hive Queen" setstate="ChatCommand" actionexpr="setvar[command, \#quest hive queen]" /> -->
         <!-- <control type="button" name="HFI" left="115" top="155" width="100" height="20" text="HFI" setstate="ChatCommand" actionexpr="setvar[command, \#quest hoshino fortress infiltration]" /> -->
         <!-- <control type="button" name="HMD" left="115" top="180" width="100" height="20" text="HMD" setstate="ChatCommand" actionexpr="setvar[command, \#quest hoshino must die]" /> -->
