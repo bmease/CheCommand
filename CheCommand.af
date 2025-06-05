@@ -2404,6 +2404,7 @@ STATE: {HandleFlagging} ~~ {
 	IF: Expr {(help)#getvar[capturegroup_flagaction]}
 		DO: DoAll
 				DoExpr {echo[`#flag frozen valley: Flags with all NPCs in Frozen Valley`, $COLOR_INFO]}
+				DoExpr {echo[`#flag hoshino: Flags with all NPCs in Hoshino`, $COLOR_INFO]}
 				DoExpr {echo[`#flag neftet: Flags with all NPCs in Neftet`, $COLOR_INFO]}
 				DoExpr {echo[`#flag rynthid: Flags with all NPCs in Rynthid`, $COLOR_INFO]}
 				SetState {Idle}
@@ -2428,7 +2429,7 @@ STATE: {HandleFlagging} ~~ {
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagRynthid`]}
 				SetState {CallMeta}
 
-	~~ Handle `#flag rynthid`
+	~~ Handle `#flag hoshino`
 	IF: Expr {(hoshino)#getvar[capturegroup_flagaction]}
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavHoshino`]}
