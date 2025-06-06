@@ -143,6 +143,10 @@ STATE: {Default} ~~ {
 				~~ Use Auto Timers
 				DoExpr {setpvar[CCAutoTimers, ifthen[testpvar[CCAutoTimers], `@CCAutoTimers`, `true`]]}
 
+				~~ Metas (UB does not support dictionaries in pvars so using two lists instead)
+				DoExpr {setpvar[CCMetaKeys, ifthen[testpvar[CCMetaKeys], `@CCMetaKeys`, `listcreate[]`]]}
+				DoExpr {setpvar[CCMetaValues, ifthen[testpvar[CCMetaValues], `@CCMetaValues`, `listcreate[]`]]}
+
 				~~ Profiles (UB does not support dictionaries in pvars so using two lists instead)
 				DoExpr {setpvar[CCProfileKeys, ifthen[testpvar[CCProfileKeys], `@CCProfileKeys`, `listcreate[]`]]}
 				DoExpr {setpvar[CCProfileValues, ifthen[testpvar[CCProfileValues], `@CCProfileValues`, `listcreate[]`]]}
@@ -981,6 +985,34 @@ STATE: {Idle} ~~ {
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleProfile}
+
+	~~ Handle `#meta load`
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#meta load (?<nickname>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {MetaLoad}
+
+	~~ Handle `#meta add`
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#meta add (?<nickname>.*) (?<metafilename>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {MetaAdd}
+
+	~~ Handle Metas
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#meta (?<metatext>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleMetas}
+
 
 	~~ Handle Killtasks
 	IF:	All
@@ -2543,6 +2575,86 @@ STATE: {HandleRoute} ~~ {
 				SetOpt {EnableNav} {True}
 				SetOpt {NavPriorityBoost} {False}
 				SetState {Idle}
+
+~~ }
+
+
+STATE: {HandleMetas} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Handle `#meta help`
+	IF: Expr {(help)#getvar[capturegroup_metatext]}
+		DO: DoAll
+				~~ DoExpr {echo[`#meta: Loads the profile associated with the landcell`, $COLOR_INFO]}
+				DoExpr {echo[`#meta add <nickname> <filename>: Adds the meta to the saved meta list`, $COLOR_INFO]}
+				~~ DoExpr {echo[`#meta addlandcell <Profile Name>: Adds the profile with the current landcell to the auto load profile list`, $COLOR_INFO]}
+				~~ DoExpr {echo[`#meta landcell: Shows the current profile for the landcell`, $COLOR_INFO]}
+				DoExpr {echo[`#meta list: Lists all saved metas`, $COLOR_INFO]}
+				DoExpr {echo[`#meta load <nickname>: Loads the nicknamed meta on all characters`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Handle `#meta list`
+	IF: Expr {(list)#getvar[capturegroup_metatext]}
+		DO: DoAll
+				DoExpr {listmap[@CCMetaKeys, `echo[$1+\` => \`+listgetitem[@CCMetaValues, $0], $COLOR_INFO]`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {MetaAdd} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Add an additional meta to an existing nickname
+	IF: Expr {listindexof[@CCMetaKeys, $capturegroup_nickname]!=-1}
+		DO: DoAll
+				DoExpr {$id=listindexof[@CCMetaKeys, $capturegroup_nickname]}
+				DoExpr {$metafilenames=listgetitem[@CCMetaValues, $id]}
+				DoExpr {listadd[$metafilenames, $capturegroup_metafilename]}
+				DoExpr {echo[`Added `+$capturegroup_nickname+` => `+listgetitem[@CCMetaValues, listindexof[@CCMetaKeys, $capturegroup_nickname]], $COLOR_INFO]}
+				DoExpr {listmap[listcreate[`metafilenames`, `id`, `capturegroup_nickname`, `capturegroup_metafilename`], `clearvar[$1]`]}
+				SetState {Idle}
+
+	~~ Add a new meta nickname
+	IF: Expr {listindexof[@CCMetaKeys, $capturegroup_nickname]==-1}
+		DO: DoAll
+				DoExpr {listadd[@CCMetaKeys, $capturegroup_nickname]}
+				DoExpr {listadd[@CCMetaValues, listcreate[$capturegroup_metafilename]]}
+				DoExpr {echo[`Added `+$capturegroup_nickname+` => `+listgetitem[@CCMetaValues, listindexof[@CCMetaKeys, $capturegroup_nickname]], $COLOR_INFO]}
+				DoExpr {listmap[listcreate[`capturegroup_nickname`, `capturegroup_metafilename`], `clearvar[$1]`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {MetaLoad} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Warn if nicknamed meta is not found
+	IF: Expr {listindexof[@CCMetaKeys, $capturegroup_nickname]==-1}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No meta found`, $COLOR_WARN]}
+				DoExpr {clearvar[capturegroup_nickname]}
+				SetState {Idle}
+
+	~~ Turn on vitals if they are off
+	IF: Expr {@CCVitals==false}
+		DO: CallState {ToggleVitals} {MetaLoad}
+
+	~~ load nicknamed meta(s)
+	IF: Expr {listindexof[@CCMetaKeys, $capturegroup_nickname]!=-1}
+		DO: DoAll
+				DoExpr {$id=listindexof[@CCMetaKeys, $capturegroup_nickname]}
+				DoExpr {$MetaCallQueue=listcopy[listgetitem[@CCMetaValues, $id]]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Loading meta(s) \`+listgetitem[@CCMetaValues, $id]]`, `false`]}
+				DoExpr {listmap[listcreate[`id`, `capturegroup_nickname`, `capturegroup_metafilename`], `clearvar[$1]`]}
+				SetState {CallMeta}
 
 ~~ }
 
@@ -4687,6 +4799,108 @@ STATE: {SetupViews} ~~ {
 	IF: Always
 		DO: SetState {Idle}
 
+~~ }
+
+
+STATE: {ShowMetas} ~~ {
+
+	~~ Close the settings view
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetlabel[uigetcontrol[Main, ShowSettings], `Settings >>`]}
+				DestroyView {Settings}
+
+	~~ Open the Metas view
+	IF: Always
+		DO: DoAll
+				DoExpr {$MetaOffset=0}
+				CreateView {Metas} {:CheCommand-Metas.xml}
+				SetState {SetMetas}
+
+~~ }
+
+
+STATE: {SetMetas} ~~ {
+
+	~~ Show all buttons
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta1], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta2], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta3], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta4], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta5], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta6], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta7], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta8], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnMeta9], 1]}
+
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnNext], 1]}
+				DoExpr {uisetvisible[uigetcontrol[Metas, btnPrevious], 1]}
+
+	~~ Set all the buttons with the names of the metas
+	IF: Always
+		DO: DoAll
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta1], ifthen[listcount[@CCMetaKeys]>=1+$MetaOffset, `@CCMetaKeys{{0+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta2], ifthen[listcount[@CCMetaKeys]>=2+$MetaOffset, `@CCMetaKeys{{1+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta3], ifthen[listcount[@CCMetaKeys]>=3+$MetaOffset, `@CCMetaKeys{{2+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta4], ifthen[listcount[@CCMetaKeys]>=4+$MetaOffset, `@CCMetaKeys{{3+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta5], ifthen[listcount[@CCMetaKeys]>=5+$MetaOffset, `@CCMetaKeys{{4+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta6], ifthen[listcount[@CCMetaKeys]>=6+$MetaOffset, `@CCMetaKeys{{5+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta7], ifthen[listcount[@CCMetaKeys]>=7+$MetaOffset, `@CCMetaKeys{{6+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta8], ifthen[listcount[@CCMetaKeys]>=8+$MetaOffset, `@CCMetaKeys{{7+$MetaOffset}}`, `empty`]]}
+				DoExpr {uisetlabel[uigetcontrol[Metas, btnMeta9], ifthen[listcount[@CCMetaKeys]>=9+$MetaOffset, `@CCMetaKeys{{8+$MetaOffset}}`, `empty`]]}
+
+	~~ Hide the empty buttons
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=1+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta1], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=2+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta2], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=3+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta3], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=4+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta4], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=5+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta5], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=6+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta6], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=7+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta7], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=8+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta8], 0]`]}
+				DoExpr {ifthen[listcount[@CCMetaKeys]>=9+$MetaOffset, `false`, `uisetvisible[uigetcontrol[Metas, btnMeta9], 0]`]}
+
+	~~ Hide the Previous button if you can't go back
+	IF: Expr {$MetaOffset<=0}
+		DO: DoExpr {uisetvisible[uigetcontrol[Metas, btnPrevious], 0]}
+
+	~~ Hide the Next button if you can't go foward
+	IF: Expr {listcount[@CCMetaKeys]<=9+$MetaOffset}
+		DO: DoExpr {uisetvisible[uigetcontrol[Metas, btnNext], 0]}
+
+	~~ Return to Idle
+	IF: Always
+		DO: SetState {Idle}
+
+~~ }
+
+
+STATE: {MetaNextPage} ~~ {
+
+	~~ Increment to the next page
+	IF: Always
+		DO: DoAll
+				DoExpr {$MetaOffset=$MetaOffset+9}
+				SetState {SetMetas}
+
+~~ }
+
+
+STATE: {MetaPreviousPage} ~~ {
+
+	~~ Don't go into a negative offset
+	IF: Expr {$MetaOffset<=0}
+		DO: SetState {SetMetas}
+
+	~~ Decrement to the previous page
+	IF: Always
+		DO: DoAll
+				DoExpr {$MetaOffset=$MetaOffset-9}
+				SetState {SetMetas}
 ~~ }
 
 
