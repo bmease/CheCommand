@@ -138,7 +138,7 @@ STATE: {ToInsideVR} ~~ {
 			NavEmpty
 			Expr {wobjectfindnearestbynameandobjectclass[$NPC, `Viridian Portal`]==false&&1}
 		DO: DoAll				
-				DoExpr {setvar[tartetNPCType,$NPC]}
+				DoExpr {setvar[targetNPCType,$NPC]}
 				DoExpr {setvar[targetNPC,`Ancient Statue of the Viridian Rise`]}
 				CallState {UseNPC} {ToInsideVR}
 	
@@ -185,7 +185,7 @@ STATE: {UseNPC} ~~ {
 	~~ Use NPC
 	IF: Always
 		DO: DoAll
-				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$tartetNPCType,$targetNPC]]}
+				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$targetNPCType,$targetNPC]]}
 				SetState {UseNPC}
 
 ~~ }
@@ -203,7 +203,7 @@ STATE: {ToShalrionMarker} ~~ {
 
 	IF: NavEmpty
 		DO: DoAll				
-				DoExpr {setvar[tartetNPCType,$NPC]}
+				DoExpr {setvar[targetNPCType,$NPC]}
 				DoExpr {setvar[targetNPC,`Shalrion's Marker`]}
 				CallState {UseNPC} {ToBrellegiasMarker}
 
@@ -222,7 +222,7 @@ STATE: {ToBrellegiasMarker} ~~ {
 
 	IF: NavEmpty
 		DO: DoAll				
-				DoExpr {setvar[tartetNPCType,$FOCI]}
+				DoExpr {setvar[targetNPCType,$FOCI]}
 				DoExpr {setvar[targetNPC,`Brellegia's Marker`]}
 				CallState {UseNPC} {ToAangesilusMarker}
 
@@ -241,7 +241,7 @@ STATE: {ToAangesilusMarker} ~~ {
 
 	IF: NavEmpty
 		DO: DoAll				
-				DoExpr {setvar[tartetNPCType,$NPC]}
+				DoExpr {setvar[targetNPCType,$NPC]}
 				DoExpr {setvar[targetNPC,`Aangesilus' Marker`]}
 				CallState {UseNPC} {ToSwiftsMarker}
 
@@ -260,7 +260,7 @@ STATE: {ToSwiftsMarker}
 
 	IF: NavEmpty
 		DO: DoAll				
-				DoExpr {setvar[tartetNPCType,$NPC]}
+				DoExpr {setvar[targetNPCType,$NPC]}
 				DoExpr {setvar[targetNPC,`Swift's Marker`]}
 				CallState {UseNPC} {Finished}
 
