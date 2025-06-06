@@ -179,6 +179,7 @@ STATE: {UseNPC} ~~ {
 	IF:	Any
 			ChatMatch {The mark of the Viridian Guardians briefly burns with blue flame}
 			ChatMatch {A plaque on this statue reads}
+			ChatMatch {You may complete this quest again in}
 		DO: Return
 
 	~~ Use NPC
