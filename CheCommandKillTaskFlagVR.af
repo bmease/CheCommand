@@ -269,7 +269,7 @@ STATE: {Finished} ~~ {
 
 	IF: Expr {$LEVEL_INFO>=@CCDebug}
 		DO: DoAll
-				DoExpr {echo[`Finished flagging at Hoshino`, $COLOR_INFO]}
+				DoExpr {echo[`Finished flagging at Viridian Rise`, $COLOR_INFO]}
 
 	~~ Reset all options to what they originally were
 	IF: Always
