@@ -995,6 +995,15 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {MetaLoad}
 
+	~~ Handle `#meta remove`
+	IF:	All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#meta remove (?<nickname>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {MetaRemove}
+
 	~~ Handle `#meta add`
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#meta add (?<nickname>.*) (?<metafilename>.*)\"$} {}
@@ -2593,6 +2602,7 @@ STATE: {HandleMetas} ~~ {
 				~~ DoExpr {echo[`#meta landcell: Shows the current profile for the landcell`, $COLOR_INFO]}
 				DoExpr {echo[`#meta list: Lists all saved metas`, $COLOR_INFO]}
 				DoExpr {echo[`#meta load <nickname>: Loads the nicknamed meta on all characters`, $COLOR_INFO]}
+				DoExpr {echo[`#meta remove <nickname>: Removes the nicknamed meta on all characters`, $COLOR_INFO]}
 				SetState {Idle}
 
 	~~ Handle `#meta list`
@@ -2626,6 +2636,31 @@ STATE: {MetaAdd} ~~ {
 				DoExpr {listadd[@CCMetaValues, listcreate[$capturegroup_metafilename]]}
 				DoExpr {echo[`Added `+$capturegroup_nickname+` => `+listgetitem[@CCMetaValues, listindexof[@CCMetaKeys, $capturegroup_nickname]], $COLOR_INFO]}
 				DoExpr {listmap[listcreate[`capturegroup_nickname`, `capturegroup_metafilename`], `clearvar[$1]`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {MetaRemove} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Warn if nicknamed meta is not found
+	IF: Expr {listindexof[@CCMetaKeys, $capturegroup_nickname]==-1}
+		DO: DoAll
+				DoExpr {echo[`[WARN] No meta found`, $COLOR_WARN]}
+				DoExpr {clearvar[capturegroup_nickname]}
+				SetState {Idle}
+
+	~~ Remove the nicknamed meta
+	IF: Expr {listindexof[@CCMetaKeys, $capturegroup_nickname]!=-1}
+		DO: DoAll
+				DoExpr {$id=listindexof[@CCMetaKeys, $capturegroup_nickname]}
+				DoExpr {echo[`Removing `+$capturegroup_nickname+` => `+listgetitem[@CCMetaValues, $id], $COLOR_INFO]}
+				DoExpr {listremoveat[@CCMetaKeys, $id]}
+				DoExpr {listremoveat[@CCMetaValues, $id]}
+				DoExpr {clearvar[capturegroup_nickname]}
 				SetState {Idle}
 
 ~~ }
