@@ -2752,6 +2752,7 @@ STATE: {HandleFlagging} ~~ {
 		DO: DoAll
 				DoExpr {echo[`#flag frozen valley: Flags with all NPCs in Frozen Valley`, $COLOR_INFO]}
 				DoExpr {echo[`#flag hoshino: Flags with all NPCs in Hoshino`, $COLOR_INFO]}
+				DoExpr {echo[`#flag vr: Flags with all NPCs in Viridian Rise`, $COLOR_INFO]}
 				DoExpr {echo[`#flag neftet: Flags with all NPCs in Neftet`, $COLOR_INFO]}
 				DoExpr {echo[`#flag rynthid: Flags with all NPCs in Rynthid`, $COLOR_INFO]}
 				SetState {Idle}
@@ -2781,6 +2782,12 @@ STATE: {HandleFlagging} ~~ {
 		DO:	DoAll
 				DoExpr {listadd[$MetaCallQueue, `CheCommandNavHoshino`]}
 				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagHoshino`]}
+				SetState {CallMeta}
+
+	~~ Handle `#flag hoshino`
+	IF: Expr {(vr)#getvar[capturegroup_flagaction]}
+		DO:	DoAll
+				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagVR`]}
 				SetState {CallMeta}
 
 	~~ Handle no match for flagaction
