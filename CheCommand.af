@@ -4277,7 +4277,7 @@ STATE: {HandleCount} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {$count=getitemcountininventorybynamerx[$capturegroup_counttext]}
-				ChatExpr {`/f `+$capturegroup_counttext+`: `+$count}
+				ChatExpr {`/t `+@CCLeader+`, `+$capturegroup_counttext+`: `+$count}
 				DoExpr {listmap[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`, `count`], `clearvar[$1]`]}
 				SetState {Idle}
 
