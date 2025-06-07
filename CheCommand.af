@@ -3632,7 +3632,9 @@ STATE: {Loot} ~~ {
 
 	~~ Drop to peace mode for looting
 	IF: Always
-		DO: DoExpr {setcombatstate[peace]}
+		DO: DoAll
+				DoExpr {setvar[OriginalCombatState, getcombatstate[]]}
+				DoExpr {setcombatstate[peace]}
 
 	~~ Find Potential Corpses
 	IF: Always
@@ -3754,6 +3756,12 @@ STATE: {CloseCorpse} ~~ {
 		DO:	DoAll
 				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`, `nearbyCorpses`], `clearvar[$1]`]}
 				SetState {LeaderCheck}
+
+	~~ Return to the original combat state
+	IF: Expr {testvar[OriginalCombatState]==true&&getcombatstate[]!=$OriginalCombatState}
+		DO: DoAll
+				DoExpr {setcombatstate[$OriginalCombatState]}
+				DoExpr {clearvar[OriginalCombatState]}
 
 	~~ Corpse is closed; finish looting
 	IF: Expr {getobjectinternaltype[wobjectgetopencontainer[]]!=$TYPE_OBJECT}
