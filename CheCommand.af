@@ -4616,6 +4616,7 @@ STATE: {ShowJungleSubway} ~~ {
 
 ~~ }
 
+
 STATE: {ShowQuests} ~~ {
 
 	~~ Show Quests view
@@ -4629,6 +4630,24 @@ STATE: {ShowQuests} ~~ {
 	IF: Expr {uiviewvisible[Quests]}
 		DO: DoAll
 				DestroyView {Quests}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ShowKilltasks} ~~ {
+
+	~~ Show Killtasks view
+	IF: Not Expr {uiviewvisible[Killtasks]}
+		DO: DoAll
+				DestroyView {Navto}
+				CreateView {Killtasks} {:CheCommand-Killtasks.xml}
+				SetState {Idle}
+
+	~~ Close Killtasks view
+	IF: Expr {uiviewvisible[Killtasks]}
+		DO: DoAll
+				DestroyView {Killtasks}
 				SetState {Idle}
 
 ~~ }
