@@ -1022,24 +1022,14 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleMetas}
 
-
 	~~ Handle Killtasks
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#killtask (?<ktaction>.*)\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#killtask (?<flagaction>.*)\"$} {}
 			Any
 				Expr {$capturegroup_saythink==`say`}
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleKilltask}
-
-	~~ Handle Flaggings
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#flag (?<flagaction>.*)\"$} {}
-			Any
-				Expr {$capturegroup_saythink==`say`}
-				Expr {$capturegroup_saythink==`think`}
-				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
-		DO: SetState {HandleFlagging}
 
 	~~ Handle Auto Looting
 	IF:	All
@@ -2846,74 +2836,13 @@ STATE: {HandleKilltask} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
 
-	IF: Expr {(help)#getvar[capturegroup_ktaction]}
-		DO: DoAll
-				DoExpr {echo[`#killtask all: Begins all killtask loops`, $COLOR_INFO]}
-				DoExpr {echo[`#killtask check: Checks remaining kill tasks (NOT IMPLEMENTED)`, $COLOR_INFO]}
-				DoExpr {echo[`#killtask frozen valley: Begins killtask loop in Frozen Valley`, $COLOR_INFO]}
-				DoExpr {echo[`#killtask neftet: Begins killtask loop in Neftet`, $COLOR_INFO]}
-				SetState {Idle}
-
-	~~ Handle `#killtask check`
-	IF: Expr {(check)#getvar[capturegroup_ktaction]}
-		DO: DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskCheck`]}
-				SetState {CallMeta}
-
-	~~ Handle `#killtask all`
-	IF: Expr {(all)#getvar[capturegroup_ktaction]}
-		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				SetState {CallMeta}
-
-	~~ Handle `#killtask frozen valley`
-	IF: Expr {(frozen valley)#getvar[capturegroup_ktaction]}
-		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavPortalspaceActivator`]}
-				DoExpr {$CCArguments=dictcreate[`CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `FrozenValley`]]}
-
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				SetState {CallMeta}
-
-	~~ Handle `#killtask neftet`
-	IF: Expr {(neftet)#getvar[capturegroup_ktaction]}
-		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				SetState {CallMeta}
-
-	~~ Handle no match for navdestination
-	IF: Expr {$LEVEL_WARN>=@CCDebug}
-		DO: DoAll
-				DoExpr {echo[`[WARN] No matching destination for #killtask`, $COLOR_WARN]}
-				SetState {Idle}
-
-~~ }
-
-
-STATE: {HandleFlagging} ~~ {
-
-	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
-
 	IF: Expr {(help)#getvar[capturegroup_flagaction]}
 		DO: DoAll
-				DoExpr {echo[`#flag frozen valley: Flags with all NPCs in Frozen Valley`, $COLOR_INFO]}
-				DoExpr {echo[`#flag hoshino: Flags with all NPCs in Hoshino`, $COLOR_INFO]}
-				DoExpr {echo[`#flag vr: Flags with all NPCs in Viridian Rise`, $COLOR_INFO]}
-				DoExpr {echo[`#flag neftet: Flags with all NPCs in Neftet`, $COLOR_INFO]}
-				DoExpr {echo[`#flag rynthid: Flags with all NPCs in Rynthid`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask frozen valley: Flags with all NPCs in Frozen Valley`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask hoshino: Flags with all NPCs in Hoshino`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask vr: Flags with all NPCs in Viridian Rise`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask neftet: Flags with all NPCs in Neftet`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask rynthid: Flags with all NPCs in Rynthid`, $COLOR_INFO]}
 				SetState {Idle}
 
 	~~ Handle `#flag frozen valley`
