@@ -2607,8 +2607,18 @@ STATE: {HandleMetas} ~~ {
 				DoExpr {echo[`#meta remove <nickname>: Removes the nicknamed meta on all characters`, $COLOR_INFO]}
 				SetState {Idle}
 
-	~~ Handle `#meta list`
-	IF: Expr {(list)#getvar[capturegroup_metatext]}
+	~~ Handle `#meta list` when it's empty
+	IF: All
+			Expr {listcount[@CCMetaValues]==0}
+			Expr {(list)#getvar[capturegroup_metatext]}
+		DO: DoAll
+				DoExpr {echo[`No metas`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Handle `#meta list` if there are metas
+	IF: All
+			Expr {listcount[@CCMetaValues]>0}
+			Expr {(list)#getvar[capturegroup_metatext]}
 		DO: DoAll
 				DoExpr {listmap[@CCMetaKeys, `echo[$1+\` => \`+listgetitem[@CCMetaValues, $0], $COLOR_INFO]`]}
 				SetState {Idle}
