@@ -191,6 +191,9 @@ STATE: {Default} ~~ {
 				~~ Distance to use nearest trash npc
 				DoExpr {setpvar[CCTrashDistance, ifthen[testpvar[CCTrashDistance], `@CCTrashDistance`, `15`]]}
 
+				~~ Distance away from `#jump on me` issuer to get when considering on them
+				DoExpr {setpvar[CCOnMeThreshold, ifthen[testpvar[CCOnMeThreshold], `@CCOnMeThreshold`, `0.1`]]}
+
 				~~ Whether the Actions view is open or closed
 				DoExpr {setpvar[CCViewsActions, ifthen[testpvar[CCViewsActions], `@CCViewsActions`, `false`]]}
 
@@ -3014,6 +3017,18 @@ STATE: {HandleJumping} ~~ {
 				DoExpr {$Jumptext=`sw 250`}
 				SetState {Jump}
 
+	~~ Handle `#jump on me` for issuer
+	IF: All
+			Expr {$capturegroup_name==false}
+			Expr {(on me)#getvar[capturegroup_jumptext]}
+		DO: SetState {Idle}
+
+	~~ Handle `#jump on me` for followers
+	IF: All
+			Expr {$capturegroup_name!=false}
+			Expr {(on me)#getvar[capturegroup_jumptext]}
+		DO: SetState {JumpOnMe}
+
 	~~ Handle `#jump <jumptext>`
 	IF: Always
 		DO: DoAll
@@ -3045,6 +3060,38 @@ STATE: {Jump} ~~ {
 	~~ Jump failure
 	IF:	ChatMatch {^You think, "You have failed to jump too many times}
 		DO:	SetState {Jump}
+
+~~ }
+
+
+STATE: {JumpOnMe} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	DoAll
+				DoExpr {listmap[listcreate[`OriginalNavClosestOpRange`, `OriginalNavPriorityBoost`, `capturegroup_name`, `capturegroup_jumptext`], `clearvar[$1]`]}
+				SetState {Idle}
+
+	~~ Save settings and set NavClosestOpRange to get on top of issuer
+	IF: Expr {testvar[OriginalNavClosestOpRange]==false}
+		DO: DoAll
+				DoExpr {setvar[OriginalNavClosestOpRange, vtgetsetting[NavClosestOpRange]]}
+				DoExpr {vtsetsetting[NavClosestOpRange, cstrf[@CCOnMeThreshold/240, `N8`]]}
+				DoExpr {setvar[OriginalNavPriorityBoost, vtgetsetting[NavPriorityBoost]]}
+				DoExpr {vtsetsetting[NavPriorityBoost, `true`]}
+				ChatExpr {`/ub follow `+$capturegroup_name}
+				SetState {JumpOnMe}
+
+	~~ Finish if on top of the issuer
+	IF: Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]], getplayercoordinates[]]<=@CCOnMeThreshold}
+		DO: DoAll
+				DoExpr {echo[`Original NavClosestOpRange: `+$OriginalNavClosestOpRange, $COLOR_DEBUG]}
+				DoExpr {vtsetsetting[NavClosestOpRange, cstrf[$OriginalNavClosestOpRange, `N8`]]}
+				DoExpr {vtsetsetting[NavPriorityBoost, cstrf[$OriginalNavPriorityBoost, `N0`]]}
+				EmbedNav Empty {[None]}
+				DoExpr {ifthen[@CCStay==false, `chatbox[\`/ub follow \`+@CCLeader]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished navigating on top of \`+$capturegroup_name]`, `false`]}
+				DoExpr {listmap[listcreate[`OriginalNavClosestOpRange`, `OriginalNavPriorityBoost`, `capturegroup_name`, `capturegroup_jumptext`], `clearvar[$1]`]}
+				SetState {Idle}
 
 ~~ }
 
