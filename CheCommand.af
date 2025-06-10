@@ -4275,7 +4275,7 @@ STATE: {HandleRecall} ~~ {
 
 STATE: {HandleSummonPortal} ~~ {
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	CallState {CleanUpHandleSummonPortal} {Idle}
 
 	~~ Return to Idle if the spell isn't known
 	IF: Not Expr {getisspellknown[$CCRecallSpell]}
@@ -4311,10 +4311,7 @@ STATE: {HandleSummonPortal} ~~ {
 	~~ Cast the recall spell
 	IF: All
 			Expr {getvar[capturegroup_name]==false]} ~~ Only the character who issued the command can summon a portal. Didn't capture a name because it was 'say' or 'think'
-		DO: DoAll
-				DoExpr {clearvar[foundGatewayId]}
-				DoExpr {clearvar[checkedForGateways]}
-				DoExpr {clearvar[gatewayList]}				
+		DO: DoAll			
 				DoExpr {actiontrycastbyid[$CCRecallSpell]}
 				SetState {LocateSummonedPortal}
 ~~ }
@@ -4322,7 +4319,7 @@ STATE: {HandleSummonPortal} ~~ {
 STATE: {LocateSummonedPortal} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	CallState {CleanUpHandleSummonPortal} {Idle}
 
 	IF: All
 			SecsInStateGE 3
@@ -4347,13 +4344,13 @@ STATE: {LocateSummonedPortal} ~~ {
 			Expr {getvar[foundGatewayId]==false} ~~ Gateway not found
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, No gateway found!\`]`, `false`]}
-				SetState {LeaderCheck}
+				CallState {CleanUpHandleSummonPortal} {LeaderCheck}
 ~~ }
 
 STATE: {ListenForSummonPortal} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	CallState {CleanUpHandleSummonPortal} {Idle}
 
 	IF:	All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#portal found (?<portalid>.*)\"$} {}
@@ -4368,7 +4365,7 @@ STATE: {ListenForSummonPortal} ~~ {
 STATE: {UseSummonedPortal} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	CallState {CleanUpHandleSummonPortal} {Idle}
 
 	~~ Disable all options
 	IF: Expr {testvar[OptionsSet]==false}
@@ -4392,7 +4389,20 @@ STATE: {UseSummonedPortal} ~~ {
 	IF: Expr {isportaling[]==true}
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+$capturegroup_name+\`, Finished using Summoned Portal\`]`, `false`]}
-				SetState {LeaderCheck}
+				CallState {CleanUpHandleSummonPortal} {LeaderCheck}
+
+~~ }
+
+STATE: {CleanUpHandleSummonPortal} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Clear all variables
+	IF: Always
+		DO: DoAll
+				DoExpr {listmap[listcreate[`castingCharacterHeading`, `foundGatewayId`, `checkedForGateways`, `gatewayList`, `currentGateway`], `clearvar[$1]`]}
+				Return
 
 ~~ }
 
@@ -4412,7 +4422,7 @@ STATE: {HandleCount} ~~ {
 		DO: DoAll
 				DoExpr {$count=getitemcountininventorybynamerx[$capturegroup_counttext]}
 				ChatExpr {`/f `+$capturegroup_counttext+`: `+$count}
-				DoExpr {listmap[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`, `count`], `clearvar[$1]`]}
+				DoExpr {[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`, `count`], `clearvar[$1]`]}
 				SetState {Idle}
 
 ~~ }
