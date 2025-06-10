@@ -4308,8 +4308,35 @@ STATE: {HandleSummonPortal} ~~ {
 	IF: All
 			Expr {getvar[capturegroup_name]==false]} ~~ Only the character who issued the command can summon a portal. Didn't capture a name because it was 'say' or 'think'
 		DO: DoAll			
-				DoExpr {actiontrycastbyid[$CCRecallSpell]}
+				DoExpr {setvar[maxCastAttempts, 3]} ~~ Set the maximum number of cast attempts
+				DoExpr {setvar[currentAttemptCount, 0]} ~~ Set a variable to indicate if the spell was cast successfully
+				SetState {TrycastSummonPortal}
+~~ }
+
+STATE: {TrycastSummonPortal} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	IF: Expr {getvar[currentAttemptCount]>=getvar[maxCastAttempts]} ~~ Maximum number of cast attempts reached
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Failed to cast the spell after `+getvar[currentAttemptCount]+` attempts\`]`, `false`]}
+				CallState {CleanUpHandleSummonPortal} {LeaderCheck}
+
+	~~ Cast the recall spell
+	IF: Expr {$wasCastSuccessfull==false}
+		DO: DoAll
+				DoExpr {setvar[currentAttemptCount, getvar[currentAttemptCount]+1]}
+				DoExpr {$wasCastSuccessfull=actiontrycastbyid[$CCRecallSpell]}
+				DoExpr {echo[`[INFO] TrycastSummonPortal:wasCastSuccessfull: `+ $wasCastSuccessfull, $COLOR_INFO]}
+				SetState {TrycastSummonPortal}
+
+	~~ Cast the recall spell
+	IF: Expr {$wasCastSuccessfull==true}
+		DO: DoAll
+				DoExpr {echo[`[INFO] LocateSummonedPortal:wasCastSuccessfull: `+ $wasCastSuccessfull, $COLOR_INFO]}
 				SetState {LocateSummonedPortal}
+
 ~~ }
 
 STATE: {LocateSummonedPortal} ~~ {
@@ -4397,7 +4424,7 @@ STATE: {CleanUpHandleSummonPortal} ~~ {
 	~~ Clear all variables
 	IF: Always
 		DO: DoAll
-				DoExpr {listmap[listcreate[`castingCharacterHeading`, `foundGatewayId`, `checkedForGateways`, `gatewayList`, `currentGateway`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`castingCharacterHeading`,`foundGatewayId`,`checkedForGateways`,`gatewayList`,`currentGateway`,`maxCastAttempts`,`currentAttemptCount`,`wasCastSuccessfull`], `clearvar[$1]`]}
 				Return
 
 ~~ }
