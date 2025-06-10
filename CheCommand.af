@@ -191,6 +191,9 @@ STATE: {Default} ~~ {
 				~~ Distance to use nearest trash npc
 				DoExpr {setpvar[CCTrashDistance, ifthen[testpvar[CCTrashDistance], `@CCTrashDistance`, `15`]]}
 
+				~~ Distance away from `#jump on me` issuer to get when considering on them
+				DoExpr {setpvar[CCOnMeThreshold, ifthen[testpvar[CCOnMeThreshold], `@CCOnMeThreshold`, `0.1`]]}
+
 				~~ Whether the Actions view is open or closed
 				DoExpr {setpvar[CCViewsActions, ifthen[testpvar[CCViewsActions], `@CCViewsActions`, `false`]]}
 
@@ -221,7 +224,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$CCRoutes, `00060100`, `CC-Western Power Forge`]}
 				DoExpr {dictadditem[$CCRoutes, `002E02D1`, `CC-Feeding Tube`]}
 				DoExpr {dictadditem[$CCRoutes, `5879052B`, `CC-Path of Rage`]}
-				DoExpr {dictadditem[$CCRoutes, `5E450375`, `CC-Black Death Catacombs`]}
+				DoExpr {dictadditem[$CCRoutes, `5E450372`, `CC-Black Death Catacombs`]}
 				DoExpr {dictadditem[$CCRoutes, `5652038A`, `CC-Halt Dericost Mnemosynes`]}
 				DoExpr {dictadditem[$CCRoutes, `56520245`, `CC-Halt Dericost`]}
 				DoExpr {dictadditem[$CCRoutes, `79E9033A`, `CC-Bloodstone Investigation 3`]}
@@ -1022,24 +1025,14 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleMetas}
 
-
 	~~ Handle Killtasks
 	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#killtask (?<ktaction>.*)\"$} {}
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#killtask (?<flagaction>.*)\"$} {}
 			Any
 				Expr {$capturegroup_saythink==`say`}
 				Expr {$capturegroup_saythink==`think`}
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandleKilltask}
-
-	~~ Handle Flaggings
-	IF:	All
-			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#flag (?<flagaction>.*)\"$} {}
-			Any
-				Expr {$capturegroup_saythink==`say`}
-				Expr {$capturegroup_saythink==`think`}
-				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
-		DO: SetState {HandleFlagging}
 
 	~~ Handle Auto Looting
 	IF:	All
@@ -2593,6 +2586,8 @@ STATE: {HandleRoute} ~~ {
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Loading route: \`+dictgetitem[$CCRoutes, cstrf[getplayerlandcell[], \`X8\`]]]`, `false`]}
 				ChatExpr {`/vt nav load `+dictgetitem[$CCRoutes, cstrf[getplayerlandcell[], `X8`]]}
+				DoExpr {@CCStay=true}
+				DoExpr {uisetlabel[uigetcontrol[Main, Follow], `Follow`]}
 				SetOpt {EnableNav} {True}
 				SetOpt {NavPriorityBoost} {False}
 				SetState {Idle}
@@ -2617,8 +2612,18 @@ STATE: {HandleMetas} ~~ {
 				DoExpr {echo[`#meta remove <nickname>: Removes the nicknamed meta on all characters`, $COLOR_INFO]}
 				SetState {Idle}
 
-	~~ Handle `#meta list`
-	IF: Expr {(list)#getvar[capturegroup_metatext]}
+	~~ Handle `#meta list` when it's empty
+	IF: All
+			Expr {listcount[@CCMetaValues]==0}
+			Expr {(list)#getvar[capturegroup_metatext]}
+		DO: DoAll
+				DoExpr {echo[`No metas`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Handle `#meta list` if there are metas
+	IF: All
+			Expr {listcount[@CCMetaValues]>0}
+			Expr {(list)#getvar[capturegroup_metatext]}
 		DO: DoAll
 				DoExpr {listmap[@CCMetaKeys, `echo[$1+\` => \`+listgetitem[@CCMetaValues, $0], $COLOR_INFO]`]}
 				SetState {Idle}
@@ -2846,74 +2851,13 @@ STATE: {HandleKilltask} ~~ {
 	IF:	ChatMatch {![Rr]eset}
 		DO:	SetState {Idle}
 
-	IF: Expr {(help)#getvar[capturegroup_ktaction]}
-		DO: DoAll
-				DoExpr {echo[`#killtask all: Begins all killtask loops`, $COLOR_INFO]}
-				DoExpr {echo[`#killtask check: Checks remaining kill tasks (NOT IMPLEMENTED)`, $COLOR_INFO]}
-				DoExpr {echo[`#killtask frozen valley: Begins killtask loop in Frozen Valley`, $COLOR_INFO]}
-				DoExpr {echo[`#killtask neftet: Begins killtask loop in Neftet`, $COLOR_INFO]}
-				SetState {Idle}
-
-	~~ Handle `#killtask check`
-	IF: Expr {(check)#getvar[capturegroup_ktaction]}
-		DO: DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskCheck`]}
-				SetState {CallMeta}
-
-	~~ Handle `#killtask all`
-	IF: Expr {(all)#getvar[capturegroup_ktaction]}
-		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				SetState {CallMeta}
-
-	~~ Handle `#killtask frozen valley`
-	IF: Expr {(frozen valley)#getvar[capturegroup_ktaction]}
-		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavPortalspaceActivator`]}
-				DoExpr {$CCArguments=dictcreate[`CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `FrozenValley`]]}
-
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFrozenValley`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagFrozenValley`]}
-				SetState {CallMeta}
-
-	~~ Handle `#killtask neftet`
-	IF: Expr {(neftet)#getvar[capturegroup_ktaction]}
-		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskNeftet`]}
-				DoExpr {listadd[$MetaCallQueue, `CheCommandKillTaskFlagNeftet`]}
-				SetState {CallMeta}
-
-	~~ Handle no match for navdestination
-	IF: Expr {$LEVEL_WARN>=@CCDebug}
-		DO: DoAll
-				DoExpr {echo[`[WARN] No matching destination for #killtask`, $COLOR_WARN]}
-				SetState {Idle}
-
-~~ }
-
-
-STATE: {HandleFlagging} ~~ {
-
-	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
-
 	IF: Expr {(help)#getvar[capturegroup_flagaction]}
 		DO: DoAll
-				DoExpr {echo[`#flag frozen valley: Flags with all NPCs in Frozen Valley`, $COLOR_INFO]}
-				DoExpr {echo[`#flag hoshino: Flags with all NPCs in Hoshino`, $COLOR_INFO]}
-				DoExpr {echo[`#flag vr: Flags with all NPCs in Viridian Rise`, $COLOR_INFO]}
-				DoExpr {echo[`#flag neftet: Flags with all NPCs in Neftet`, $COLOR_INFO]}
-				DoExpr {echo[`#flag rynthid: Flags with all NPCs in Rynthid`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask frozen valley: Flags with all NPCs in Frozen Valley`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask hoshino: Flags with all NPCs in Hoshino`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask vr: Flags with all NPCs in Viridian Rise`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask neftet: Flags with all NPCs in Neftet`, $COLOR_INFO]}
+				DoExpr {echo[`#killtask rynthid: Flags with all NPCs in Rynthid`, $COLOR_INFO]}
 				SetState {Idle}
 
 	~~ Handle `#flag frozen valley`
@@ -3085,6 +3029,18 @@ STATE: {HandleJumping} ~~ {
 				DoExpr {$Jumptext=`sw 250`}
 				SetState {Jump}
 
+	~~ Handle `#jump on me` for issuer
+	IF: All
+			Expr {$capturegroup_name==false}
+			Expr {(on me)#getvar[capturegroup_jumptext]}
+		DO: SetState {Idle}
+
+	~~ Handle `#jump on me` for followers
+	IF: All
+			Expr {$capturegroup_name!=false}
+			Expr {(on me)#getvar[capturegroup_jumptext]}
+		DO: SetState {JumpOnMe}
+
 	~~ Handle `#jump <jumptext>`
 	IF: Always
 		DO: DoAll
@@ -3116,6 +3072,38 @@ STATE: {Jump} ~~ {
 	~~ Jump failure
 	IF:	ChatMatch {^You think, "You have failed to jump too many times}
 		DO:	SetState {Jump}
+
+~~ }
+
+
+STATE: {JumpOnMe} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	DoAll
+				DoExpr {listmap[listcreate[`OriginalNavClosestOpRange`, `OriginalNavPriorityBoost`, `capturegroup_name`, `capturegroup_jumptext`], `clearvar[$1]`]}
+				SetState {Idle}
+
+	~~ Save settings and set NavClosestOpRange to get on top of issuer
+	IF: Expr {testvar[OriginalNavClosestOpRange]==false}
+		DO: DoAll
+				DoExpr {setvar[OriginalNavClosestOpRange, vtgetsetting[NavClosestOpRange]]}
+				DoExpr {vtsetsetting[NavClosestOpRange, cstrf[@CCOnMeThreshold/240, `N8`]]}
+				DoExpr {setvar[OriginalNavPriorityBoost, vtgetsetting[NavPriorityBoost]]}
+				DoExpr {vtsetsetting[NavPriorityBoost, `true`]}
+				ChatExpr {`/ub follow `+$capturegroup_name}
+				SetState {JumpOnMe}
+
+	~~ Finish if on top of the issuer
+	IF: Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]], getplayercoordinates[]]<=@CCOnMeThreshold}
+		DO: DoAll
+				DoExpr {echo[`Original NavClosestOpRange: `+$OriginalNavClosestOpRange, $COLOR_DEBUG]}
+				DoExpr {vtsetsetting[NavClosestOpRange, cstrf[$OriginalNavClosestOpRange, `N8`]]}
+				DoExpr {vtsetsetting[NavPriorityBoost, cstrf[$OriginalNavPriorityBoost, `N0`]]}
+				EmbedNav Empty {[None]}
+				DoExpr {ifthen[@CCStay==false, `chatbox[\`/ub follow \`+@CCLeader]`, `false`]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished navigating on top of \`+$capturegroup_name]`, `false`]}
+				DoExpr {listmap[listcreate[`OriginalNavClosestOpRange`, `OriginalNavPriorityBoost`, `capturegroup_name`, `capturegroup_jumptext`], `clearvar[$1]`]}
+				SetState {Idle}
 
 ~~ }
 
@@ -3642,7 +3630,9 @@ STATE: {Loot} ~~ {
 
 	~~ Drop to peace mode for looting
 	IF: Always
-		DO: DoExpr {setcombatstate[peace]}
+		DO: DoAll
+				DoExpr {setvar[OriginalCombatState, getcombatstate[]]}
+				DoExpr {setcombatstate[peace]}
 
 	~~ Find Potential Corpses
 	IF: Always
@@ -3764,6 +3754,12 @@ STATE: {CloseCorpse} ~~ {
 		DO:	DoAll
 				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`, `nearbyCorpses`], `clearvar[$1]`]}
 				SetState {LeaderCheck}
+
+	~~ Return to the original combat state
+	IF: Expr {testvar[OriginalCombatState]==true&&getcombatstate[]!=$OriginalCombatState}
+		DO: DoAll
+				DoExpr {setcombatstate[$OriginalCombatState]}
+				DoExpr {clearvar[OriginalCombatState]}
 
 	~~ Corpse is closed; finish looting
 	IF: Expr {getobjectinternaltype[wobjectgetopencontainer[]]!=$TYPE_OBJECT}
@@ -4421,8 +4417,8 @@ STATE: {HandleCount} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {$count=getitemcountininventorybynamerx[$capturegroup_counttext]}
-				ChatExpr {`/f `+$capturegroup_counttext+`: `+$count}
-				DoExpr {[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`, `count`], `clearvar[$1]`]}
+				ChatExpr {`/t `+@CCLeader+`, `+$capturegroup_counttext+`: `+$count}
+				DoExpr {listmap[listcreate[`capturegroup_counttext`, `capturegroup_name`, `capturegroup_saythink`, `count`], `clearvar[$1]`]}
 				SetState {Idle}
 
 ~~ }
@@ -4811,6 +4807,7 @@ STATE: {ShowJungleSubway} ~~ {
 
 ~~ }
 
+
 STATE: {ShowQuests} ~~ {
 
 	~~ Show Quests view
@@ -4824,6 +4821,24 @@ STATE: {ShowQuests} ~~ {
 	IF: Expr {uiviewvisible[Quests]}
 		DO: DoAll
 				DestroyView {Quests}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {ShowKilltasks} ~~ {
+
+	~~ Show Killtasks view
+	IF: Not Expr {uiviewvisible[Killtasks]}
+		DO: DoAll
+				DestroyView {Navto}
+				CreateView {Killtasks} {:CheCommand-Killtasks.xml}
+				SetState {Idle}
+
+	~~ Close Killtasks view
+	IF: Expr {uiviewvisible[Killtasks]}
+		DO: DoAll
+				DestroyView {Killtasks}
 				SetState {Idle}
 
 ~~ }

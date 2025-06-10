@@ -13,6 +13,9 @@
         <control type="button" name="N" left="135" top="100" width="30" height="20" text="N" setstate="ChatCommand" actionexpr="setvar[command, `#face north`]" />
         <control type="button" name="NE" left="200" top="100" width="30" height="20" text="NE" setstate="ChatCommand" actionexpr="setvar[command, `#face northeast`]" />
         <control type="button" name="W" left="70" top="130" width="30" height="20" text="W" setstate="ChatCommand" actionexpr="setvar[command, `#face west`]" />
+
+        <control type="button" name="W" left="110" top="130" width="80" height="20" text="On Me" setstate="ChatCommand" actionexpr="setvar[command, `#jump on me`]" />
+
         <control type="button" name="E" left="200" top="130" width="30" height="20" text="E" setstate="ChatCommand" actionexpr="setvar[command, `#face east`]" />
         <control type="button" name="SW" left="70" top="160" width="30" height="20" text="SW" setstate="ChatCommand" actionexpr="setvar[command, `#face southwest`]" />
         <control type="button" name="S" left="135" top="160" width="30" height="20" text="S" setstate="ChatCommand" actionexpr="setvar[command, `#face south`]" />

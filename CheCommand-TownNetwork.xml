@@ -30,6 +30,7 @@
         <control type="button" name="Zaikhal" left="115" top="230" width="100" height="20" text="Zaikhal" setstate="ChatCommand" actionexpr="setvar[command, \#navto zaikhal]" />
 
         <control type="button" name="Subway" left="115" top="360" width="100" height="20" text="Subway >>" setstate="ShowSubway" />
+        <control type="button" name="Killtasks" left="115" top="385" width="100" height="20" text="Killtasks >>" setstate="ShowKilltasks" />
 
         <!-- Column 3 -->
         <control type="button" name="Baishi" left="225" top="5" width="100" height="20" text="Baishi" setstate="ChatCommand" actionexpr="setvar[command, \#navto baishi]" />
