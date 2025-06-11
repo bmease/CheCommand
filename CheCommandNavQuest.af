@@ -126,8 +126,34 @@ STATE: {Dispatch} ~~ {
 				DoExpr {ifthen[$LEVEL_WARN>=@CCDebug, `echo[\`[WARN] No state found for destination\`, $COLOR_WARN]`, `false`]}
 				SetState {Finished}
 
+	~~ Set vt settings to sane defaults
+	IF: Always
+		DO: DoAll
+				DoExpr {setvar[OriginalEnableNav, vtgetsetting[EnableNav]]}
+				DoExpr {setvar[OriginalNavCloseStopRange, vtgetsetting[NavCloseStopRange]]}
+				SetOpt {EnableNav} {True}
+				SetOpt {NavCloseStopRange} {0.0083333}
+
+
 	IF: Expr {dicthaskey[$DESTINATION_STATE, $destination]==true}
 		DO: DoExpr {vtsetmetastate[dictgetitem[$DESTINATION_STATE, $destination]]}
+
+~~ }
+
+
+STATE: {CallMeta} ~~ {
+
+	~~ Return all vt settings to the original values
+	IF: Always
+		DO: DoAll
+				SetOpt {EnableNav} {$OriginalEnableNav}
+				SetOpt {NavCloseStopRange} {$OriginalNavCloseStopRange}
+				DoExpr {listmap[listcreate[`OriginalEnableNav`, `OriginalNavCloseStopRange`], `clearvar[$1]`]}
+
+	~~ Call the meta
+	IF: Always
+		DO: DoAll
+				ChatExpr {`/vt meta load `+$QuestMetaName}
 
 ~~ }
 
@@ -180,7 +206,8 @@ STATE: {InitMoufP} ~~ {
 				DoExpr {dictadditem[$CCArguments, `CheCommandNavTownNetwork`, dictcreate[`destination`, `Fiun Outpost`]]}
 				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
 				DoExpr {$CCReturnMeta=$metaname}
-				ChatExpr {`/vt meta load CheCommandNavTownNetwork`}
+				DoExpr {$QuestMetaName=`ChecommandNavTownNetwork`}
+				SetState {CallMeta}
 
 ~~ }
 
@@ -200,7 +227,8 @@ STATE: {InitLiberationUziz} ~~ {
 				DoExpr {dictadditem[$CCArguments, `CheCommandNavTownNetwork`, dictcreate[`destination`, `Al-Arqas`]]}
 				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
 				DoExpr {$CCReturnMeta=$metaname}
-				ChatExpr {`/vt meta load CheCommandNavTownNetwork`}
+				DoExpr {$QuestMetaName=`ChecommandNavTownNetwork`}
+				SetState {CallMeta}
 
 ~~ }
 
@@ -220,7 +248,8 @@ STATE: {InitPurgingCorruption} ~~ {
 				DoExpr {dictadditem[$CCArguments, `CheCommandNavSubway`, dictcreate[`destination`, `Candeth Keep`]]}
 				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
 				DoExpr {$CCReturnMeta=$metaname}
-				ChatExpr {`/vt meta load CheCommandNavSubway`}
+				DoExpr {$QuestMetaName=`ChecommandNavSubway`}
+				SetState {CallMeta}
 
 ~~ }
 
@@ -240,7 +269,8 @@ STATE: {InitDreamReaver} ~~ {
 				DoExpr {dictadditem[$CCArguments, `CheCommandNavTownNetwork`, dictcreate[`destination`, `Khayyaban`]]}
 				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
 				DoExpr {$CCReturnMeta=$metaname}
-				ChatExpr {`/vt meta load CheCommandNavTownNetwork`}
+				DoExpr {$QuestMetaName=`ChecommandNavTownNetwork`}
+				SetState {CallMeta}
 
 ~~ }
 
@@ -260,7 +290,8 @@ STATE: {InitSerpentBurialGrounds} ~~ {
 				DoExpr {dictadditem[$CCArguments, `CheCommandNavTownNetwork`, dictcreate[`destination`, `Stonehold`]]}
 				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
 				DoExpr {$CCReturnMeta=$metaname}
-				ChatExpr {`/vt meta load CheCommandNavTownNetwork`}
+				DoExpr {$QuestMetaName=`ChecommandNavTownNetwork`}
+				SetState {CallMeta}
 
 ~~ }
 
@@ -284,7 +315,8 @@ STATE: {InitHaltDericost} ~~ {
 				DoExpr {dictadditem[$CCArguments, `CheCommandNavPortalspaceActivator`, dictcreate[`destination`, `FrozenValley`]]}
 				DoExpr {$QuestOriginalCCReturnMeta=$CCReturnMeta}
 				DoExpr {$CCReturnMeta=$metaname}
-				ChatExpr {`/vt meta load CheCommandNavPortalspaceActivator`}
+				DoExpr {$QuestMetaName=`ChecommandNavPortalspaceActivator`}
+				SetState {CallMeta}
 
 ~~ }
 
@@ -459,11 +491,12 @@ STATE: {Finished} ~~ {
 	IF: Always
 		DO:	DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished navigating to \`+$destination]`, `false`]}
 
-	~~ Reset all options to what they originally were
+	~~ Return all vt settings to the original values
 	IF: Always
 		DO: DoAll
 				SetOpt {EnableNav} {$OriginalEnableNav}
 				SetOpt {NavCloseStopRange} {$OriginalNavCloseStopRange}
+				DoExpr {listmap[listcreate[`OriginalEnableNav`, `OriginalNavCloseStopRange`], `clearvar[$1]`]}
 
 	~~ Return to the meta that called this one
 	IF: Always
