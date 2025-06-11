@@ -4292,17 +4292,11 @@ STATE: {HandleSummonPortal} ~~ {
 	
 	IF: Expr {getvar[capturegroup_name]==false]}
 		DO: DoAll
-				DoExpr {echo[`[DEBUG] SETTING HEADING: `+ getheading[wobjectgetplayer[]], $COLOR_DEBUG]}
 				DoExpr {setvar[castingCharacterHeading, getheading[wobjectgetplayer[]]]}
 
 	IF: Expr {getvar[capturegroup_name]!=false]}
 		DO: DoAll
 				SetState {ListenForSummonPortal}
-
-	IF: Always
-		DO: DoAll
-				DoExpr {echo[`[DEBUG] castingCharacterHeading: `+ getvar[castingCharacterHeading], $COLOR_DEBUG]}
-				DoExpr {echo[`[DEBUG] Casted by: `+getvar[capturegroup_name], $COLOR_DEBUG]}
 
 	~~ Cast the recall spell
 	IF: All
@@ -4316,7 +4310,7 @@ STATE: {HandleSummonPortal} ~~ {
 STATE: {TrycastSummonPortal} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {Idle}
+		DO:	SetState {CleanUpHandleSummonPortal} {Idle}
 
 	IF: Expr {getvar[currentAttemptCount]>=getvar[maxCastAttempts]} ~~ Maximum number of cast attempts reached
 		DO: DoAll
