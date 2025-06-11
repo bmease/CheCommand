@@ -4752,6 +4752,19 @@ STATE: {PickupSelect} ~~ {
 ~~ }
 
 
+STATE: {CountSelect} ~~ {
+
+	~~ Issue the `#count` commmand for the selected item
+	IF: Always
+		DO: DoAll
+				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {$command=`#count `+$item}
+				DoExpr {clearvar[item]}
+				SetState {ChatCommand}
+
+~~ }
+
+
 STATE: {LootSelect} ~~ {
 
 	~~ Warn if no container open
