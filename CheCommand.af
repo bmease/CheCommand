@@ -3020,17 +3020,17 @@ STATE: {HandleJumping} ~~ {
 				DoExpr {$Jumptext=`sw 250`}
 				SetState {Jump}
 
-	~~ Handle `#jump on me` for issuer
+	~~ Handle `#jump stack` for issuer
 	IF: All
 			Expr {$capturegroup_name==false}
-			Expr {(on me)#getvar[capturegroup_jumptext]}
+			Expr {(stack)#getvar[capturegroup_jumptext]}
 		DO: SetState {Idle}
 
-	~~ Handle `#jump on me` for followers
+	~~ Handle `#jump stack` for followers
 	IF: All
 			Expr {$capturegroup_name!=false}
-			Expr {(on me)#getvar[capturegroup_jumptext]}
-		DO: SetState {JumpOnMe}
+			Expr {(stack)#getvar[capturegroup_jumptext]}
+		DO: SetState {JumpStack}
 
 	~~ Handle `#jump <jumptext>`
 	IF: Always
@@ -3067,7 +3067,7 @@ STATE: {Jump} ~~ {
 ~~ }
 
 
-STATE: {JumpOnMe} ~~ {
+STATE: {JumpStack} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
 		DO:	DoAll
@@ -3082,7 +3082,7 @@ STATE: {JumpOnMe} ~~ {
 				DoExpr {setvar[OriginalNavPriorityBoost, vtgetsetting[NavPriorityBoost]]}
 				DoExpr {vtsetsetting[NavPriorityBoost, `true`]}
 				ChatExpr {`/ub follow `+$capturegroup_name}
-				SetState {JumpOnMe}
+				SetState {JumpStack}
 
 	~~ Finish if on top of the issuer
 	IF: Expr {coordinatedistancewithz[wobjectgetphysicscoordinates[wobjectfindnearestbynameandobjectclass[$PLAYER, $capturegroup_name]], getplayercoordinates[]]<=@CCOnMeThreshold}
