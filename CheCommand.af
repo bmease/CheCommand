@@ -4310,7 +4310,7 @@ STATE: {HandleSummonPortal} ~~ {
 STATE: {TrycastSummonPortal} ~~ {
 
 	IF:	ChatMatch {![Rr]eset}
-		DO:	SetState {CleanUpHandleSummonPortal} {Idle}
+		DO:	CallState {CleanUpHandleSummonPortal} {Idle}
 
 	IF: Expr {getvar[currentAttemptCount]>=getvar[maxCastAttempts]} ~~ Maximum number of cast attempts reached
 		DO: DoAll
