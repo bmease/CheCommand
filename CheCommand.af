@@ -194,6 +194,9 @@ STATE: {Default} ~~ {
 				~~ Distance away from `#jump on me` issuer to get when considering on them
 				DoExpr {setpvar[CCOnMeThreshold, ifthen[testpvar[CCOnMeThreshold], `@CCOnMeThreshold`, `0.1`]]}
 
+				~~ If the character should jump when looting
+				DoExpr {setpvar[CCJumpLoot, ifthen[testpvar[CCJumpLoot], `@CCJumpLoot`, `false`]]}
+
 				~~ Whether the Actions view is open or closed
 				DoExpr {setpvar[CCViewsActions, ifthen[testpvar[CCViewsActions], `@CCViewsActions`, `false`]]}
 
@@ -3678,6 +3681,15 @@ STATE: {LootCorpse} ~~ {
 	~~ 	DO: DoAll
 	~~ 			DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Looting corpse\`, $COLOR_INFO]`, `false`]}
 
+	~~ Disable jump confirmation since we don't need it for looting
+	IF: All
+			Expr {@CCJumpLoot==true}
+			Expr {uboptget[`Jumper.ThinkComplete`]==true}
+		DO: DoAll
+				DoExpr {uboptset[`Jumper.ThinkComplete`, false]}
+				DoExpr {uboptset[`Jumper.ThinkFail`, false]}
+				DoExpr {setvar[jumped, false]}
+
 	~~ Count how many of the item is in inventory
 	IF: Expr {testvar[ItemCount]==false}
 		DO: DoAll
@@ -3704,7 +3716,9 @@ STATE: {LootCorpse} ~~ {
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Unable to loot \`+$LootCorpseItem]`, `false`]}
 				DoExpr {ifthen[getobjectinternaltype[wobjectgetopencontainer[]]==$TYPE_OBJECT, `actiontryuseitem[wobjectgetopencontainer[]]`, `false`]}  ~~ Close the container
-				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`, `nearbyCorpses`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`jumped`, `CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`, `nearbyCorpses`], `clearvar[$1]`]}
+				DoExpr {ifthen[uboptget[`Jumper.ThinkComplete`]==false, `uboptset[\`Jumper.ThinkComplete\`, true]`, `false`]} ~~ Reset jumping confirmation if turned on
+				DoExpr {ifthen[uboptget[`Jumper.ThinkFail`]==false, `uboptset[\`Jumper.ThinkFail\`, true]`, `false`]}
 				SetState {CloseCorpse}
 
 	~~ Picked up an item since inventory has increased
@@ -3712,7 +3726,9 @@ STATE: {LootCorpse} ~~ {
 		DO: DoAll
 				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Looted \`+$LootCorpseItem]`, `false`]}
 				DoExpr {ifthen[getobjectinternaltype[wobjectgetopencontainer[]]==$TYPE_OBJECT, `actiontryuseitem[wobjectgetopencontainer[]]`, `false`]}  ~~ Close the container
-				DoExpr {listmap[listcreate[`CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`, `nearbyCorpses`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`jumped`, `CorpseBlacklist`, `ItemCount`, `CorpseItemsWanted`, `Corpse`, `item`, `LootCorpseItem`, `LootCorpseName`, `allCorpses`, `foundCorpses`, `nearbyCorpses`], `clearvar[$1]`]}
+				DoExpr {ifthen[uboptget[`Jumper.ThinkComplete`]==false, `uboptset[\`Jumper.ThinkComplete\`, true]`, `false`]} ~~ Reset jumping confirmation if turned on
+				DoExpr {ifthen[uboptget[`Jumper.ThinkFail`]==false, `uboptset[\`Jumper.ThinkFail\`, true]`, `false`]}
 				SetState {CloseCorpse}
 
 	~~ Warn if no items found on the corpse
@@ -3726,6 +3742,8 @@ STATE: {LootCorpse} ~~ {
 	~~ Pickup item from the corpse
 	IF: Expr {listcount[$CorpseItemsWanted]>0}
 		DO: DoAll
+				DoExpr {ifthen[@CCJumpLoot&&$jumped==false, `chatbox[\`/ub jump\`]`, `false`]}  ~~ Try jumping once to break animation and loot faster
+				DoExpr {setvar[jumped, true]}
 				DoExpr {$item=listpop[$CorpseItemsWanted, 0]}
 				DoExpr {actiontryuseitem[$item]}
 				SetState {LootCorpse}
