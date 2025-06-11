@@ -4322,13 +4322,11 @@ STATE: {TrycastSummonPortal} ~~ {
 		DO: DoAll
 				DoExpr {setvar[currentAttemptCount, getvar[currentAttemptCount]+1]}
 				DoExpr {$wasCastSuccessfull=actiontrycastbyid[$CCRecallSpell]}
-				DoExpr {echo[`[INFO] TrycastSummonPortal:wasCastSuccessfull: `+ $wasCastSuccessfull, $COLOR_INFO]}
 				SetState {TrycastSummonPortal}
 
 	~~ Cast the recall spell
 	IF: Expr {$wasCastSuccessfull==true}
 		DO: DoAll
-				DoExpr {echo[`[INFO] LocateSummonedPortal:wasCastSuccessfull: `+ $wasCastSuccessfull, $COLOR_INFO]}
 				SetState {LocateSummonedPortal}
 
 ~~ }
@@ -4344,7 +4342,6 @@ STATE: {LocateSummonedPortal} ~~ {
 		DO: DoAll
 				DoExpr {setvar[checkedForGateways, true]} ~~ Set a variable to indicate that we checked for gateways
 				DoExpr {setvar[gatewayList, wobjectfindallbynamerx[Gateway]]}
-				DoExpr {echo[`[DEBUG] gatewayList: `+ getvar[gatewayList], $COLOR_DEBUG]}
 				SetState {LocateSummonedPortal}
 
 	IF: All			
