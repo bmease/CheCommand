@@ -120,6 +120,7 @@ STATE: {Dispatch} ~~ {
 				DoExpr {dictadditem[$DESTINATION_STATE, `serpent burial grounds`, `InitSerpentBurialGrounds`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `halt dericost`, `InitHaltDericost`]}
 				DoExpr {dictadditem[$DESTINATION_STATE, `first sister`, `InitFirstSister`]}
+				DoExpr {dictadditem[$DESTINATION_STATE, `mhoire castle`, `InitMhoireCastle`]}
 
 	~~ Warn if no state is found for destination
 	IF: Expr {dicthaskey[$DESTINATION_STATE, $destination]==false}
@@ -130,8 +131,10 @@ STATE: {Dispatch} ~~ {
 	~~ Set vt settings to sane defaults
 	IF: Always
 		DO: DoAll
+				DoExpr {setvar[OriginalEnableCombat, vtgetsetting[EnableCombat]]}
 				DoExpr {setvar[OriginalEnableNav, vtgetsetting[EnableNav]]}
 				DoExpr {setvar[OriginalNavCloseStopRange, vtgetsetting[NavCloseStopRange]]}
+				SetOpt {EnableCombat} {False}
 				SetOpt {EnableNav} {True}
 				SetOpt {NavCloseStopRange} {0.0083333}
 
@@ -147,9 +150,10 @@ STATE: {CallMeta} ~~ {
 	~~ Return all vt settings to the original values
 	IF: Always
 		DO: DoAll
+				SetOpt {EnableCombat} {$OriginalEnableCombat}
 				SetOpt {EnableNav} {$OriginalEnableNav}
 				SetOpt {NavCloseStopRange} {$OriginalNavCloseStopRange}
-				DoExpr {listmap[listcreate[`OriginalEnableNav`, `OriginalNavCloseStopRange`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`OriginalEnableCombat`, `OriginalEnableNav`, `OriginalNavCloseStopRange`], `clearvar[$1]`]}
 
 	~~ Call the meta
 	IF: Always
@@ -201,6 +205,7 @@ STATE: {UseItem} ~~ {
 				DoExpr {actiontryuseitem[wobjectfindnearestbynameandobjectclass[$NPC, $item]]}
 				SetState {UseItem}
 
+	~~ Finish if you've receieved a chat message from the npc
 	IF:	Any
 			All
 				ChatCapture {^(?<tellname>.*?) tells you, \"(?<npctext>.*)\"$} {}
@@ -215,6 +220,17 @@ STATE: {UseItem} ~~ {
 				DoExpr {clearvar[using]}
 				DoExpr {clearvar[item]}
 				Return
+
+	~~ Finish if npcCreated appears
+	IF: All
+			Expr {testvar[npcCreated]==true}
+			Expr {getobjectinternaltype[wobjectfindnearestbynameandobjectclass[$NPC, $npcCreated]]==$TYPE_OBJECT}
+		DO: DoAll
+				DoExpr {clearvar[using]}
+				DoExpr {clearvar[item]}
+				DoExpr {clearvar[npcCreated]}
+				Return
+
 ~~ }
 
 
@@ -362,6 +378,24 @@ STATE: {InitFirstSister} ~~ {
 		DO: DoAll
 				DoExpr {$CCRecallSpell=5541} ~~ Lost City of Neftet Recall
 				CallState {HandleRecall} {ToKaltus}
+
+~~ }
+
+
+STATE: {InitMhoireCastle} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ If in Graveyard Recall navigate to the Guardian Statue
+	IF: BlockE 482D0000
+		DO: SetState {ToGuardianStatue}
+
+	~~ Navigate to Graveyard
+	IF: Always
+		DO: DoAll
+				DoExpr {$CCRecallSpell=4128} ~~ Graveyard Recall
+				CallState {HandleRecall} {ToGuardianStatue}
 
 ~~ }
 
@@ -570,6 +604,66 @@ STATE: {ToTempleOfMornings} ~~ {
 ~~ }
 
 
+STATE: {ToGuardianStatue} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Navigate to Gargoyle
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Guardian Statue\`, $COLOR_INFO]`, `false`]}
+				EmbedNav ToGuardianStatue {ToGuardianStatue}
+
+	~~ Finished navigation and use Guardian Statue
+	IF:	NavEmpty
+		DO: DoAll
+				DoExpr {$item=`Guardian Statue`}
+				DoExpr {$npcCreated=`Mhoire Castle Courtyard Portal`}
+				CallState {UseItem} {UseMhoireCourtyard}
+~~ }
+
+
+STATE: {UseMhoireCourtyard} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Use Mhoire Castle Courtyard Portal
+	IF:	Always
+		DO: DoAll
+				DoExpr {$item=`Mhoire Castle Courtyard Portal`}
+				CallState {UseItem} {ToMhoireCastleNortheast}
+
+	~~ Finished using portal go to MhoireCastleNorthEast
+	IF: All
+			NavEmpty
+			Expr {isportaling[]==false}
+		DO: SetState {ToMhoireCastleNortheast}
+
+~~ }
+
+
+STATE: {ToMhoireCastleNortheast} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Finished}
+
+	~~ Navigate to Mhoire Castle Northeast
+	IF: Always
+		DO: DoAll
+				DoExpr {ifthen[$LEVEL_INFO>=@CCDebug, `echo[\`[INFO] Navigating to Mhoire Castle Northeast\`, $COLOR_INFO]`, `false`]}
+				EmbedNav ToMhoireCastleNortheast {ToMhoireCastleNortheast}
+
+	~~ Finished using portal go to Finished
+	IF: All
+			NavEmpty
+			Expr {isportaling[]==false}
+		DO: SetState {Finished}
+
+~~ }
+
+
 STATE: {Finished} ~~ {
 
 	IF: Always
@@ -578,9 +672,10 @@ STATE: {Finished} ~~ {
 	~~ Return all vt settings to the original values
 	IF: Always
 		DO: DoAll
+				SetOpt {EnableCombat} {$OriginalEnableCombat}
 				SetOpt {EnableNav} {$OriginalEnableNav}
 				SetOpt {NavCloseStopRange} {$OriginalNavCloseStopRange}
-				DoExpr {listmap[listcreate[`OriginalEnableNav`, `OriginalNavCloseStopRange`], `clearvar[$1]`]}
+				DoExpr {listmap[listcreate[`OriginalEnableCombat`, `OriginalEnableNav`, `OriginalNavCloseStopRange`], `clearvar[$1]`]}
 
 	~~ Return to the meta that called this one
 	IF: Always
@@ -1056,4 +1151,78 @@ NAV: ToTempleOfMornings once ~~ {
 	pnt 8.33681434790293 -21.921376546224 -0.206645822525024
 	pnt 8.33275593916575 -21.920432917277 -0.206645822525024
 	ptl 93.4037500063578 -82.5470833301544 0.707520802815755 8.32463374932607 -21.9201250076294 -0.207540944218636 14 {Temple of Mornings}
+~~ }
+
+
+NAV: ToGuardianStatue once ~~ {
+	pnt -43.9883333206177 -65.3766666412353 -0.0616458376248678
+	pnt -43.9669936498006 -65.3891848882039 -0.0616458376248678
+	pnt -43.9656407674154 -65.3893664677938 -0.0616458376248678
+	pnt -43.967964553833 -65.3937578837077 -0.0616458376248678
+	pnt -43.9699461301168 -65.4005030949911 -0.0616458376248678
+	pnt -43.978878625234 -65.4277374267578 -0.0616458376248678
+	pnt -44.0114812533061 -65.4379596392314 -0.0616458376248678
+	pnt -44.0133650143941 -65.4295265197754 -0.0616458376248678
+	pnt -44.0131903330485 -65.4231520652771 -0.0597870826721191
+	pnt -44.0140194892883 -65.4024433771769 -0.0432201345761617
+	pnt -44.013151327769 -65.3911526997884 -0.0399791717529297
+	pnt -44.009472211202 -65.3650553385417 -0.0399791717529297
+	pnt -43.988223807017 -65.3612859725952 -0.0399791717529297
+	pnt -43.9991488138835 -65.3761280059814 -0.0399791717529297
+	pnt -44.0019133885702 -65.381053352356 -0.0377693891525269
+	pnt -44.0000468889872 -65.4230471611023 -0.0183124999205271
+	pnt -43.9866565068563 -65.4235250155131 -0.0183124999205271
+	pnt -43.9873431841532 -65.4093318303426 -0.0183124999205271
+	pnt -43.9882899602254 -65.379826037089 0.00387372920910517
+	pnt -43.9909833908081 -65.361758295695 0.0033541664481163
+	pnt -44.0019857724508 -65.3693823496501 0.00335416843493779
+	pnt -44.0015409787496 -65.3764026641846 0.00335416843493779
+	pnt -44.0011291821798 -65.4049019495646 0.0247761348883311
+	pnt -44.0004479408264 -65.4285871187846 0.0250208338101705
+	pnt -44.0092847824097 -65.4342734336853 0.0250208338101705
+	pnt -44.0352024714152 -65.4344869613647 0.0250208338101705
+	pnt -44.0408802032471 -65.4157341003418 0.0250208338101705
+	pnt -44.0738089879354 -65.3613109588623 0.0210526704788208
+	pnt -44.1036133448283 -65.3422672271729 0.0160852750142415
+	pnt -44.1287079175313 -65.3251742045085 0.0124917964140574
+	pnt -44.1446538130442 -65.2926495234172 0.0179125765959422
+	pnt -44.1500569661458 -65.2488547643026 0.0251162707805634
+	pnt -44.1602081298828 -65.2203615188599 0.0274907072385152
+	pnt -44.1711203257243 -65.1892901738485 0.0300799866517385
+	pnt -44.1721943219503 -65.1656881332397 0.0320468227068583
+	pnt -44.1786388079325 -65.1332873205344 0.0347468892733256
+	pnt -44.1823126475016 -65.0978060921033 0.0377036571502686
+	pnt -44.1897315343221 -65.0595066785812 0.0408952752749125
+	pnt -44.2133483886719 -65.0441961765289 0.0416874965031942
+	pnt -44.2424959977468 -65.0219691435496 0.0416874965031942
+	pnt -44.2828682740529 -64.9779413223267 0.0334704279899597
+	pnt -44.3220219691594 -64.9296907107035 0.0236820081869761
+	pnt -44.3471821407477 -64.8865286191305 0.0224464257558187
+	pnt -44.3571764628092 -64.8338389078776 0.031599227587382
+	pnt -44.3591358184814 -64.7758555094401 0.0333953062693278
+	pnt -44.3468892159561 -64.7209599812825 0.0263169944286346
+	pnt -44.3332281708717 -64.6888213475545 0.0320090929667155
+	pnt -44.2991790016492 -64.6707677841187 0.0461962501207987
+	pnt -44.2569580396016 -64.6509220123291 0.0637883146603902
+	pnt -44.220020866394 -64.6406677881877 0.0666874965031942
+	pnt -44.1637414296468 -64.6354981740316 0.0666874965031942
+	pnt -44.1555567423503 -64.6306470870972 0.0666874965031942
+	pnt -44.1402468204498 -64.6151940027873 0.0666874965031942
+	pnt -44.1261825243632 -64.6161528905233 0.0666874965031942
+~~ }
+
+
+NAV: UseGuardianStatue circular ~~ {
+	tlk -46.0179211934408 -65.1668918609619 0.283354187011719 -44.125 -64.625 0.0666770190000534 37 {Guardian Statue}
+~~ }
+
+
+NAV: ToMhoireCastleNortheast once ~~ {
+	pnt -46.0883874893188 -65.2376416524251 0.283354187011719
+	pnt -46.0531621297201 -65.2087312062581 0.283354187011719
+	pnt -45.9795318603516 -65.1605553944906 0.283354187011719
+	pnt -45.8943646272024 -65.1478149083753 0.283354187011719
+	pnt -45.8680804649989 -65.1098467071851 0.283354187011719
+	pnt -45.8699329455694 -65.1025450825691 0.283354187011719
+	ptl -46.0179211934408 -65.1668918609619 0.283354187011719 -45.8738099972407 -65.0958037495613 0.282459050416946 37 {Mhoire Castle Northeast Tower Portal}
 ~~ }
