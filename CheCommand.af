@@ -2352,8 +2352,7 @@ STATE: {HandleQuests} ~~ {
 	~~ Handle `#quest geraines host`
 	IF: Expr {(geraines host)#getvar[capturegroup_questdestination]}
 		DO:	DoAll
-				DoExpr {listadd[$MetaCallQueue, `CheCommandNavQuest`]}
-				DoExpr {$CCArguments=dictcreate[`CheCommandNavQuest`, dictcreate[`destination`, `geraines host`]]}
+				DoExpr {listadd[$MetaCallQueue, `CheCommandNavGerainesHosts`]}
 				SetState {CallMeta}
 
 	~~ Handle `#quest geraines study`
