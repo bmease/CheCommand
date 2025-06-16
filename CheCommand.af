@@ -288,6 +288,7 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Norus`, `Seed of Essence`]} ~~ Harvesting the Bulb of Twilight
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Rynthid Crystal Access Device`, `Focused Splinter of Hatred`]} ~~
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Ancient Altar`, `Ancient Skull and Bones`]} ~~
+				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Mu-miyah Device`, `Red Destabilizing Crystal`]} ~~ Slave Master
 
 				~~ Luminance Quests
 				DoExpr {dictadditem[$AUTOGIVE_PROFILE, `Aun Aemaua`, `Claw of the Hopeslayer`]} ~~ Ithaenc Quiddity Seed Quest
@@ -345,6 +346,8 @@ STATE: {Default} ~~ {
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Ronin Ginmura`, `Shaped Arm Bone`]} ~~
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of First Lieutenant`, `First Lieutenant's Insignia.`]} ~~
 				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Shade of Lord Rytheran`, `Rytheran's Jeweled Ring`]} ~~
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Mu-miyah Soothsayer`, `Yellow Destabilizing Crystal`]} ~~ Slave Master
+				DoExpr {dictadditem[$AUTO_LOOT_CORPSES, `Corpse of Mu-miyah Channeller`, `Red Destabilizing Crystal`]} ~~ Slave Master
 
 
 				~~ Luminance Quests
