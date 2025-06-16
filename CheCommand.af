@@ -1136,6 +1136,15 @@ STATE: {Idle} ~~ {
 				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
 		DO: SetState {HandlePass}
 
+	~~ Handle Use
+	IF: All
+			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#use (?<usetext>.*)\"$} {}
+			Any
+				Expr {$capturegroup_saythink==`say`}
+				Expr {$capturegroup_saythink==`think`}
+				Expr {listcontains[@CCCharacterList, $capturegroup_name]}
+		DO: SetState {HandleUse}
+
 	~~ Handle Checking
 	IF: All
 			ChatCapture {(^(\[[A-z]+?\] |)You|.*\<Tell:IIDString:.+:(?<name>[^\<]*)\>.+\<\\Tell\>) (?<saythink>.*), \"#check (?<checktext>.*)\"$} {}
@@ -3507,6 +3516,130 @@ STATE: {PassGive} ~~ {
 
 ~~ }
 
+
+STATE: {HandleUse} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Handle `#use help`
+	IF: Expr {(help)#getvar[capturegroup_usetext]}
+		DO: DoAll
+				DoExpr {echo[`#use help: Displays this help message`, $COLOR_INFO]}
+				DoExpr {echo[`#use <item name>: All characters use the item`, $COLOR_INFO]}
+				SetState {Idle}
+
+	~~ Use item
+	IF: Always
+		DO: DoAll
+				DoExpr {setvar[ItemName, $capturegroup_usetext]}
+				DoExpr {clearvar[capturegroup_usetext]}
+				SetState {Use}
+
+~~ }
+
+
+STATE: {Use} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Check to see if item is on the landscape
+	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`^`+$ItemName+`$`]]>0}
+		DO: DoExpr {setvar[Item, listpop[wobjectfindalllandscapebynamerx[$ItemName]]]}
+
+	~~ Check to see if item is in inventory
+	IF: Expr {listcount[wobjectfindallinventorybynamerx[`^`+$ItemName+`$`]]>0}
+		DO: DoExpr {setvar[Item, listpop[wobjectfindallinventorybynamerx[$ItemName]]]}
+
+	~~ Warn if no item found
+	IF: Expr {testvar[Item]==false}
+		DO: DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Item to use not found!\`]`, `false`]}
+				SetState {Idle}
+
+	~~ If inventory item use it
+	IF: All
+			Expr {testvar[Item]==true}
+			Expr {listcount[wobjectfindallinventorybynamerx[`^`+$ItemName+`$`]]>0}
+		DO: SetState {UseInventory}
+
+	~~ If landscape item use it
+	IF: All
+			Expr {testvar[Item]==true}
+			Expr {listcount[wobjectfindalllandscapebynamerx[`^`+$ItemName+`$`]]>0}
+		DO: SetState {UseLandscape}
+
+~~ }
+
+
+STATE: {UseInventory} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Use inventory item a single time since we won't get feedback
+	IF: Always
+		DO: DoAll
+				DoExpr {actiontryuseitem[$Item]}
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using \`+$ItemName]`, `false`]}
+				DoExpr {listmap[listcreate[`Item`, `ItemName`], `clearvar[$1]`]}
+				SetState {Idle}
+
+~~ }
+
+
+STATE: {UseLandscape} ~~ {
+
+	IF:	ChatMatch {![Rr]eset}
+		DO:	SetState {Idle}
+
+	~~ Disable all options
+	IF: Expr {testvar[OptionsSet]==false}
+		DO: CallState {DisableOptions} {UseLandscape}
+
+	~~ Stop using Item if you receieve a response
+	IF:	Any
+			All
+				ChatCapture {.*} {0}  ~~ Directbroadcast of any kind
+				Expr {$capturegroup_color==0}
+			All
+				ChatCapture {^(?<tellname>.*?) tells you, \"(?<npctext>.*)\"$} {}
+				Expr {$capturegroup_tellname==$Item}
+			All
+				ChatCapture {^(?<tellname>.*?) gives you (?<npctext>.*)$} {}
+				Expr {$capturegroup_tellname==$Item}
+			All
+				ChatCapture {^(?<tellname>.*?) cast (?<npctext>.*)$} {}
+				Expr {$capturegroup_tellname==$Item}
+			ChatMatch {^You've earned}
+			ChatMatch {^You may complete this quest}
+			ChatMatch {^A plaque on}
+			ChatMatch {^You have already gained}
+			ChatMatch {^You shock yourself}
+			ChatMatch {^As you touch}
+			ChatMatch {^A voice in your mind}
+			ChatMatch {^According to the plaque}
+			ChatMatch {^You search through the parts}
+			ChatMatch {^You must wait}
+			ChatMatch {^The stone eyes widens}
+			ChatMatch {^Looking at the tusker corpse} ~~ Slain Protectorate
+			ChatMatch {^You have killed} ~~ Slain Protectorate
+			IntoPortal
+		DO:	DoAll
+				DoExpr {ifthen[@CCConfirm==true, `chatbox[\`/t \`+@CCLeader+\`, Finished using \`+$ItemName]`, `false`]}
+				DoExpr {listmap[listcreate[`Item`, `ItemName`], `clearvar[$1]`]}
+				SetState {LeaderCheck}
+
+	~~ Repeatedly use the item
+	IF: Always
+		DO: DoAll
+				DoExpr {actiontryuseitem[$Item]}
+				SetState {UseLandscape}
+
+~~ }
+
+
 STATE: {HandleCheck} ~~ {
 
 	~~ TODO: distance
@@ -4362,6 +4495,9 @@ STATE: {UseNPC} ~~ {
 	~~ Stop using NPC if you receieve a response
 	IF:	Any
 			All
+				ChatCapture {.*} {0}  ~~ Directbroadcast of any kind
+				Expr {$capturegroup_color==0}
+			All
 				ChatCapture {^(?<tellname>.*?) tells you, \"(?<npctext>.*)\"$} {}
 				Expr {$capturegroup_tellname==$name}
 			All
@@ -4767,6 +4903,19 @@ STATE: {CountSelect} ~~ {
 		DO: DoAll
 				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
 				DoExpr {$command=`#count `+$item}
+				DoExpr {clearvar[item]}
+				SetState {ChatCommand}
+
+~~ }
+
+
+STATE: {UseSelect} ~~ {
+
+	~~ Issue the `#use` commmand for the selected item
+	IF: Always
+		DO: DoAll
+				DoExpr {$item=wobjectgetname[wobjectgetselection[]]}
+				DoExpr {$command=`#use `+$item}
 				DoExpr {clearvar[item]}
 				SetState {ChatCommand}
 
